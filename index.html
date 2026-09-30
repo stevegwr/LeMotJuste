@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Le Mot Juste — entraînez votre vocabulaire</title>
+<meta name="theme-color" content="#1C2554">
+<meta name="description" content="Jeu pour enrichir son vocabulaire : définitions, synonymes, phrases à trous, par tranche d'âge.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mot Juste">
+<style>
+@font-face{font-family:Fraunces;font-weight:400;font-display:swap;src:url(fonts/fraunces-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:Fraunces;font-weight:600;font-display:swap;src:url(fonts/fraunces-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:Fraunces;font-weight:800;font-display:swap;src:url(fonts/fraunces-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:400;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Atkinson Hyperlegible";font-weight:700;font-display:swap;src:url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2")}
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#F5F6FB; --paper:#FFFFFF; --ink:#1C2554; --ink-soft:#4A5380; --line:#D9DCEB;
+  --hl:#FFD84D; --hl-soft:#FFF1B8; --ok:#1F7A4D; --ok-bg:#E3F4EA; --ko:#B23A30; --ko-bg:#FBE7E4;
+  --btn:#1C2554; --btn-text:#FFFFFF;
+  --fs:1.0625rem;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121733; --paper:#1B2146; --ink:#EEF0FA; --ink-soft:#B3B9D9; --line:#2F3764;
+    --hl:#E8BF2E; --hl-soft:#4A421F; --ok:#6FD39C; --ok-bg:#16392A; --ko:#FF8F84; --ko-bg:#45211E;
+    --btn:#FFD84D; --btn-text:#121733;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121733; --paper:#1B2146; --ink:#EEF0FA; --ink-soft:#B3B9D9; --line:#2F3764;
+  --hl:#E8BF2E; --hl-soft:#4A421F; --ok:#6FD39C; --ok-bg:#16392A; --ko:#FF8F84; --ko-bg:#45211E;
+  --btn:#FFD84D; --btn-text:#121733;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);
+  font-family:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;font-size:var(--fs);line-height:1.55}
+body.big{--fs:1.3rem}
+.wrap{max-width:660px;margin:0 auto;padding:1.25rem 1.1rem 3rem}
+h1,h2,h3,.word{font-family:Fraunces,Georgia,"Times New Roman",serif;font-weight:600;line-height:1.15;margin:0}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
+
+/* En-tête */
+.top{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:1.5rem}
+.brand{font-family:Fraunces,Georgia,serif;font-weight:800;font-size:1.35rem;letter-spacing:-.01em;background:none;border:0;color:var(--ink);padding:0}
+.chips{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.chip{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:.3rem .8rem;font-size:.9em}
+
+/* Le surligneur : l'élément signature */
+.word{font-size:clamp(2.2rem,8vw,3.4rem);font-weight:800;letter-spacing:-.02em;display:inline;
+  background:linear-gradient(transparent 58%,var(--hl) 58%,var(--hl) 90%,transparent 90%);
+  padding:0 .12em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.word.sm{font-size:clamp(1.6rem,6vw,2.2rem)}
+.swipe{background-size:0 100%;background-repeat:no-repeat;background-image:linear-gradient(transparent 58%,var(--hl) 58%,var(--hl) 90%,transparent 90%);background-color:transparent;animation:swipe .55s .15s ease-out forwards}
+@keyframes swipe{to{background-size:100% 100%}}
+@media (prefers-reduced-motion:reduce){.swipe{animation:none;background-size:100% 100%}}
+
+/* Accueil */
+.hero{padding:1rem 0 1.75rem}
+.hero p{color:var(--ink-soft);max-width:34em;margin:.9rem 0 0}
+.profiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:.75rem;margin-top:1.25rem}
+.prof{text-align:left;background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:1rem;color:var(--ink)}
+.prof:hover{border-color:var(--ink)}
+.prof .ic{font-size:1.8rem;display:block;margin-bottom:.35rem}
+.prof strong{font-family:Fraunces,Georgia,serif;font-size:1.2rem;display:block}
+.prof span{color:var(--ink-soft);font-size:.9em}
+
+.daily{background:var(--paper);border-left:6px solid var(--hl);border-radius:4px 14px 14px 4px;padding:1.2rem 1.25rem;margin:1.25rem 0}
+.daily h2{font-size:1rem;font-family:"Atkinson Hyperlegible",sans-serif;font-weight:700;color:var(--ink-soft);margin-bottom:.5rem}
+.daily .def{margin:.75rem 0 .35rem}
+.daily .ex{color:var(--ink-soft);font-style:italic;margin:0}
+
+.stats{display:flex;gap:1.5rem;flex-wrap:wrap;margin:1.25rem 0}
+.stat b{font-family:Fraunces,Georgia,serif;font-size:1.6rem;display:block;line-height:1}
+.stat span{color:var(--ink-soft);font-size:.88em}
+
+.actions{display:flex;flex-direction:column;gap:.6rem;margin-top:1.5rem}
+.btn{background:var(--btn);color:var(--btn-text);border:0;border-radius:12px;padding:.95rem 1.2rem;font-weight:700;font-size:1.05em}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.link{background:none;border:0;color:var(--ink-soft);text-decoration:underline;padding:.3rem 0}
+
+/* Jeu */
+.progress{display:flex;gap:5px;margin-bottom:1.5rem}
+.progress i{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.progress i.ok{background:var(--ok)} .progress i.ko{background:var(--ko)} .progress i.cur{background:var(--hl)}
+.mode{color:var(--ink-soft);font-size:.92em;margin-bottom:.9rem;display:flex;justify-content:space-between;gap:1rem}
+.q{margin:0 0 1.4rem}
+.q .prompt{font-size:1.15em;margin:.9rem 0 0}
+.q .sentence{font-family:Fraunces,Georgia,serif;font-size:1.45em;line-height:1.4;margin:.25rem 0 0}
+.gap{display:inline-block;min-width:4.5em;border-bottom:3px solid var(--ink);margin:0 .1em}
+.defbox{font-family:Fraunces,Georgia,serif;font-size:1.4em;line-height:1.4;margin:.4rem 0 0}
+.opts{display:grid;gap:.6rem}
+.opt{text-align:left;background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:.85rem 1rem;color:var(--ink);font-size:1em}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.ko{border-color:var(--ko);background:var(--ko-bg)}
+.opt:disabled{cursor:default}
+
+.recall{display:flex;gap:.5rem;flex-wrap:wrap}
+.recall input{flex:1 1 220px;font:inherit;font-size:1.2em;padding:.8rem 1rem;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink)}
+.recall input:focus{border-color:var(--ink);outline:none}
+.pattern{font-family:Fraunces,Georgia,serif;font-size:1.5em;letter-spacing:.3em;margin:.4rem 0 1rem;word-break:break-all}
+.hints{display:flex;gap:.75rem;align-items:center;margin-top:.75rem;flex-wrap:wrap}
+
+.feedback{margin-top:1.4rem;border-radius:14px;padding:1.1rem 1.2rem;background:var(--paper);border:2px solid var(--line)}
+.feedback.good{border-color:var(--ok)} .feedback.bad{border-color:var(--ko)}
+.feedback .verdict{font-weight:700;margin-bottom:.4rem}
+.feedback.good .verdict{color:var(--ok)} .feedback.bad .verdict{color:var(--ko)}
+.feedback .ex{font-style:italic;color:var(--ink-soft);margin:.5rem 0 0}
+.feedback .syn{margin:.5rem 0 0;font-size:.95em}
+.feedback .btn{margin-top:1rem;width:100%}
+
+/* Résultats & carnet */
+.result-score{font-family:Fraunces,Georgia,serif;font-size:4rem;font-weight:800;line-height:1}
+.levelup{background:var(--hl-soft);border-radius:12px;padding:.9rem 1.1rem;margin:1rem 0}
+.list{list-style:none;padding:0;margin:1rem 0}
+.list li{border-bottom:1px solid var(--line);padding:.7rem 0}
+.list summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:1rem;list-style:none}
+.list summary::-webkit-details-marker{display:none}
+.list summary strong{font-family:Fraunces,Georgia,serif;font-size:1.2em}
+.list .dd{color:var(--ink-soft);margin:.4rem 0 0}
+.dots{display:flex;gap:3px;flex-shrink:0}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--ok)}
+.muted{color:var(--ink-soft)}
+.filters{display:flex;gap:.5rem;flex-wrap:wrap}
+.filters button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:.3rem .8rem}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+footer{margin-top:2.5rem;color:var(--ink-soft);font-size:.85em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <button class="brand" id="homeBtn" aria-label="Retour à l'accueil">Le Mot Juste</button>
+    <div class="chips" id="chips"></div>
+  </header>
+  <main id="app"></main>
+  <footer>Vos progrès sont enregistrés dans ce navigateur, sur cet appareil.</footer>
+</div>
+
+<script>
+/* ============ BANQUES DE MOTS ============ */
+const BANK = {
+junior:[
+{w:"minuscule",l:1,d:"Très, très petit.",s:["petit","infime","microscopique"],a:["énorme","gigantesque"],ex:"La fourmi transportait une ___ miette de pain."},
+{w:"gigantesque",l:1,d:"Extrêmement grand, immense.",s:["immense","énorme","colossal"],a:["minuscule"],ex:"Le dinosaure avait une taille ___."},
+{w:"courageux",l:1,d:"Qui n'a pas peur d'affronter le danger.",s:["brave","vaillant","audacieux"],a:["peureux","lâche"],ex:"Le chevalier ___ entra dans la grotte du dragon."},
+{w:"timide",l:1,d:"Qui n'ose pas parler ou se montrer devant les autres.",s:["réservé","craintif"],a:["effronté"],ex:"Le nouvel élève, un peu ___, restait au fond de la classe."},
+{w:"délicieux",l:1,d:"Qui a très bon goût.",s:["savoureux","succulent","exquis"],a:["infect"],ex:"Grand-mère a préparé un gâteau ___."},
+{w:"épuisé",l:1,d:"Très, très fatigué.",s:["exténué","éreinté","fourbu"],a:["reposé"],ex:"Après la randonnée, papa était ___."},
+{w:"furieux",l:1,d:"Très en colère.",s:["enragé","fâché","courroucé"],a:["calme"],ex:"Le chat, ___, a sorti ses griffes."},
+{w:"bavard",l:1,d:"Qui parle beaucoup.",s:["causant","loquace","volubile"],a:["silencieux","muet"],ex:"Mon voisin de table est tellement ___ que je n'entends pas la maîtresse."},
+{w:"soudain",l:1,d:"Qui arrive tout d'un coup, sans prévenir.",s:["brusque","subit","brutal"],a:["progressif"],ex:"Un orage ___ nous a surpris au parc."},
+{w:"curieux",l:2,d:"Qui a envie de tout savoir, de tout découvrir.",s:["intéressé","fouineur"],a:["indifférent"],ex:"Ce petit ___ pose sans arrêt des questions."},
+{w:"gourmand",l:2,d:"Qui aime beaucoup manger de bonnes choses.",s:["friand","glouton"],a:[],ex:"Mon frère est si ___ qu'il a mangé toutes les crêpes."},
+{w:"fragile",l:2,d:"Qui se casse facilement.",s:["cassant","délicat"],a:["solide","robuste"],ex:"Attention, ce vase en verre est très ___."},
+{w:"obscur",l:2,d:"Où il n'y a pas de lumière, sombre.",s:["sombre","noir","ténébreux"],a:["lumineux","éclairé"],ex:"Le couloir ___ du château faisait peur."},
+{w:"paisible",l:2,d:"Calme et tranquille.",s:["calme","tranquille","serein"],a:["agité"],ex:"Le lac était ___ ce matin-là, sans une vague."},
+{w:"ravi",l:2,d:"Très content.",s:["enchanté","heureux","comblé"],a:["déçu","mécontent"],ex:"Je suis ___ de te revoir !"},
+{w:"maladroit",l:2,d:"Qui fait souvent tomber ou casser les choses sans le vouloir.",s:["gauche","malhabile"],a:["adroit","habile"],ex:"Ce ___ a encore renversé son verre de jus."},
+{w:"espiègle",l:2,d:"Vif et malicieux, qui aime faire de petites farces.",s:["malicieux","coquin","farceur"],a:["sage"],ex:"Le lutin ___ avait caché les chaussures de tout le monde."},
+{w:"éblouissant",l:2,d:"Qui brille tellement qu'on a du mal à le regarder.",s:["aveuglant","étincelant","brillant"],a:["terne"],ex:"Le soleil était ___ sur la neige."},
+{w:"intrépide",l:3,d:"Qui n'a peur de rien, qui ose tout.",s:["téméraire","hardi","audacieux"],a:["craintif","peureux"],ex:"L'exploratrice ___ traversa seule la jungle."},
+{w:"vigilant",l:3,d:"Qui fait très attention, qui surveille avec soin.",s:["attentif","prudent"],a:["distrait","négligent"],ex:"Le gardien restait ___ toute la nuit."},
+{w:"rusé",l:3,d:"Qui sait tromper les autres grâce à son intelligence.",s:["malin","astucieux","futé"],a:["naïf"],ex:"Le renard, très ___, a volé le fromage du corbeau."},
+{w:"minutieux",l:3,d:"Qui fait les choses avec beaucoup de soin, jusque dans les petits détails.",s:["méticuleux","soigneux","appliqué"],a:["négligent","brouillon"],ex:"Il faut être ___ pour construire une maquette de bateau."},
+{w:"mélancolique",l:3,d:"Un peu triste et rêveur.",s:["triste","morose","nostalgique"],a:["joyeux","gai"],ex:"En regardant la pluie, Léa se sentit ___."},
+{w:"insolite",l:3,d:"Bizarre, qui sort de l'ordinaire.",s:["étrange","inhabituel","surprenant"],a:["banal","ordinaire"],ex:"Nous avons trouvé un objet ___ dans le grenier."},
+{w:"vorace",l:3,d:"Qui mange avec un très gros appétit.",s:["glouton","goulu","affamé"],a:[],ex:"Le loup ___ dévora tout le repas."},
+{w:"limpide",l:3,d:"Très clair et transparent, comme de l'eau pure.",s:["clair","transparent","cristallin"],a:["trouble"],ex:"L'eau de la source était ___."},
+{w:"chétif",l:3,d:"Petit et faible, de santé fragile.",s:["malingre","frêle","faible"],a:["robuste","vigoureux"],ex:"Le petit oiseau ___ tremblait dans son nid."},
+{w:"émerveillé",l:3,d:"Rempli d'admiration devant quelque chose de beau ou d'étonnant.",s:["ébloui","fasciné","enchanté"],a:["indifférent","blasé"],ex:"Le public ___ applaudissait le magicien."}
+],
+ado:[
+{w:"ambigu",l:1,d:"Qui peut être compris de plusieurs façons.",s:["équivoque","flou","ambivalent"],a:["clair","explicite"],ex:"Sa réponse ___ n'a convaincu personne."},
+{w:"éphémère",l:1,d:"Qui ne dure que très peu de temps.",s:["passager","fugace","temporaire"],a:["durable","permanent"],ex:"Ce succès ___ n'a duré qu'un été."},
+{w:"pertinent",l:1,d:"Qui convient parfaitement au sujet, juste et approprié.",s:["judicieux","approprié","adéquat"],a:["inapproprié"],ex:"Ta remarque est très ___, on n'y avait pas pensé."},
+{w:"sceptique",l:1,d:"Qui doute, qui n'est pas facilement convaincu.",s:["dubitatif","incrédule","méfiant"],a:["crédule","convaincu"],ex:"Face à cette rumeur, je reste ___."},
+{w:"empathie",l:1,d:"Capacité à ressentir et à comprendre les émotions des autres.",s:["compassion","compréhension","sensibilité"],a:["indifférence"],ex:"Elle a fait preuve d'une grande ___ envers son amie."},
+{w:"arrogant",l:1,d:"Qui se croit supérieur aux autres et le montre.",s:["hautain","méprisant","prétentieux"],a:["modeste","humble"],ex:"Ce joueur ___ refuse de saluer ses adversaires."},
+{w:"nonchalant",l:1,d:"Qui agit lentement, sans effort, avec un air détaché.",s:["indolent","flegmatique","décontracté"],a:["énergique","zélé"],ex:"Il est entré en classe d'un pas ___."},
+{w:"exaspéré",l:1,d:"À bout de patience, très agacé.",s:["agacé","excédé","irrité"],a:["apaisé"],ex:"Le prof, ___, a fini par hausser la voix."},
+{w:"altruiste",l:1,d:"Qui se soucie du bien des autres avant le sien.",s:["généreux","désintéressé","bienveillant"],a:["égoïste"],ex:"Ce geste ___ a permis d'aider toute l'association."},
+{w:"véhément",l:2,d:"Qui s'exprime avec force et passion.",s:["fougueux","virulent","passionné"],a:["mesuré","modéré"],ex:"Il a défendu son idée dans un discours ___."},
+{w:"laconique",l:2,d:"Qui s'exprime en très peu de mots.",s:["bref","concis","succinct"],a:["prolixe","verbeux"],ex:"Son message ___ se résumait à « OK »."},
+{w:"procrastiner",l:2,d:"Remettre sans cesse au lendemain ce qu'on doit faire.",s:["atermoyer","temporiser","différer"],a:[],ex:"Arrête de ___ et commence tes révisions !"},
+{w:"désinvolte",l:2,d:"Qui agit avec une légèreté parfois impolie, sans se soucier des autres.",s:["insouciant","cavalier","sans-gêne"],a:["sérieux","respectueux"],ex:"Sa réponse ___ a vexé le jury."},
+{w:"utopique",l:2,d:"Qui relève du rêve, impossible à réaliser.",s:["irréaliste","chimérique","idéaliste"],a:["réaliste","concret"],ex:"Un monde sans aucun conflit semble ___."},
+{w:"perspicace",l:2,d:"Qui comprend vite et voit ce qui échappe aux autres.",s:["clairvoyant","lucide","sagace"],a:["naïf"],ex:"Le détective ___ a vite trouvé le coupable."},
+{w:"indulgent",l:2,d:"Qui pardonne facilement les fautes.",s:["tolérant","clément","compréhensif"],a:["sévère","intransigeant"],ex:"Le professeur a été ___ avec les retardataires."},
+{w:"résilience",l:2,d:"Capacité à surmonter les épreuves et à rebondir.",s:["endurance","ténacité","force morale"],a:["fragilité"],ex:"Après sa blessure, l'athlète a montré une ___ incroyable."},
+{w:"fébrile",l:2,d:"Agité par l'impatience ou l'inquiétude.",s:["nerveux","fiévreux","agité"],a:["serein"],ex:"Il attendait les résultats du bac, ___ et impatient."},
+{w:"péremptoire",l:3,d:"Qui n'admet aucune contestation, tranchant.",s:["catégorique","tranchant","autoritaire"],a:["hésitant","nuancé"],ex:"Il a répondu d'un ton ___ : « C'est non. »"},
+{w:"sibyllin",l:3,d:"Obscur, difficile à comprendre, comme un mystérieux oracle.",s:["obscur","énigmatique","hermétique"],a:["limpide"],ex:"Ce message ___ nous a laissés perplexes."},
+{w:"velléitaire",l:3,d:"Qui a des intentions mais ne passe jamais à l'acte.",s:["indécis","irrésolu","hésitant"],a:["déterminé","résolu"],ex:"Trop ___, il n'a jamais commencé son projet de groupe."},
+{w:"condescendant",l:3,d:"Qui montre, avec une bienveillance hautaine, qu'il se croit supérieur.",s:["hautain","dédaigneux","méprisant"],a:["humble","respectueux"],ex:"Elle m'a expliqué la règle d'un air ___."},
+{w:"ostentatoire",l:3,d:"Qui est fait pour être vu, pour se faire remarquer.",s:["voyant","tape-à-l'œil","ostensible"],a:["discret","sobre"],ex:"Sa montre en or, très ___, attirait tous les regards."},
+{w:"galvaniser",l:3,d:"Remplir d'énergie et d'enthousiasme.",s:["électriser","enflammer","stimuler"],a:["décourager","démotiver"],ex:"Le discours du capitaine a su ___ toute l'équipe."},
+{w:"iconoclaste",l:3,d:"Qui s'attaque aux traditions et aux idées établies.",s:["rebelle","anticonformiste","subversif"],a:["conformiste","traditionaliste"],ex:"Cet artiste ___ bouscule les codes de la peinture."},
+{w:"dithyrambique",l:3,d:"Qui fait un éloge enthousiaste, parfois excessif.",s:["élogieux","louangeur","enthousiaste"],a:["critique"],ex:"La critique du film était ___ : cinq étoiles partout."}
+],
+adulte:[
+{w:"volubile",l:1,d:"Qui parle beaucoup, avec facilité et rapidité.",s:["bavard","loquace","disert"],a:["taciturne","laconique"],ex:"Notre guide, très ___, nous a raconté mille anecdotes."},
+{w:"taciturne",l:1,d:"Qui parle peu, par tempérament.",s:["silencieux","renfermé","mutique"],a:["volubile","loquace"],ex:"Ce vieux marin ___ ne racontait jamais ses voyages."},
+{w:"prolixe",l:1,d:"Qui s'exprime trop longuement, avec trop de mots.",s:["verbeux","bavard","redondant"],a:["concis","laconique"],ex:"Le rapport, beaucoup trop ___, faisait quarante pages."},
+{w:"intègre",l:1,d:"D'une honnêteté absolue, incorruptible.",s:["honnête","probe","incorruptible"],a:["corrompu","malhonnête"],ex:"Ce juge ___ n'a jamais accepté le moindre cadeau."},
+{w:"fastidieux",l:1,d:"Ennuyeux par sa longueur ou sa monotonie.",s:["lassant","rébarbatif","monotone"],a:["captivant","passionnant"],ex:"La saisie de ces factures est un travail ___."},
+{w:"inéluctable",l:1,d:"Qu'on ne peut empêcher, qui arrivera forcément.",s:["inévitable","inexorable","fatal"],a:["évitable"],ex:"Le vieillissement est un processus ___."},
+{w:"pragmatique",l:1,d:"Qui privilégie l'efficacité et le concret plutôt que la théorie.",s:["réaliste","concret","pratique"],a:["idéaliste","théorique"],ex:"Face à la panne, il a adopté une approche ___."},
+{w:"opiniâtre",l:1,d:"Qui persévère avec ténacité.",s:["tenace","obstiné","persévérant"],a:["inconstant","versatile"],ex:"Grâce à un travail ___, elle a fini par réussir."},
+{w:"versatile",l:1,d:"Qui change facilement d'opinion.",s:["inconstant","changeant","lunatique"],a:["constant","fidèle"],ex:"L'opinion publique est souvent ___."},
+{w:"pérenne",l:1,d:"Qui dure longtemps, durable.",s:["durable","permanent","persistant"],a:["éphémère","provisoire"],ex:"Il faut trouver une solution ___ à ce problème."},
+{w:"sagace",l:1,d:"Doué d'une grande finesse d'esprit, perspicace.",s:["perspicace","clairvoyant","fin"],a:["obtus"],ex:"Son analyse ___ a éclairé tout le débat."},
+{w:"abscons",l:2,d:"Difficile à comprendre.",s:["obscur","hermétique","abstrus"],a:["clair","intelligible"],ex:"Ce contrat rédigé dans un jargon ___ décourage les lecteurs."},
+{w:"atermoyer",l:2,d:"Remettre à plus tard, chercher à gagner du temps.",s:["temporiser","différer","retarder"],a:["trancher","décider"],ex:"Inutile d'___ davantage, il faut signer."},
+{w:"tergiverser",l:2,d:"Hésiter, user de détours pour éviter de prendre une décision.",s:["hésiter","louvoyer","tâtonner"],a:["trancher"],ex:"Le comité a passé l'après-midi à ___ sans rien conclure."},
+{w:"acrimonieux",l:2,d:"Plein d'amertume et d'hostilité.",s:["aigre","hargneux","amer"],a:["aimable","bienveillant"],ex:"L'échange ___ entre les deux voisins a mal fini."},
+{w:"vergogne",l:2,d:"Honte, pudeur (surtout dans « sans vergogne »).",s:["honte","pudeur","scrupule"],a:["impudence","effronterie"],ex:"Il a menti sans ___ devant tout le monde."},
+{w:"pusillanime",l:2,d:"Qui manque de courage, craint de prendre des risques.",s:["craintif","timoré","lâche"],a:["courageux","audacieux"],ex:"Une direction ___ n'osera jamais lancer ce projet."},
+{w:"prodigue",l:2,d:"Qui dépense sans compter.",s:["dépensier","dispendieux","généreux"],a:["avare","économe","pingre"],ex:"Le fils ___ a dilapidé l'héritage familial."},
+{w:"idoine",l:2,d:"Qui convient parfaitement, approprié.",s:["adéquat","approprié","adapté"],a:["inadapté","inapproprié"],ex:"Il a enfin trouvé l'outil ___ pour cette réparation."},
+{w:"sinécure",l:2,d:"Emploi rémunéré qui demande peu de travail.",s:["planque","filon","fromage"],a:["corvée"],ex:"Diriger ce chantier n'est pas une ___."},
+{w:"obséquieux",l:2,d:"Poli et empressé à l'excès, jusqu'à la servilité.",s:["servile","flagorneur","mielleux"],a:["hautain","arrogant"],ex:"Le vendeur, ___, multipliait les courbettes."},
+{w:"ergoter",l:2,d:"Discuter sur des détails, chicaner.",s:["chicaner","pinailler","discutailler"],a:[],ex:"Plutôt que d'___ sur une virgule, parlons du fond."},
+{w:"hâbleur",l:2,d:"Qui aime se vanter et exagérer.",s:["vantard","fanfaron","fabulateur"],a:["modeste"],ex:"Ce pêcheur ___ jure avoir attrapé un poisson de deux mètres."},
+{w:"thuriféraire",l:3,d:"Personne qui flatte, qui encense quelqu'un avec excès.",s:["flatteur","laudateur","courtisan"],a:["détracteur"],ex:"Le ministre était escorté de son plus fidèle ___."},
+{w:"apophtegme",l:3,d:"Parole mémorable exprimée de façon concise.",s:["maxime","aphorisme","sentence"],a:[],ex:"Le vieux professeur aimait citer un ___ de Sénèque."},
+{w:"amphigourique",l:3,d:"Obscur et embrouillé, confus.",s:["confus","embrouillé","alambiqué"],a:["limpide"],ex:"Son discours ___ a perdu tout l'auditoire."},
+{w:"thaumaturge",l:3,d:"Personne qui fait, ou prétend faire, des miracles.",s:["faiseur de miracles","guérisseur","magicien"],a:[],ex:"On le présentait comme un ___ capable de tout guérir."},
+{w:"impéritie",l:3,d:"Manque de compétence dans sa fonction.",s:["incompétence","incapacité","inaptitude"],a:["compétence","habileté"],ex:"L'___ du capitaine a provoqué le naufrage."},
+{w:"ataraxie",l:3,d:"Tranquillité de l'âme, absence de trouble.",s:["sérénité","quiétude","impassibilité"],a:["angoisse","agitation"],ex:"Le sage recherchait l'___, à l'abri des passions."},
+{w:"concupiscence",l:3,d:"Désir intense des biens matériels ou des plaisirs.",s:["convoitise","avidité","désir"],a:["détachement","ascétisme"],ex:"Il regardait le trésor avec ___."},
+{w:"sycophante",l:3,d:"Délateur, dénonciateur hypocrite.",s:["délateur","dénonciateur","mouchard"],a:[],ex:"Ce ___ rapportait tout au directeur."},
+{w:"palinodie",l:3,d:"Changement complet d'opinion, revirement.",s:["revirement","volte-face","retournement"],a:["constance"],ex:"Après sa ___, plus personne ne croyait à ses promesses."},
+{w:"vaticiner",l:3,d:"Prédire l'avenir avec emphase, parler comme un prophète.",s:["prophétiser","prédire","augurer"],a:[],ex:"Il aimait ___ sur la fin prochaine du monde."},
+{w:"incoercible",l:3,d:"Qu'on ne peut contenir ni réprimer.",s:["irrépressible","irrésistible","incontrôlable"],a:["maîtrisable"],ex:"Un fou rire ___ s'empara de la salle."},
+{w:"margoulin",l:3,d:"Commerçant peu scrupuleux.",s:["escroc","filou","aigrefin"],a:[],ex:"Ce ___ lui a vendu une voiture sans moteur."}
+]};
+
+const PROFILES = {
+  junior:{label:"Junior",age:"8 à 12 ans",icon:"🦊",bank:"junior"},
+  ado:{label:"Ado",age:"13 à 17 ans",icon:"🎧",bank:"ado"},
+  adulte:{label:"Adulte",age:"18 ans et plus",icon:"📚",bank:"adulte"},
+  serenite:{label:"Sérénité",age:"Grands caractères, rythme posé",icon:"🌿",bank:"adulte",big:true}
+};
+const LEVEL_NAMES = {1:"Courant",2:"Soutenu",3:"Rare"};
+const MODE_NAMES = {def:"Quel mot correspond ?",recall:"Retrouvez le mot",trou:"Phrase à trous",syn:"Synonyme",intrus:"L'intrus",anto:"Contraire"};
+const INTERVALS = [0,0,1,3,7,15]; // jours avant révision, par boîte 0→5
+const SESSION_LEN = 10;
+
+/* ============ ÉTAT ============ */
+const KEY = "lemotjuste_v1";
+let S = load();
+function load(){
+  try{ const r = localStorage.getItem(KEY); if(r) return JSON.parse(r); }catch(e){}
+  return {profile:null, data:{}, streak:{last:null,count:0}};
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function pdata(){ const p=S.profile; if(!S.data[p]) S.data[p]={words:{},xp:0,sessions:0}; return S.data[p]; }
+function bank(){ return BANK[PROFILES[S.profile].bank]; }
+function ws(w){ return pdata().words[w]; }
+
+/* ============ OUTILS ============ */
+const $ = s => document.querySelector(s);
+const app = $("#app");
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g,"'").replace(/\s+/g," ").trim();
+const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+function today(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function dayNum(str){ const [y,m,d]=str.split("-").map(Number); return Math.round(Date.UTC(y,m-1,d)/864e5); }
+
+function unlockedLevel(){
+  let L=1;
+  for(const l of [1,2]){
+    const words=bank().filter(e=>e.l===l);
+    const ok=words.filter(e=>(ws(e.w)?.box||0)>=2).length;
+    if(ok/words.length>=0.6) L=l+1; else break;
+  }
+  return L;
+}
+function related(a,b){
+  if(a.w===b.w) return true;
+  const sa=a.s.map(norm), sb=b.s.map(norm), aa=a.a.map(norm), ab=b.a.map(norm);
+  if(sa.includes(norm(b.w))||sb.includes(norm(a.w))||aa.includes(norm(b.w))||ab.includes(norm(a.w))) return true;
+  return sa.some(x=>sb.includes(x));
+}
+function distractors(entry,n){
+  const pool=bank().filter(e=>!related(entry,e));
+  const same=shuffle(pool.filter(e=>e.l===entry.l)), other=shuffle(pool.filter(e=>e.l!==entry.l));
+  return [...same,...other].slice(0,n);
+}
+
+/* ============ SÉRIE DE JOURS ============ */
+function touchStreak(){
+  const t=today(), last=S.streak.last;
+  if(last===t) return;
+  S.streak.count = (last && dayNum(t)-dayNum(last)===1) ? S.streak.count+1 : 1;
+  S.streak.last=t;
+}
+function streakShown(){
+  const last=S.streak.last; if(!last) return 0;
+  return dayNum(today())-dayNum(last)<=1 ? S.streak.count : 0;
+}
+
+/* ============ EN-TÊTE ============ */
+function renderChips(){
+  const c=$("#chips");
+  if(!S.profile){ c.innerHTML=""; return; }
+  const p=PROFILES[S.profile], st=streakShown();
+  c.innerHTML=`<span class="chip" title="Jours d'affilée">🔥 ${st} jour${st>1?"s":""}</span><button class="chip" id="swProf">${p.icon} ${p.label}</button>`;
+  $("#swProf").onclick=()=>{ S.profile=null; save(); home(); };
+  document.body.classList.toggle("big",!!p.big);
+}
+
+/* ============ ACCUEIL ============ */
+function home(){
+  renderChips();
+  if(!S.profile){
+    document.body.classList.remove("big");
+    app.innerHTML=`
+      <section class="hero">
+        <h1 class="word swipe">Le mot juste</h1>
+        <p>Des définitions, des phrases à compléter, des synonymes et des pièges. Les mots que vous ratez reviennent plus souvent, ceux que vous maîtrisez s'espacent, et la difficulté monte avec vous.</p>
+      </section>
+      <h2 style="font-size:1.25rem">Qui joue ?</h2>
+      <div class="profiles">${Object.entries(PROFILES).map(([k,p])=>`
+        <button class="prof" data-p="${k}"><span class="ic" aria-hidden="true">${p.icon}</span><strong>${p.label}</strong><span>${p.age}</span></button>`).join("")}
+      </div>`;
+    app.querySelectorAll(".prof").forEach(b=>b.onclick=()=>{ S.profile=b.dataset.p; save(); home(); });
+    return;
+  }
+  const pd=pdata(), b=bank(), L=unlockedLevel();
+  const seen=Object.keys(pd.words).length;
+  const mastered=Object.values(pd.words).filter(x=>x.box>=4).length;
+  const due=Object.values(pd.words).filter(x=>x.due<=dayNum(today())).length;
+  const t=today(); let h=0; for(const ch of t+S.profile) h=(h*31+ch.charCodeAt(0))>>>0;
+  const wod=b[h%b.length];
+  app.innerHTML=`
+    <section class="daily" aria-label="Mot du jour">
+      <h2>Le mot du jour</h2>
+      <div class="word sm swipe">${esc(wod.w)}</div>
+      <p class="def">${esc(wod.d)}</p>
+      <p class="ex">${esc(wod.ex.replace("___",wod.w))}</p>
+    </section>
+    <div class="stats">
+      <div class="stat"><b>${seen}<span style="font-size:.5em"> / ${b.length}</span></b><span>mots rencontrés</span></div>
+      <div class="stat"><b>${mastered}</b><span>mots maîtrisés</span></div>
+      <div class="stat"><b>${LEVEL_NAMES[L]}</b><span>niveau atteint</span></div>
+      <div class="stat"><b>${pd.xp}</b><span>points</span></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="play">Lancer une partie de ${SESSION_LEN} questions</button>
+      <button class="btn ghost" id="carnet">Ouvrir mon carnet de mots</button>
+    </div>
+    <p class="muted" style="margin-top:1rem">${due>0?`${due} mot${due>1?"s":""} à réviser aujourd'hui, ils passeront en priorité.`:(seen?"Aucune révision en attente : de nouveaux mots vous attendent.":"Première partie : on commence par des mots courants.")}</p>
+    ${L<3?`<p class="muted">Le niveau ${LEVEL_NAMES[L+1].toLowerCase()} se débloque quand 60 % des mots du niveau ${LEVEL_NAMES[L].toLowerCase()} ont été trouvés au moins une fois.</p>`:""}`;
+  $("#play").onclick=startSession;
+  $("#carnet").onclick=carnet;
+}
+
+/* ============ CONSTRUCTION D'UNE PARTIE ============ */
+function buildSession(){
+  const pd=pdata(), L=unlockedLevel(), now=dayNum(today());
+  const pool=bank().filter(e=>e.l<=L);
+  const dueW=shuffle(pool.filter(e=>pd.words[e.w] && pd.words[e.w].due<=now)).sort((a,b)=>pd.words[a.w].box-pd.words[b.w].box).slice(0,6);
+  const fresh=shuffle(pool.filter(e=>!pd.words[e.w])).sort((a,b)=>a.l-b.l);
+  let list=[...dueW, ...fresh.slice(0,SESSION_LEN-dueW.length)];
+  if(list.length<SESSION_LEN){
+    const rest=shuffle(pool.filter(e=>!list.includes(e))).sort((a,b)=>(pd.words[a.w]?.box||0)-(pd.words[b.w]?.box||0));
+    list=[...list,...rest.slice(0,SESSION_LEN-list.length)];
+  }
+  let prev=null;
+  return shuffle(list).map(e=>{
+    const box=pd.words[e.w]?.box||0;
+    let modes = box<2 ? ["def","trou","syn"] : ["recall","recall","def","trou","syn","intrus","anto"];
+    modes=modes.filter(m=>(m!=="syn"||e.s.length) && (m!=="intrus"||e.s.length>=3) && (m!=="anto"||e.a.length));
+    const alt=modes.filter(m=>m!==prev); const m=pick(alt.length?alt:modes); prev=m;
+    return {e,m};
+  });
+}
+
+let G=null;
+function startSession(){
+  G={qs:buildSession(),i:0,res:[],pts:0,startL:unlockedLevel(),answered:false};
+  question();
+}
+
+/* ============ QUESTIONS ============ */
+function progressBar(){
+  return `<div class="progress" aria-label="Question ${G.i+1} sur ${G.qs.length}">${G.qs.map((_,k)=>`<i class="${k<G.i?(G.res[k]?"ok":"ko"):(k===G.i?"cur":"")}"></i>`).join("")}</div>`;
+}
+function question(){
+  G.answered=false;
+  const {e,m}=G.qs[G.i];
+  let html=progressBar()+`<div class="mode"><span>${MODE_NAMES[m]}</span><span>${G.i+1} / ${G.qs.length}</span></div>`;
+  let opts=null, correctIdx=null;
+
+  if(m==="def"){
+    const ds=distractors(e,3);
+    const all=shuffle([{t:e.d,ok:true},...ds.map(x=>({t:x.d,ok:false}))]);
+    html+=`<div class="q"><div class="word">${esc(e.w)}</div><p class="prompt">Que signifie ce mot ?</p></div>`;
+    opts=all;
+  } else if(m==="trou"){
+    const ds=distractors(e,3);
+    const parts=e.ex.split("___");
+    html+=`<div class="q"><p class="sentence">${esc(parts[0])}<span class="gap"></span>${esc(parts[1]||"")}</p><p class="prompt">Quel mot complète la phrase ?</p></div>`;
+    opts=shuffle([{t:e.w,ok:true},...ds.map(x=>({t:x.w,ok:false}))]);
+  } else if(m==="syn"){
+    const ds=distractors(e,3);
+    html+=`<div class="q"><div class="word">${esc(e.w)}</div><p class="prompt">Lequel de ces mots en est un synonyme ?</p></div>`;
+    opts=shuffle([{t:pick(e.s),ok:true},...ds.map(x=>({t:x.w,ok:false}))]);
+  } else if(m==="anto"){
+    const ds=distractors(e,2);
+    html+=`<div class="q"><div class="word">${esc(e.w)}</div><p class="prompt">Lequel de ces mots veut dire le contraire ?</p></div>`;
+    opts=shuffle([{t:pick(e.a),ok:true},{t:pick(e.s),ok:false},...ds.map(x=>({t:x.w,ok:false}))]);
+  } else if(m==="intrus"){
+    const d=distractors(e,1)[0];
+    html+=`<div class="q"><div class="word">${esc(e.w)}</div><p class="prompt">Un de ces mots n'est <strong>pas</strong> un synonyme. Lequel ?</p></div>`;
+    opts=shuffle([...shuffle(e.s).slice(0,3).map(s=>({t:s,ok:false})),{t:d.w,ok:true}]);
+  } else if(m==="recall"){
+    G.hints=0;
+    html+=`<div class="q"><p class="prompt" style="margin-top:0">Quel mot correspond à cette définition ?</p><p class="defbox">${esc(e.d)}</p></div>
+      <div class="pattern" id="pattern" aria-label="${e.w.length} lettres">${patternOf(e.w,0)}</div>
+      <form class="recall" id="rf" autocomplete="off"><input id="ri" aria-label="Votre réponse" autocapitalize="off" spellcheck="false" placeholder="Tapez le mot…"><button class="btn" type="submit">Valider</button></form>
+      <div class="hints"><button class="link" id="hint">Afficher un indice (−3 points)</button><button class="link" id="giveup">Je ne sais pas</button></div>`;
+  }
+
+  if(opts){
+    html+=`<div class="opts">${opts.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o.t)}</button>`).join("")}</div>`;
+  }
+  html+=`<div id="fb"></div>`;
+  app.innerHTML=html;
+  window.scrollTo({top:0});
+
+  if(opts){
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      if(G.answered) return;
+      const o=opts[+b.dataset.k];
+      app.querySelectorAll(".opt").forEach((x,k)=>{ x.disabled=true; if(opts[k].ok) x.classList.add("ok"); });
+      if(!o.ok) b.classList.add("ko");
+      answer(o.ok, o.ok?5:0);
+    });
+  } else {
+    const inp=$("#ri"); inp.focus();
+    $("#rf").onsubmit=ev=>{ ev.preventDefault(); if(G.answered||!inp.value.trim()) return;
+      const ok=norm(inp.value)===norm(e.w);
+      if(!ok && G.tries===undefined){ G.tries=1; inp.value=""; inp.placeholder="Pas tout à fait… encore un essai"; inp.focus(); return; }
+      delete G.tries; inp.disabled=true; answer(ok, ok?Math.max(10-3*G.hints,2):0, true);
+    };
+    $("#hint").onclick=()=>{ if(G.answered) return; G.hints=Math.min(G.hints+1,2); $("#pattern").innerHTML=patternOf(e.w,G.hints); if(G.hints>=2) $("#hint").disabled=true; inp.focus(); };
+    $("#giveup").onclick=()=>{ if(G.answered) return; delete G.tries; inp.disabled=true; answer(false,0,true); };
+  }
+}
+function patternOf(w,h){
+  // 0 : que des tirets ; 1 : première lettre ; 2 : une lettre sur deux
+  return [...w].map((c,k)=>{
+    if(c===" "||c==="-"||c==="'") return c===" "?"&nbsp;":c;
+    if(h>=1&&k===0) return esc(c);
+    if(h>=2&&k%2===0) return esc(c);
+    return "_";
+  }).join("");
+}
+
+/* ============ RÉPONSE & RÉPÉTITION ESPACÉE ============ */
+function answer(ok,pts,recall){
+  G.answered=true;
+  const {e}=G.qs[G.i], pd=pdata(), now=dayNum(today());
+  const st=pd.words[e.w]||{box:0,ok:0,ko:0,due:now};
+  if(ok){ st.box=Math.min(st.box+1,5); st.ok++; } else { st.box=1; st.ko++; }
+  st.due=now+INTERVALS[st.box];
+  pd.words[e.w]=st; pd.xp+=pts; G.pts+=pts; G.res[G.i]=ok;
+  save();
+  const praise=["Exactement.","Bien vu.","Parfait.","C'est ça.","Très juste."];
+  const fb=$("#fb");
+  fb.innerHTML=`<div class="feedback ${ok?"good":"bad"}" role="status">
+    <div class="verdict">${ok?pick(praise)+(pts?` +${pts} points`:""):"Ce n'était pas ça."}</div>
+    <div><strong style="font-family:Fraunces,Georgia,serif;font-size:1.3em">${esc(cap(e.w))}</strong> : ${esc(e.d)}</div>
+    <p class="ex">${esc(e.ex.replace("___",e.w))}</p>
+    ${e.s.length?`<p class="syn">Synonymes : ${e.s.map(esc).join(", ")}${e.a.length?`<br>Contraires : ${e.a.map(esc).join(", ")}`:""}</p>`:""}
+    <button class="btn" id="next">${G.i+1<G.qs.length?"Question suivante":"Voir mon résultat"}</button>
+  </div>`;
+  if(recall) $("#pattern").textContent=e.w;
+  const nb=$("#next"); nb.focus({preventScroll:true});
+  fb.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"nearest"});
+  nb.onclick=()=>{ G.i++; G.i<G.qs.length?question():results(); };
+}
+
+/* ============ RÉSULTATS ============ */
+function results(){
+  const pd=pdata(); pd.sessions++; touchStreak(); save(); renderChips();
+  const good=G.res.filter(Boolean).length, L=unlockedLevel();
+  const msg = good>=9?"Remarquable.":good>=7?"Belle partie.":good>=5?"Bon entraînement, les mots manqués reviendront bientôt.":"Les mots manqués vont revenir plus souvent : c'est comme ça qu'on les retient.";
+  app.innerHTML=`
+    <section class="hero">
+      <div class="result-score">${good}<span style="font-size:.4em;color:var(--ink-soft)"> / ${G.qs.length}</span></div>
+      <p style="font-size:1.15em;color:var(--ink)">${msg} Vous gagnez ${G.pts} points.</p>
+      ${L>G.startL?`<div class="levelup">🎉 Nouveau niveau débloqué : <strong>${LEVEL_NAMES[L]}</strong>. Des mots plus exigeants vont apparaître.</div>`:""}
+    </section>
+    <h2 style="font-size:1.2rem">Les mots de cette partie</h2>
+    <ul class="list">${G.qs.map((q,k)=>`<li><details><summary><strong>${esc(q.e.w)}</strong><span>${G.res[k]?"✓":"✗"}</span></summary><p class="dd">${esc(q.e.d)}</p></details></li>`).join("")}</ul>
+    <div class="actions"><button class="btn" id="again">Rejouer</button><button class="btn ghost" id="back">Retour à l'accueil</button></div>`;
+  $("#again").onclick=startSession; $("#back").onclick=home;
+  window.scrollTo({top:0});
+}
+
+/* ============ CARNET ============ */
+let carnetFilter="all";
+function carnet(){
+  const pd=pdata();
+  const seen=bank().filter(e=>pd.words[e.w]).sort((a,b)=>a.w.localeCompare(b.w,"fr"));
+  const list=seen.filter(e=>carnetFilter==="all"||(carnetFilter==="weak"?pd.words[e.w].box<3:pd.words[e.w].box>=4));
+  app.innerHTML=`
+    <h1 style="font-size:1.8rem;margin-bottom:.4rem">Mon carnet</h1>
+    <p class="muted">Les points verts indiquent l'ancrage de chaque mot en mémoire.</p>
+    <div class="filters" role="group" aria-label="Filtrer">
+      ${[["all","Tous"],["weak","À travailler"],["strong","Maîtrisés"]].map(([k,t])=>`<button data-f="${k}" aria-pressed="${carnetFilter===k}">${t}</button>`).join("")}
+    </div>
+    ${list.length?`<ul class="list">${list.map(e=>{const b=pd.words[e.w].box;return `<li><details><summary><strong>${esc(e.w)}</strong><span class="dots" aria-label="Niveau ${b} sur 5">${[1,2,3,4,5].map(n=>`<i class="${n<=b?"on":""}"></i>`).join("")}</span></summary><p class="dd">${esc(e.d)}</p><p class="dd"><em>${esc(e.ex.replace("___",e.w))}</em></p></details></li>`}).join("")}</ul>`
+      :`<p style="margin:1.5rem 0">${seen.length?"Aucun mot dans cette catégorie pour l'instant.":"Votre carnet se remplit au fil des parties. Lancez-en une pour y ajouter vos premiers mots."}</p>`}
+    <div class="actions"><button class="btn" id="play">Lancer une partie</button><button class="btn ghost" id="back">Retour à l'accueil</button></div>`;
+  app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{carnetFilter=b.dataset.f;carnet();});
+  $("#play").onclick=startSession; $("#back").onclick=home;
+}
+
+$("#homeBtn").onclick=home;
+home();
+
+/* Mode hors ligne / installation */
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); });
+}
+</script>
+</body>
+</html>

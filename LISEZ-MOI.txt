@@ -1,0 +1,35 @@
+LE MOT JUSTE — version application (PWA)
+=========================================
+
+CONTENU DU DOSSIER
+  index.html              le jeu
+  manifest.webmanifest    nom, icône et couleurs de l'application
+  sw.js                   mode hors ligne
+  icons/                  icônes (Android, iPhone)
+  fonts/                  polices embarquées (aucune connexion nécessaire)
+
+METTRE EN LIGNE — le plus simple : Netlify (gratuit)
+  1. Aller sur https://app.netlify.com/drop
+  2. Glisser-déposer le DOSSIER « le-mot-juste-pwa » (pas le zip) dans la page
+  3. Netlify donne une adresse. Dans « Site configuration » > « Change site name »,
+     on peut la renommer, par ex. lemotjuste.netlify.app
+  (Créer un compte gratuit permet de garder le site et de le mettre à jour.)
+
+  Alternative : GitHub Pages (dépôt public > Settings > Pages > branche main).
+
+INSTALLER SUR UN TÉLÉPHONE
+  Android (Chrome) : ouvrir l'adresse > menu ⋮ > « Installer l'application »
+                     (ou le bandeau proposé automatiquement)
+  iPhone (Safari)  : ouvrir l'adresse > bouton Partager > « Sur l'écran d'accueil »
+  Ensuite l'appli s'ouvre en plein écran et fonctionne sans réseau.
+
+METTRE À JOUR LE JEU
+  1. Modifier index.html
+  2. Dans sw.js, changer VERSION (ex. "lemotjuste-v2")
+  3. Redéposer le dossier sur Netlify (onglet « Deploys » > glisser-déposer)
+  Les téléphones récupèrent la nouvelle version à la prochaine ouverture avec du réseau.
+
+À SAVOIR
+  - Les progrès sont enregistrés sur chaque téléphone ; ils ne se synchronisent pas.
+  - Ouvrir index.html directement depuis l'ordinateur fonctionne pour jouer,
+    mais l'installation et le hors ligne exigent une adresse en https (Netlify, GitHub Pages).
