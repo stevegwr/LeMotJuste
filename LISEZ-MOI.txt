@@ -27,9 +27,14 @@ METTRE À JOUR LE JEU
   1. Modifier index.html
   2. Dans sw.js, changer VERSION (ex. "lemotjuste-v2")
   3. Redéposer le dossier sur Netlify (onglet « Deploys » > glisser-déposer)
-  Les téléphones récupèrent la nouvelle version à la prochaine ouverture avec du réseau.
+  Les téléphones téléchargent la nouvelle version en arrière-plan ; un bandeau
+  « Une nouvelle version du jeu est prête — Recharger » apparaît alors.
 
 À SAVOIR
   - Les progrès sont enregistrés sur chaque téléphone ; ils ne se synchronisent pas.
+    Réglages (⚙) > « Sauvegarder mes progrès » crée un fichier, que « Restaurer une
+    sauvegarde » permet de recharger sur un autre appareil.
+  - Le bouton « retour » du téléphone ramène à l'écran précédent ; si une partie est en
+    cours, le jeu demande confirmation avant de la quitter.
   - Ouvrir index.html directement depuis l'ordinateur fonctionne pour jouer,
     mais l'installation et le hors ligne exigent une adresse en https (Netlify, GitHub Pages).

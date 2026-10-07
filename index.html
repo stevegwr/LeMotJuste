@@ -5,8 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Le Mot Juste — entraînez votre vocabulaire</title>
 <meta name="theme-color" content="#1C2554">
+<script>try{var t=JSON.parse(localStorage.getItem("lemotjuste_v1")||"{}").settings||{};if(t.theme&&t.theme!=="auto")document.documentElement.dataset.theme=t.theme;}catch(e){}</script>
 <meta name="description" content="Jeu pour enrichir son vocabulaire : définitions, synonymes, pendu, mots croisés, mots fléchés, racines et expressions.">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/atkinson-hyperlegible-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/fraunces-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -208,6 +211,44 @@ button{font:inherit;cursor:pointer}
 .badge.c-a{border-color:var(--ok);color:var(--ok)}
 .badge.c-d{border-color:var(--ko);color:var(--ko)}
 footer{margin-top:2.5rem;color:var(--ink-soft);font-size:.85em}
+/* v2 : barre « Suivant » collante, modale, toast, réglages, objectif du jour */
+.stickynext{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + .6rem);z-index:4;margin-top:1rem}
+.stickynext .btn{width:100%;box-shadow:0 6px 18px rgba(10,14,35,.25)}
+.feedback .stickynext .btn{margin-top:0}
+.kbdhint{display:none;color:var(--ink-soft);font-size:.8em;text-align:center;margin-top:.4rem}
+@media (hover:hover) and (pointer:fine){.kbdhint{display:block}}
+.opt .k{display:none;font-size:.78em;color:var(--ink-soft);border:1px solid var(--line);border-radius:5px;padding:0 .35em;margin-right:.6em;vertical-align:.1em}
+@media (hover:hover) and (pointer:fine){.opt .k{display:inline-block}}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem 1.5rem}
+@media (min-width:520px){.stats{grid-template-columns:repeat(4,auto);justify-content:space-between}}
+.goal{display:flex;align-items:center;gap:1rem;background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:.85rem 1rem;margin:1rem 0}
+.goal svg{flex-shrink:0;width:56px;height:56px;transform:rotate(-90deg)}
+.goal circle{fill:none;stroke-width:7}
+.goal .bg{stroke:var(--line)} .goal .fg{stroke:var(--ok);stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+.goal b{display:block;font-family:Fraunces,Georgia,serif;font-size:1.15rem}
+.goal span{color:var(--ink-soft);font-size:.9em}
+.modal-bd{position:fixed;inset:0;z-index:50;background:rgba(10,14,35,.5);display:flex;align-items:flex-end;justify-content:center;padding:1rem;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 1rem)}
+@media (min-width:520px){.modal-bd{align-items:center}}
+.modal{background:var(--paper);color:var(--ink);border-radius:16px;padding:1.3rem 1.2rem 1.1rem;width:min(100%,420px);box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.modal p{margin:0 0 1rem;font-size:1.05em}
+.modal .row{display:flex;gap:.6rem}
+.modal .row .btn{flex:1}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 1rem);z-index:60;background:var(--ink);color:var(--bg);border-radius:12px;padding:.7rem 1rem;display:flex;gap:.9rem;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,.3);max-width:calc(100% - 2rem)}
+.toast button{background:var(--hl);color:#1C2554;border:0;border-radius:8px;padding:.35rem .7rem;font-weight:700}
+.set{display:grid;gap:.2rem;margin:1rem 0}
+.set h2{font-size:1.1rem;margin:1.2rem 0 .3rem}
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:.75rem 1rem}
+.setrow label{flex:1}
+.setrow small{display:block;color:var(--ink-soft)}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex-shrink:0}
+.seg button{border:0;background:var(--paper);color:var(--ink);padding:.35rem .75rem;font-size:.9em}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.switch{appearance:none;-webkit-appearance:none;width:46px;height:28px;border-radius:999px;background:var(--line);position:relative;flex-shrink:0;cursor:pointer;margin:0}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .15s}
+.switch:checked{background:var(--ok)} .switch:checked::after{left:21px}
+.search{width:100%;font:inherit;padding:.65rem .9rem;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);margin:.8rem 0 .6rem}
+.search:focus{border-color:var(--ink);outline:none}
+.near{background:var(--hl-soft);border-radius:8px;padding:.4rem .6rem;margin:.4rem 0 0;font-size:.95em}
 </style>
 </head>
 <body>
@@ -217,7 +258,7 @@ footer{margin-top:2.5rem;color:var(--ink-soft);font-size:.85em}
     <div class="chips" id="chips"></div>
   </header>
   <main id="app"></main>
-  <footer>Vos progrès sont enregistrés dans ce navigateur, sur cet appareil.</footer>
+  <footer>Vos progrès sont enregistrés dans ce navigateur, sur cet appareil. Pensez à les sauvegarder depuis les <button class="link" id="footSet" style="font-size:1em;padding:0">réglages</button>.</footer>
 </div>
 
 <script>
@@ -251,7 +292,29 @@ junior:[
 {w:"vorace",l:3,d:"Qui mange avec un très gros appétit.",s:["glouton","goulu","affamé"],a:[],ex:"Le loup ___ dévora tout le repas."},
 {w:"limpide",l:3,d:"Très clair et transparent, comme de l'eau pure.",s:["clair","transparent","cristallin"],a:["trouble"],ex:"L'eau de la source était ___."},
 {w:"chétif",l:3,d:"Petit et faible, de santé fragile.",s:["malingre","frêle","faible"],a:["robuste","vigoureux"],ex:"Le petit oiseau ___ tremblait dans son nid."},
-{w:"émerveillé",l:3,d:"Rempli d'admiration devant quelque chose de beau ou d'étonnant.",s:["ébloui","fasciné","enchanté"],a:["indifférent","blasé"],ex:"Le public ___ applaudissait le magicien."}
+{w:"émerveillé",l:3,d:"Rempli d'admiration devant quelque chose de beau ou d'étonnant.",s:["ébloui","fasciné","enchanté"],a:["indifférent","blasé"],ex:"Le public ___ applaudissait le magicien."},
+{w:"joyeux",l:1,d:"Qui est plein de joie, de bonne humeur.",s:["gai","content","enjoué"],a:["triste","maussade"],ex:"Les enfants ___ chantaient dans le car."},
+{w:"bruyant",l:1,d:"Qui fait beaucoup de bruit.",s:["tapageur","sonore","assourdissant"],a:["silencieux","calme"],ex:"La cour de récréation est très ___ à midi."},
+{w:"rapide",l:1,d:"Qui va vite.",s:["vif","prompt","véloce"],a:["lent"],ex:"Le guépard est l'animal le plus ___ du monde."},
+{w:"généreux",l:1,d:"Qui aime donner et partager.",s:["partageur","bon","large"],a:["égoïste","avare"],ex:"Mon cousin, très ___, m'a donné la moitié de son goûter."},
+{w:"têtu",l:1,d:"Qui ne veut jamais changer d'avis.",s:["entêté","obstiné","buté"],a:["docile","souple"],ex:"Mon petit frère est ___ comme une mule."},
+{w:"effrayé",l:1,d:"Qui a très peur.",s:["apeuré","terrifié","épouvanté"],a:["rassuré"],ex:"Le chaton ___ s'est caché sous le lit."},
+{w:"poli",l:1,d:"Qui respecte les règles de la politesse : dire bonjour, merci, s'il te plaît.",s:["courtois","bien élevé","respectueux"],a:["impoli","grossier"],ex:"Un enfant ___ dit merci quand on lui rend service."},
+{w:"ennuyeux",l:2,d:"Qui ne présente aucun intérêt, qui fait bâiller.",s:["lassant","monotone","assommant"],a:["passionnant","amusant"],ex:"Ce film était si ___ que je me suis endormi."},
+{w:"distrait",l:2,d:"Qui ne fait pas attention à ce qu'il fait, qui pense à autre chose.",s:["étourdi","rêveur","inattentif"],a:["attentif","concentré"],ex:"Trop ___, Hugo a oublié son cartable à l'école."},
+{w:"agile",l:2,d:"Qui bouge avec facilité et rapidité.",s:["souple","leste","adroit"],a:["pataud","maladroit"],ex:"Le singe ___ sautait de branche en branche."},
+{w:"radieux",l:2,d:"Qui rayonne de bonheur ou de lumière.",s:["rayonnant","resplendissant","épanoui"],a:["sombre","morose"],ex:"Le jour de son anniversaire, Inès avait un sourire ___."},
+{w:"immobile",l:2,d:"Qui ne bouge pas.",s:["figé","inerte","statique"],a:["mobile","agité"],ex:"Le héron restait ___ au bord de l'étang."},
+{w:"prudent",l:2,d:"Qui fait attention pour éviter le danger.",s:["précautionneux","avisé","sage"],a:["imprudent","téméraire"],ex:"Sois ___ en traversant la rue."},
+{w:"grincheux",l:2,d:"Qui est souvent de mauvaise humeur et se plaint de tout.",s:["grognon","ronchon","bougon"],a:["aimable","jovial"],ex:"Le vieux voisin ___ râlait contre le bruit du ballon."},
+{w:"ingénieux",l:3,d:"Qui trouve des solutions astucieuses et inventives.",s:["astucieux","inventif","habile"],a:["maladroit"],ex:"Grâce à une idée ___, elle a réparé le jouet avec un trombone."},
+{w:"vertigineux",l:3,d:"Si haut ou si grand qu'il donne le vertige.",s:["immense","colossal","démesuré"],a:["minime"],ex:"Du haut de la tour, la vue était ___."},
+{w:"redoutable",l:3,d:"Qu'on doit craindre, très dangereux ou très fort.",s:["terrible","menaçant","effrayant"],a:["inoffensif"],ex:"Le requin est un chasseur ___."},
+{w:"accablé",l:3,d:"Écrasé par la fatigue, la chaleur ou le chagrin.",s:["abattu","épuisé","découragé"],a:["soulagé"],ex:"Le chien, ___ par la chaleur, dormait à l'ombre."},
+{w:"chuchoter",l:3,d:"Parler très bas, à voix basse.",s:["murmurer","susurrer"],a:["crier","hurler"],ex:"Pendant la sieste, il faut ___ pour ne réveiller personne."},
+{w:"scintiller",l:3,d:"Briller en lançant de petits éclats de lumière.",s:["étinceler","briller","miroiter"],a:[],ex:"Les étoiles commencent à ___ dans le ciel."},
+{w:"impassible",l:3,d:"Qui ne montre aucune émotion.",s:["imperturbable","calme","flegmatique"],a:["ému","agité"],ex:"Le garde royal restait ___ malgré les grimaces des touristes."},
+{w:"somptueux",l:3,d:"D'une grande beauté, très riche et luxueux.",s:["magnifique","splendide","fastueux"],a:["modeste","pauvre"],ex:"Le roi donna un festin ___ dans son palais."}
 ],
 ado:[
 {w:"ambigu",l:1,d:"Qui peut être compris de plusieurs façons.",s:["équivoque","flou","ambivalent"],a:["clair","explicite"],ex:"Sa réponse ___ n'a convaincu personne."},
@@ -279,7 +342,28 @@ ado:[
 {w:"ostentatoire",l:3,d:"Qui est fait pour être vu, pour se faire remarquer.",s:["voyant","tape-à-l'œil","ostensible"],a:["discret","sobre"],ex:"Sa montre en or, très ___, attirait tous les regards."},
 {w:"galvaniser",l:3,d:"Remplir d'énergie et d'enthousiasme.",s:["électriser","enflammer","stimuler"],a:["décourager","démotiver"],ex:"Le discours du capitaine a su ___ toute l'équipe."},
 {w:"iconoclaste",l:3,d:"Qui s'attaque aux traditions et aux idées établies.",s:["rebelle","anticonformiste","subversif"],a:["conformiste","traditionaliste"],ex:"Cet artiste ___ bouscule les codes de la peinture."},
-{w:"dithyrambique",l:3,d:"Qui fait un éloge enthousiaste, parfois excessif.",s:["élogieux","louangeur","enthousiaste"],a:["critique"],ex:"La critique du film était ___ : cinq étoiles partout."}
+{w:"dithyrambique",l:3,d:"Qui fait un éloge enthousiaste, parfois excessif.",s:["élogieux","louangeur","enthousiaste"],a:["critique"],ex:"La critique du film était ___ : cinq étoiles partout."},
+{w:"anxieux",l:1,d:"Qui est inquiet, qui s'angoisse facilement.",s:["inquiet","angoissé","stressé"],a:["serein","détendu"],ex:"La veille du contrôle, Nina était ___."},
+{w:"hypocrite",l:1,d:"Qui fait semblant d'avoir des sentiments ou des opinions qu'il n'a pas.",s:["faux","fourbe","sournois"],a:["sincère","franc"],ex:"Ce compliment ___ cachait de la jalousie."},
+{w:"spontané",l:1,d:"Qui agit ou parle naturellement, sans calcul ni préparation.",s:["naturel","impulsif","franc"],a:["calculé","réfléchi"],ex:"Sa réaction ___ a fait rire toute la classe."},
+{w:"rancunier",l:1,d:"Qui garde longtemps le souvenir d'une offense et en veut aux autres.",s:["vindicatif","revanchard"],a:["indulgent","clément"],ex:"Ne sois pas ___, il s'est excusé."},
+{w:"futile",l:1,d:"Qui n'a pas d'importance, sans intérêt.",s:["insignifiant","frivole","dérisoire"],a:["essentiel","important"],ex:"Ils se sont disputés pour une raison ___."},
+{w:"ironie",l:1,d:"Façon de se moquer en disant le contraire de ce qu'on pense.",s:["moquerie","raillerie","sarcasme"],a:["sérieux"],ex:"« Super, encore de la pluie ! » dit-il avec ___."},
+{w:"assidu",l:1,d:"Qui est régulier et appliqué dans ce qu'il fait.",s:["régulier","appliqué","sérieux"],a:["irrégulier"],ex:"Grâce à un travail ___, il a rattrapé son retard."},
+{w:"cynique",l:2,d:"Qui exprime sans scrupule des opinions choquantes, qui se moque des valeurs morales.",s:["désabusé","impudent","sarcastique"],a:["idéaliste","naïf"],ex:"Sa remarque ___ sur la solidarité a choqué tout le monde."},
+{w:"éloquent",l:2,d:"Qui s'exprime avec facilité et sait convaincre.",s:["convaincant","persuasif","expressif"],a:["maladroit"],ex:"Lors du débat, la déléguée s'est montrée très ___."},
+{w:"intransigeant",l:2,d:"Qui refuse tout compromis.",s:["inflexible","intraitable","rigide"],a:["conciliant","souple"],ex:"L'arbitre est resté ___ malgré les protestations."},
+{w:"prétexte",l:2,d:"Fausse raison donnée pour cacher la vraie.",s:["excuse","alibi","échappatoire"],a:[],ex:"Il a trouvé un ___ pour ne pas venir à l'entraînement."},
+{w:"préjugé",l:2,d:"Opinion qu'on se fait à l'avance, sans vraiment connaître.",s:["a priori","cliché","stéréotype"],a:[],ex:"Juger quelqu'un sur son apparence, c'est un ___."},
+{w:"exhaustif",l:2,d:"Qui traite un sujet complètement, sans rien oublier.",s:["complet","intégral","détaillé"],a:["partiel","incomplet"],ex:"Le prof attend une liste ___ des causes de la guerre."},
+{w:"impulsif",l:2,d:"Qui agit sous le coup d'une émotion, sans réfléchir.",s:["irréfléchi","fougueux","emporté"],a:["réfléchi","posé"],ex:"Trop ___, il a répondu avant de lire la question."},
+{w:"pléthore",l:3,d:"Quantité excessive, trop grande abondance.",s:["profusion","surabondance","excès"],a:["pénurie","manque"],ex:"Il y a une ___ de séries, impossible de toutes les regarder."},
+{w:"apathique",l:3,d:"Qui n'a aucune énergie, aucune réaction.",s:["mou","indolent","amorphe"],a:["dynamique","énergique"],ex:"Après la nuit blanche, il était complètement ___."},
+{w:"démagogue",l:3,d:"Qui flatte la foule pour gagner sa faveur.",s:["populiste","flatteur","bonimenteur"],a:[],ex:"Ce candidat ___ promet tout à tout le monde."},
+{w:"fallacieux",l:3,d:"Qui cherche à tromper par de fausses apparences.",s:["trompeur","mensonger","spécieux"],a:["vrai","honnête"],ex:"Cette publicité repose sur un argument ___."},
+{w:"inexorable",l:3,d:"Qu'on ne peut arrêter ni fléchir.",s:["implacable","inéluctable","inflexible"],a:["évitable"],ex:"La montée des eaux semblait ___."},
+{w:"prosaïque",l:3,d:"Banal, terre à terre, sans poésie.",s:["banal","terre à terre","ordinaire"],a:["poétique","lyrique"],ex:"Après ce rêve de voyage, retour à une réalité bien ___."},
+{w:"stoïque",l:3,d:"Qui supporte la douleur ou le malheur avec courage, sans se plaindre.",s:["courageux","impassible","imperturbable"],a:["douillet"],ex:"Malgré sa cheville foulée, elle est restée ___."}
 ],
 adulte:[
 {w:"volubile",l:1,d:"Qui parle beaucoup, avec facilité et rapidité.",s:["bavard","loquace","disert"],a:["taciturne","laconique"],ex:"Notre guide, très ___, nous a raconté mille anecdotes."},
@@ -316,7 +400,29 @@ adulte:[
 {w:"palinodie",l:3,d:"Changement complet d'opinion, revirement.",s:["revirement","volte-face","retournement"],a:["constance"],ex:"Après sa ___, plus personne ne croyait à ses promesses."},
 {w:"vaticiner",l:3,d:"Prédire l'avenir avec emphase, parler comme un prophète.",s:["prophétiser","prédire","augurer"],a:[],ex:"Il aimait ___ sur la fin prochaine du monde."},
 {w:"incoercible",l:3,d:"Qu'on ne peut contenir ni réprimer.",s:["irrépressible","irrésistible","incontrôlable"],a:["maîtrisable"],ex:"Un fou rire ___ s'empara de la salle."},
-{w:"margoulin",l:3,d:"Commerçant peu scrupuleux.",s:["escroc","filou","aigrefin"],a:[],ex:"Ce ___ lui a vendu une voiture sans moteur."}
+{w:"margoulin",l:3,d:"Commerçant peu scrupuleux.",s:["escroc","filou","aigrefin"],a:[],ex:"Ce ___ lui a vendu une voiture sans moteur."},
+{w:"affable",l:1,d:"Qui accueille les autres avec douceur et bienveillance.",s:["aimable","courtois","avenant"],a:["revêche","bourru"],ex:"La libraire, toujours ___, connaît chaque client par son prénom."},
+{w:"candide",l:1,d:"D'une grande naïveté, d'une innocence sans méfiance.",s:["naïf","ingénu","crédule"],a:["méfiant","rusé"],ex:"Sa question ___ a fait sourire toute l'assemblée."},
+{w:"cupide",l:1,d:"Avide d'argent, de richesses.",s:["avide","rapace","vénal"],a:["désintéressé","généreux"],ex:"Un héritier ___ guettait la fortune de son oncle."},
+{w:"désuet",l:1,d:"Qui n'est plus en usage, démodé.",s:["démodé","suranné","obsolète"],a:["moderne","actuel"],ex:"Ce mot un peu ___ fait sourire les plus jeunes."},
+{w:"laborieux",l:1,d:"Qui coûte beaucoup d'efforts, pénible.",s:["pénible","difficile","ardu"],a:["facile","aisé"],ex:"Après des négociations ___, l'accord a été signé."},
+{w:"probité",l:1,d:"Honnêteté scrupuleuse dans l'accomplissement de ses devoirs.",s:["honnêteté","intégrité","droiture"],a:["malhonnêteté"],ex:"Sa ___ ne fut jamais mise en doute."},
+{w:"circonspect",l:2,d:"Qui agit avec prudence et réserve.",s:["prudent","réservé","mesuré"],a:["imprudent","téméraire"],ex:"Face à cette offre trop belle, restons ___."},
+{w:"vétille",l:2,d:"Chose sans importance, détail insignifiant.",s:["broutille","bagatelle","futilité"],a:[],ex:"Ils se sont fâchés pour une ___."},
+{w:"péjoratif",l:2,d:"Qui exprime un jugement défavorable, qui déprécie.",s:["dépréciatif","négatif","dévalorisant"],a:["mélioratif","élogieux"],ex:"Le suffixe « -ard » donne souvent un sens ___."},
+{w:"inique",l:2,d:"Profondément injuste.",s:["injuste","partial","inéquitable"],a:["équitable","juste"],ex:"Ce jugement ___ a révolté l'opinion."},
+{w:"veule",l:2,d:"Sans énergie ni volonté, faible et lâche.",s:["mou","lâche","faible"],a:["énergique","courageux"],ex:"Un dirigeant ___ cède à toutes les pressions."},
+{w:"subreptice",l:2,d:"Qui se fait en cachette, à la dérobée.",s:["furtif","clandestin","discret"],a:["ostensible","manifeste"],ex:"Il jeta un regard ___ sur la copie de son voisin."},
+{w:"hétéroclite",l:2,d:"Fait d'éléments disparates, mal assortis.",s:["disparate","composite","hybride"],a:["homogène","uniforme"],ex:"Le grenier abritait une collection ___ d'objets."},
+{w:"sempiternel",l:2,d:"Qui se répète sans fin, au point de lasser.",s:["perpétuel","éternel","incessant"],a:["passager","bref"],ex:"Il a ressorti son ___ refrain sur le bon vieux temps."},
+{w:"atrabilaire",l:3,d:"D'humeur sombre et irritable.",s:["grincheux","acariâtre","bilieux"],a:["jovial","enjoué"],ex:"Le vieil oncle ___ trouvait à redire à tout."},
+{w:"logorrhée",l:3,d:"Flot de paroles intarissable et souvent inutile.",s:["verbiage","bavardage","verbosité"],a:["mutisme"],ex:"Sa ___ a épuisé tous les participants de la réunion."},
+{w:"sérendipité",l:3,d:"Fait de découvrir par hasard quelque chose qu'on ne cherchait pas.",s:["hasard heureux","découverte fortuite"],a:[],ex:"La pénicilline est un célèbre exemple de ___."},
+{w:"pantagruélique",l:3,d:"Énorme, digne de Pantagruel, en parlant d'un repas.",s:["gargantuesque","copieux","plantureux"],a:["frugal"],ex:"Après ce repas ___, une sieste s'imposait."},
+{w:"oxymore",l:3,d:"Figure qui associe deux mots de sens opposés, comme « obscure clarté ».",s:["alliance de mots","antilogie"],a:[],ex:"« Un silence assourdissant » est un ___."},
+{w:"prévarication",l:3,d:"Manquement grave d'un responsable aux devoirs de sa charge.",s:["forfaiture","malversation","corruption"],a:["probité","intégrité"],ex:"Le maire a été condamné pour ___."},
+{w:"zélateur",l:3,d:"Partisan ardent d'une cause ou d'une personne.",s:["partisan","adepte","défenseur"],a:["détracteur","adversaire"],ex:"Ce ___ du vélo en ville ne prend jamais la voiture."},
+{w:"vilipender",l:3,d:"Dénoncer comme méprisable, traiter avec mépris.",s:["dénigrer","décrier","conspuer"],a:["louer","encenser"],ex:"La presse s'est empressée de ___ le perdant."}
 ]};
 
 /* ============ RACINES ============ */
@@ -347,7 +453,15 @@ const ROOTS = [
 {r:"-fuge",o:"latin",m:"qui fait fuir",ex:[["ignifuge","qui protège du feu"],["vermifuge","qui chasse les vers"],["centrifuge","qui éloigne du centre"]]},
 {r:"-cole",o:"latin",m:"qui cultive ou qui habite",ex:[["agricole","qui concerne la culture des champs"],["viticole","qui concerne la culture de la vigne"],["arboricole","qui vit dans les arbres"]]},
 {r:"-fère",o:"latin",m:"qui porte",ex:[["mammifère","animal qui porte des mamelles"],["conifère","arbre qui porte des cônes"],["somnifère","qui apporte le sommeil"]]},
-{r:"sub-",o:"latin",m:"sous",ex:[["submerger","recouvrir complètement d'eau"],["subalterne","placé sous l'autorité d'un autre"],["subaquatique","qui se fait sous l'eau"]]}
+{r:"sub-",o:"latin",m:"sous",ex:[["submerger","recouvrir complètement d'eau"],["subalterne","placé sous l'autorité d'un autre"],["subaquatique","qui se fait sous l'eau"]]},
+{r:"géo-",o:"grec",m:"la terre",ex:[["géographie","description de la Terre"],["géologie","science des roches et du sol"],["géométrie","à l'origine, mesure de la terre"]]},
+{r:"psych-",o:"grec",m:"l'esprit, l'âme",ex:[["psychologie","étude de l'esprit et du comportement"],["psychiatre","médecin des maladies mentales"],["psychique","qui concerne l'esprit"]]},
+{r:"-logie",o:"grec",m:"l'étude, le discours",ex:[["zoologie","étude des animaux"],["météorologie","étude de l'atmosphère et du temps qu'il fait"],["étymologie","étude de l'origine des mots"]]},
+{r:"cardio-",o:"grec",m:"le cœur",ex:[["cardiologue","médecin du cœur"],["cardiaque","qui concerne le cœur"],["tachycardie","accélération du rythme du cœur"]]},
+{r:"aqua-, aqu-",o:"latin",m:"l'eau",ex:[["aquarium","réservoir où vivent des animaux aquatiques"],["aqueduc","canal qui conduit l'eau"],["aquatique","qui vit dans l'eau"]]},
+{r:"péd-, -pède",o:"latin",m:"le pied",ex:[["bipède","qui marche sur deux pieds"],["quadrupède","qui a quatre pattes"],["pédestre","qui se fait à pied"]]},
+{r:"rétro-",o:"latin",m:"en arrière",ex:[["rétroviseur","miroir pour voir derrière soi"],["rétrograde","qui va en arrière"],["rétrospective","regard en arrière sur une période"]]},
+{r:"vid-, vis-",o:"latin",m:"voir",ex:[["visible","qui peut être vu"],["vidéo","du latin video, « je vois »"],["providence","qui voit et pourvoit à l'avance"]]}
 ];
 
 /* ============ EXPRESSIONS ============ */
@@ -374,7 +488,16 @@ const EXPR = [
 {e:"Passer l'arme à gauche",s:"Mourir.",o:"Souvent reliée au vocabulaire militaire (reposer son arme du côté gauche, au repos), mais aucune explication n'est vraiment établie.",c:"d"},
 {e:"Tirer le diable par la queue",s:"Avoir du mal à joindre les deux bouts, vivre pauvrement.",o:"L'idée d'une lutte pénible et vaine contre la misère, personnifiée par le diable. Le détail de l'image reste obscur.",c:"d"},
 {e:"Faire la grasse matinée",s:"Rester longtemps au lit le matin.",o:"« Gras » avait autrefois le sens d'abondant, de confortable : une matinée grasse est une matinée généreuse en sommeil.",c:"p"},
-{e:"Prendre des vessies pour des lanternes",s:"Se tromper grossièrement, croire n'importe quoi.",o:"Une vessie de porc séchée et gonflée pouvait ressembler de loin à une lanterne. Confondre les deux, c'était se laisser abuser par l'apparence.",c:"p"}
+{e:"Prendre des vessies pour des lanternes",s:"Se tromper grossièrement, croire n'importe quoi.",o:"Une vessie de porc séchée et gonflée pouvait ressembler de loin à une lanterne. Confondre les deux, c'était se laisser abuser par l'apparence.",c:"p"},
+{e:"Être dans de beaux draps",s:"Être dans une situation difficile.",o:"« Draps » désignait autrefois les vêtements, l'étoffe. L'expression est ironique : de « beaux » habits pour une bien mauvaise posture.",c:"p"},
+{e:"Être aux anges",s:"Être extrêmement heureux.",o:"Être transporté de joie au point de se croire parmi les anges, au paradis.",c:"p"},
+{e:"Battre son plein",s:"Être à son point culminant, au plus fort de son activité.",o:"Vient de la marée : la mer « bat son plein » quand elle atteint sa hauteur maximale et semble s'immobiliser.",c:"a"},
+{e:"Casser sa pipe",s:"Mourir.",o:"On raconte que des soldats serraient une pipe entre leurs dents pendant les opérations ; si elle tombait et se cassait, c'est qu'ils étaient morts. Rien ne le prouve vraiment.",c:"d"},
+{e:"Ménager la chèvre et le chou",s:"Chercher à ne mécontenter personne entre deux partis opposés.",o:"L'énigme du passeur qui doit faire traverser une rivière à un loup, une chèvre et un chou, sans jamais laisser la chèvre seule avec le chou.",c:"p"},
+{e:"Prendre la poudre d'escampette",s:"S'enfuir, filer sans demander son reste.",o:"« Escampette » vient de l'ancien verbe « escamper », s'enfuir, emprunté à l'italien. La « poudre » est un trait d'humour : une poudre magique qui ferait disparaître.",c:"p"},
+{e:"Avoir du pain sur la planche",s:"Avoir beaucoup de travail devant soi.",o:"Autrefois, on conservait le pain sur une planche fixée au mur : en avoir beaucoup voulait dire avoir des réserves. Le sens a glissé vers « beaucoup à faire ».",c:"p"},
+{e:"Mettre du beurre dans les épinards",s:"Améliorer sa situation financière.",o:"Les épinards, plat modeste, deviennent bien meilleurs avec du beurre, ingrédient plus coûteux.",c:"p"},
+{e:"Avoir le cafard",s:"Avoir des idées noires, être déprimé.",o:"Le cafard, insecte noir qui fuit la lumière, est devenu au XIXe siècle l'image des idées sombres ; Baudelaire a contribué à répandre ce sens.",c:"p"}
 ];
 const CERT = {a:"Origine attestée",p:"Origine probable",d:"Origine discutée"};
 
@@ -397,6 +520,13 @@ function load(){
   return {profile:null, data:{}, streak:{last:null,count:0}};
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function settings(){ if(!S.settings) S.settings={theme:"auto",big:null,auto:false,vibe:true,goal:15}; return S.settings; }
+function applySettings(){
+  const st=settings();
+  if(st.theme==="auto") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=st.theme;
+  const big = st.big===null ? !!(S.profile&&PROFILES[S.profile].big) : st.big;
+  document.body.classList.toggle("big",big);
+}
 function pdata(){ const p=S.profile; if(!S.data[p]) S.data[p]={words:{},xp:0,sessions:0}; return S.data[p]; }
 function bank(){ return BANK[PROFILES[S.profile].bank]; }
 function ws(w){ return pdata().words[w]; }
@@ -411,6 +541,48 @@ const norm = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""
 const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
 function today(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 function dayNum(str){ const [y,m,d]=str.split("-").map(Number); return Math.round(Date.UTC(y,m-1,d)/864e5); }
+const reduced = () => matchMedia("(prefers-reduced-motion:reduce)").matches;
+function buzz(p){ if(settings().vibe&&navigator.vibrate) try{ navigator.vibrate(p); }catch(e){} }
+
+/* ============ NAVIGATION ============ */
+// Le bouton « retour » du téléphone ramène à l'écran parent au lieu de fermer l'appli.
+// Principe : une entrée d'historique « piège » ; à chaque retour, on affiche le parent et on la remet.
+let ROUTE={name:"home",parent:null,guard:null};
+function at(name,parent,guard){ ROUTE={name,parent:parent||null,guard:guard||null}; if(parent) armTrap(); }
+function armTrap(){ try{ if(!history.state||!history.state.lmj) history.pushState({lmj:1},""); }catch(e){} }
+async function leave(target){
+  // target : fonction écran à afficher ; on demande confirmation si une partie est en cours
+  if(ROUTE.guard){ const msg=ROUTE.guard(); if(msg && !(await ask(msg,"Quitter","Continuer"))) return false; }
+  target(); return true;
+}
+window.addEventListener("popstate",async ()=>{
+  if(document.querySelector(".modal-bd")){ closeModal(false); history.pushState({lmj:1},""); return; }
+  const drawer=document.querySelector(".drawer.open"); if(drawer){ drawer.dispatchEvent(new CustomEvent("close")); history.pushState({lmj:1},""); return; }
+  if(!ROUTE.parent){ toast("Appuyez encore sur retour pour quitter.",null,null,2000); return; }   // accueil : le prochain retour ferme l'appli
+  history.pushState({lmj:1},"");
+  await leave(ROUTE.parent);
+});
+let modalResolve=null;
+function ask(msg,okLabel="OK",cancelLabel="Annuler"){
+  closeModal(false);
+  return new Promise(res=>{
+    modalResolve=res;
+    const bd=document.createElement("div"); bd.className="modal-bd";
+    bd.innerHTML=`<div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="mtxt"><p id="mtxt">${esc(msg)}</p><div class="row"><button class="btn ghost" data-r="0">${esc(cancelLabel)}</button><button class="btn" data-r="1">${esc(okLabel)}</button></div></div>`;
+    bd.addEventListener("click",ev=>{ if(ev.target===bd) closeModal(false); const b=ev.target.closest("[data-r]"); if(b) closeModal(b.dataset.r==="1"); });
+    bd.addEventListener("keydown",ev=>{ if(ev.key==="Escape"){ ev.stopPropagation(); closeModal(false);} });
+    document.body.appendChild(bd); bd.querySelector('[data-r="1"]').focus();
+  });
+}
+function closeModal(v){ const bd=document.querySelector(".modal-bd"); if(bd) bd.remove(); if(modalResolve){ const r=modalResolve; modalResolve=null; r(v); } }
+let toastTimer=null;
+function toast(msg,action,fn,ms=4000){
+  document.querySelector(".toast")?.remove(); clearTimeout(toastTimer);
+  const t=document.createElement("div"); t.className="toast"; t.setAttribute("role","status");
+  t.innerHTML=`<span>${esc(msg)}</span>${action?`<button>${esc(action)}</button>`:""}`;
+  if(action) t.querySelector("button").onclick=()=>{ t.remove(); fn(); };
+  document.body.appendChild(t); if(ms) toastTimer=setTimeout(()=>t.remove(),ms);
+}
 
 function unlockedLevel(){
   let L=1;
@@ -440,6 +612,12 @@ function touchStreak(){
   S.streak.count = (last && dayNum(t)-dayNum(last)===1) ? S.streak.count+1 : 1;
   S.streak.last=t;
 }
+function credit(n){
+  const t=today(); if(!S.daily||S.daily.date!==t) S.daily={date:t,n:0};
+  const before=S.daily.n; S.daily.n+=n; touchStreak(); save();
+  const g=settings().goal; if(before<g && S.daily.n>=g){ toast("🎯 Objectif du jour atteint ! Bravo."); buzz([30,60,30]); }
+}
+function dailyCount(){ return S.daily&&S.daily.date===today()?S.daily.n:0; }
 function streakShown(){
   const last=S.streak.last; if(!last) return 0;
   return dayNum(today())-dayNum(last)<=1 ? S.streak.count : 0;
@@ -448,37 +626,49 @@ function streakShown(){
 /* ============ EN-TÊTE ============ */
 function renderChips(){
   const c=$("#chips");
+  applySettings();
   if(!S.profile){ c.innerHTML=""; return; }
   const p=PROFILES[S.profile], st=streakShown();
-  c.innerHTML=`<span class="chip" title="Jours d'affilée">🔥 ${st} jour${st>1?"s":""}</span><button class="chip" id="swProf">${p.icon} ${p.label}</button>`;
-  $("#swProf").onclick=()=>{ S.profile=null; save(); home(); };
-  document.body.classList.toggle("big",!!p.big);
+  c.innerHTML=`${st?`<span class="chip" title="Jours d'affilée">🔥 ${st} jour${st>1?"s":""}</span>`:""}<button class="chip" id="swProf" aria-label="Changer de profil (actuel : ${p.label})">${p.icon} ${p.label}</button><button class="chip" id="setBtn" aria-label="Réglages">⚙︎</button>`;
+  $("#swProf").onclick=()=>leave(profilePicker);
+  $("#setBtn").onclick=()=>leave(settingsScreen);
 }
 
 /* ============ ACCUEIL ============ */
+function profilePicker(){
+  setKeys(null); at("profiles",S.profile?home:null);
+  const c=$("#chips"); c.innerHTML="";
+  const st=settings(); if(st.big===null) document.body.classList.remove("big");
+  app.innerHTML=`
+    <section class="hero">
+      <h1 class="word swipe">Le mot juste</h1>
+      <p>Des définitions, des phrases à compléter, des synonymes, des jeux de lettres et l'histoire des mots. Les mots que vous ratez reviennent plus souvent, ceux que vous maîtrisez s'espacent, et la difficulté monte avec vous.</p>
+    </section>
+    <h2 style="font-size:1.25rem">Qui joue ?</h2>
+    <div class="profiles">${Object.entries(PROFILES).map(([k,p])=>{ const d=S.data[k]; const n=d?Object.keys(d.words).length:0;
+      return `<button class="prof" data-p="${k}" ${k===S.profile?'aria-current="true" style="border-color:var(--ink)"':""}><span class="ic" aria-hidden="true">${p.icon}</span><strong>${p.label}</strong><span>${p.age}${n?` · ${n} mot${n>1?"s":""}`:""}</span></button>`;}).join("")}
+    </div>
+    ${S.profile?`<div class="actions"><button class="btn ghost" id="back">Annuler</button></div>`:""}`;
+  app.querySelectorAll(".prof").forEach(b=>b.onclick=()=>{ S.profile=b.dataset.p; save(); home(); });
+  if(S.profile) $("#back").onclick=home;
+  window.scrollTo({top:0});
+}
+function goalRing(n,g){
+  const r=24, C=2*Math.PI*r, f=Math.min(n/g,1);
+  return `<svg viewBox="0 0 56 56" aria-hidden="true"><circle class="bg" cx="28" cy="28" r="${r}"/><circle class="fg" cx="28" cy="28" r="${r}" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-f)).toFixed(1)}"/></svg>`;
+}
 function home(){
   setKeys(null);
+  if(!S.profile){ profilePicker(); return; }
+  at("home",null);
   renderChips();
-  if(!S.profile){
-    document.body.classList.remove("big");
-    app.innerHTML=`
-      <section class="hero">
-        <h1 class="word swipe">Le mot juste</h1>
-        <p>Des définitions, des phrases à compléter, des synonymes et des pièges. Les mots que vous ratez reviennent plus souvent, ceux que vous maîtrisez s'espacent, et la difficulté monte avec vous.</p>
-      </section>
-      <h2 style="font-size:1.25rem">Qui joue ?</h2>
-      <div class="profiles">${Object.entries(PROFILES).map(([k,p])=>`
-        <button class="prof" data-p="${k}"><span class="ic" aria-hidden="true">${p.icon}</span><strong>${p.label}</strong><span>${p.age}</span></button>`).join("")}
-      </div>`;
-    app.querySelectorAll(".prof").forEach(b=>b.onclick=()=>{ S.profile=b.dataset.p; save(); home(); });
-    return;
-  }
   const pd=pdata(), b=bank(), L=unlockedLevel();
   const seen=Object.keys(pd.words).length;
   const mastered=Object.values(pd.words).filter(x=>x.box>=4).length;
   const due=Object.values(pd.words).filter(x=>x.due<=dayNum(today())).length;
   const t=today(); let h=0; for(const ch of t+S.profile) h=(h*31+ch.charCodeAt(0))>>>0;
   const wod=b[h%b.length];
+  const g=settings().goal, n=dailyCount();
   app.innerHTML=`
     <section class="daily" aria-label="Mot du jour">
       <h2>Le mot du jour</h2>
@@ -486,36 +676,99 @@ function home(){
       <p class="def">${esc(wod.d)}</p>
       <p class="ex">${esc(wod.ex.replace("___",wod.w))}</p>
     </section>
+    <div class="goal" aria-label="Objectif du jour : ${Math.min(n,g)} sur ${g}">
+      ${goalRing(n,g)}
+      <div><b>${n>=g?"Objectif du jour atteint 🎯":`Objectif du jour : ${Math.min(n,g)} / ${g}`}</b>
+      <span>${n>=g?"Revenez demain pour prolonger votre série.":"Chaque bonne réponse et chaque jeu réussi comptent."}</span></div>
+    </div>
+    <div class="doors">
+      <button class="door main" id="play"><strong>${due>0?`Réviser · ${due} mot${due>1?"s":""} à revoir`:"S'entraîner"}</strong><span>${SESSION_LEN} questions variées${due>0?", vos révisions du jour en priorité":seen?", avec de nouveaux mots":" pour commencer en douceur"}.</span></button>
+      <button class="door" id="games"><strong>Jouer</strong><span>Pendu, mots croisés, mots fléchés, anagramme.</span></button>
+      <button class="door" id="learn"><strong>Comprendre</strong><span>Racines grecques et latines, origine des expressions.</span></button>
+    </div>
     <div class="stats">
       <div class="stat"><b>${seen}<span style="font-size:.5em"> / ${b.length}</span></b><span>mots rencontrés</span></div>
       <div class="stat"><b>${mastered}</b><span>mots maîtrisés</span></div>
       <div class="stat"><b>${LEVEL_NAMES[L]}</b><span>niveau atteint</span></div>
       <div class="stat"><b>${pd.xp}</b><span>points</span></div>
     </div>
-    <div class="doors">
-      <button class="door main" id="play"><strong>S'entraîner</strong><span>${SESSION_LEN} questions variées, vos révisions du jour en priorité.</span></button>
-      <button class="door" id="games"><strong>Jouer</strong><span>Pendu, mots croisés, anagramme.</span></button>
-      <button class="door" id="learn"><strong>Comprendre</strong><span>Racines grecques et latines, origine des expressions.</span></button>
-    </div>
     <div class="actions"><button class="btn ghost" id="carnet">Ouvrir mon carnet de mots</button></div>
-    <p class="muted" style="margin-top:1rem">${due>0?`${due} mot${due>1?"s":""} à réviser aujourd'hui, ils passeront en priorité.`:(seen?"Aucune révision en attente : de nouveaux mots vous attendent.":"Première partie : on commence par des mots courants.")}</p>
-    ${L<3?`<p class="muted">Le niveau ${LEVEL_NAMES[L+1].toLowerCase()} se débloque quand 60 % des mots du niveau ${LEVEL_NAMES[L].toLowerCase()} ont été trouvés au moins une fois.</p>`:""}`;
-  $("#play").onclick=startSession;
+    ${L<3?`<p class="muted" style="margin-top:1rem">Le niveau ${LEVEL_NAMES[L+1].toLowerCase()} se débloque quand 60 % des mots du niveau ${LEVEL_NAMES[L].toLowerCase()} ont été trouvés au moins deux fois.</p>`:""}`;
+  $("#play").onclick=()=>startSession();
   $("#games").onclick=gamesHome;
   $("#learn").onclick=learnHome;
   $("#carnet").onclick=carnet;
+  window.scrollTo({top:0});
+}
+
+/* ============ RÉGLAGES ============ */
+function settingsScreen(){
+  setKeys(null); at("settings",home);
+  const st=settings(), bigNow=document.body.classList.contains("big");
+  const seg=(key,opts)=>`<div class="seg" role="group">${opts.map(([v,t])=>`<button data-set="${key}" data-v="${v}" aria-pressed="${String(st[key])===String(v)}">${t}</button>`).join("")}</div>`;
+  app.innerHTML=`
+    <h1 style="font-size:1.8rem">Réglages</h1>
+    <div class="set">
+      <h2>Affichage</h2>
+      <div class="setrow"><span>Thème</span>${seg("theme",[["auto","Auto"],["light","Clair"],["dark","Sombre"]])}</div>
+      <div class="setrow"><label for="sBig">Grands caractères</label><input type="checkbox" class="switch" id="sBig" ${bigNow?"checked":""}></div>
+      <h2>Partie</h2>
+      <div class="setrow"><label for="sAuto">Enchaîner après une bonne réponse<small>Passe seul à la question suivante.</small></label><input type="checkbox" class="switch" id="sAuto" ${st.auto?"checked":""}></div>
+      <div class="setrow"><label for="sVibe">Vibrations<small>Sur les téléphones compatibles.</small></label><input type="checkbox" class="switch" id="sVibe" ${st.vibe?"checked":""}></div>
+      <div class="setrow"><span>Objectif du jour<small>Bonnes réponses par jour.</small></span>${seg("goal",[[10,"10"],[15,"15"],[25,"25"],[40,"40"]])}</div>
+      <h2>Mes données</h2>
+      <p class="muted" style="margin:.2rem 0 .4rem">Les progrès restent sur cet appareil. Sauvegardez-les dans un fichier pour les transférer sur un autre téléphone ou les mettre à l'abri.</p>
+      <button class="btn ghost" id="exp">Sauvegarder mes progrès</button>
+      <button class="btn ghost" id="imp" style="margin-top:.5rem">Restaurer une sauvegarde</button>
+      <input type="file" id="impf" accept="application/json,.json" hidden>
+      <button class="btn ghost" id="reset" style="margin-top:.5rem;color:var(--ko)">Effacer les progrès du profil ${S.profile?esc(PROFILES[S.profile].label):""}</button>
+    </div>
+    <div class="actions"><button class="btn" id="back">Terminé</button></div>`;
+  app.querySelectorAll("[data-set]").forEach(b=>b.onclick=()=>{ const k=b.dataset.set; st[k]=k==="goal"?+b.dataset.v:b.dataset.v; save(); applySettings(); settingsScreen(); });
+  $("#sBig").onchange=e=>{ st.big=e.target.checked; save(); applySettings(); };
+  $("#sAuto").onchange=e=>{ st.auto=e.target.checked; save(); };
+  $("#sVibe").onchange=e=>{ st.vibe=e.target.checked; save(); if(st.vibe) buzz(20); };
+  $("#exp").onclick=()=>{
+    const blob=new Blob([JSON.stringify({app:"lemotjuste",v:1,date:new Date().toISOString(),state:S},null,1)],{type:"application/json"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`mot-juste-sauvegarde-${today()}.json`;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+    toast("Sauvegarde téléchargée.");
+  };
+  $("#imp").onclick=()=>$("#impf").click();
+  $("#impf").onchange=async e=>{
+    const f=e.target.files[0]; if(!f) return;
+    try{
+      const j=JSON.parse(await f.text());
+      if(j.app!=="lemotjuste"||!j.state||typeof j.state.data!=="object") throw 0;
+      if(!(await ask("Remplacer les progrès de cet appareil par cette sauvegarde ?","Restaurer"))) return;
+      S=j.state; if(!S.streak) S.streak={last:null,count:0}; save(); toast("Progrès restaurés."); home();
+    }catch(err){ toast("Ce fichier n'est pas une sauvegarde du Mot Juste."); }
+  };
+  $("#reset").onclick=async ()=>{
+    if(!S.profile) return;
+    if(!(await ask(`Effacer tous les progrès du profil ${PROFILES[S.profile].label} ? Cette action est définitive.`,"Effacer"))) return;
+    delete S.data[S.profile]; save(); toast("Progrès effacés."); home();
+  };
+  $("#back").onclick=home;
+  window.scrollTo({top:0});
 }
 
 /* ============ CONSTRUCTION D'UNE PARTIE ============ */
-function buildSession(){
+function buildSession(custom){
   const pd=pdata(), L=unlockedLevel(), now=dayNum(today());
-  const pool=bank().filter(e=>e.l<=L);
-  const dueW=shuffle(pool.filter(e=>pd.words[e.w] && pd.words[e.w].due<=now)).sort((a,b)=>pd.words[a.w].box-pd.words[b.w].box).slice(0,6);
-  const fresh=shuffle(pool.filter(e=>!pd.words[e.w])).sort((a,b)=>a.l-b.l);
-  let list=[...dueW, ...fresh.slice(0,SESSION_LEN-dueW.length)];
-  if(list.length<SESSION_LEN){
-    const rest=shuffle(pool.filter(e=>!list.includes(e))).sort((a,b)=>(pd.words[a.w]?.box||0)-(pd.words[b.w]?.box||0));
-    list=[...list,...rest.slice(0,SESSION_LEN-list.length)];
+  let list;
+  if(custom){ list=shuffle(custom).slice(0,SESSION_LEN); }
+  else {
+    let pool=bank().filter(e=>e.l<=L);
+    // Banque trop petite pour une partie complète : on emprunte au niveau suivant
+    if(pool.length<SESSION_LEN) pool=bank().filter(e=>e.l<=L+1);
+    const dueW=shuffle(pool.filter(e=>pd.words[e.w] && pd.words[e.w].due<=now)).sort((a,b)=>pd.words[a.w].box-pd.words[b.w].box).slice(0,6);
+    const fresh=shuffle(pool.filter(e=>!pd.words[e.w])).sort((a,b)=>a.l-b.l);
+    list=[...dueW, ...fresh.slice(0,SESSION_LEN-dueW.length)];
+    if(list.length<SESSION_LEN){
+      const rest=shuffle(pool.filter(e=>!list.includes(e))).sort((a,b)=>(pd.words[a.w]?.box||0)-(pd.words[b.w]?.box||0));
+      list=[...list,...rest.slice(0,SESSION_LEN-list.length)];
+    }
   }
   let prev=null;
   return shuffle(list).map(e=>{
@@ -528,27 +781,39 @@ function buildSession(){
 }
 
 let G=null;
-function startSession(){
+function startSession(custom){
   setKeys(null);
-  G={qs:buildSession(),i:0,res:[],pts:0,startL:unlockedLevel(),answered:false};
+  G={qs:buildSession(custom),i:0,res:[],pts:0,startL:unlockedLevel(),answered:false,custom};
   question();
 }
+const sessionGuard=()=>G&&G.i<G.qs.length&&(G.i>0||G.answered)?"Quitter la partie en cours ? Les réponses déjà données sont enregistrées.":null;
 
 /* ============ QUESTIONS ============ */
 function progressBar(){
   return `<div class="progress" aria-label="Question ${G.i+1} sur ${G.qs.length}">${G.qs.map((_,k)=>`<i class="${k<G.i?(G.res[k]?"ok":"ko"):(k===G.i?"cur":"")}"></i>`).join("")}</div>`;
 }
+// Distance d'édition (fautes de frappe) : une lettre en trop, en moins, changée ou deux lettres inversées
+function editDist(a,b){
+  if(Math.abs(a.length-b.length)>2) return 9;
+  const d=[...Array(a.length+1)].map((_,i)=>[i,...Array(b.length).fill(0)]);
+  for(let j=1;j<=b.length;j++) d[0][j]=j;
+  for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++){
+    d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+    if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1]) d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);
+  }
+  return d[a.length][b.length];
+}
 function question(){
-  G.answered=false;
+  G.answered=false; delete G.tries;
+  at("session",home,sessionGuard);
   const {e,m}=G.qs[G.i];
   let html=progressBar()+`<div class="mode"><span>${MODE_NAMES[m]}</span><span>${G.i+1} / ${G.qs.length}</span></div>`;
-  let opts=null, correctIdx=null;
+  let opts=null;
 
   if(m==="def"){
     const ds=distractors(e,3);
-    const all=shuffle([{t:e.d,ok:true},...ds.map(x=>({t:x.d,ok:false}))]);
     html+=`<div class="q"><div class="word">${esc(e.w)}</div><p class="prompt">Que signifie ce mot ?</p></div>`;
-    opts=all;
+    opts=shuffle([{t:e.d,ok:true},...ds.map(x=>({t:x.d,ok:false}))]);
   } else if(m==="trou"){
     const ds=distractors(e,3);
     const parts=e.ex.split("___");
@@ -557,7 +822,7 @@ function question(){
   } else if(m==="syn"){
     const ds=distractors(e,3);
     html+=`<div class="q"><div class="word">${esc(e.w)}</div><p class="prompt">Lequel de ces mots en est un synonyme ?</p></div>`;
-    opts=shuffle([{t:pick(e.s),ok:true},...ds.map(x=>({t:x.w,ok:false}))]);
+    opts=shuffle([{t:pick(e.s),ok:true},...ds.map(x=>({t:pick([x.w,...x.s]),ok:false}))]);
   } else if(m==="anto"){
     const ds=distractors(e,2);
     html+=`<div class="q"><div class="word">${esc(e.w)}</div><p class="prompt">Lequel de ces mots veut dire le contraire ?</p></div>`;
@@ -570,31 +835,44 @@ function question(){
     G.hints=0;
     html+=`<div class="q"><p class="prompt" style="margin-top:0">Quel mot correspond à cette définition ?</p><p class="defbox">${esc(e.d)}</p></div>
       <div class="pattern" id="pattern" aria-label="${e.w.length} lettres">${patternOf(e.w,0)}</div>
-      <form class="recall" id="rf" autocomplete="off"><input id="ri" aria-label="Votre réponse" autocapitalize="off" spellcheck="false" placeholder="Tapez le mot…"><button class="btn" type="submit">Valider</button></form>
+      <form class="recall" id="rf" autocomplete="off"><input id="ri" aria-label="Votre réponse" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="Tapez le mot…"><button class="btn" type="submit">Valider</button></form>
       <div class="hints"><button class="link" id="hint">Afficher un indice (−3 points)</button><button class="link" id="giveup">Je ne sais pas</button></div>`;
   }
 
   if(opts){
-    html+=`<div class="opts">${opts.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o.t)}</button>`).join("")}</div>`;
+    html+=`<div class="opts">${opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="k" aria-hidden="true">${k+1}</span>${esc(o.t)}</button>`).join("")}</div>
+      <p class="kbdhint">Astuce : touches 1 à ${opts.length} pour répondre, Entrée pour continuer.</p>`;
   }
-  html+=`<div id="fb"></div>`;
+  html+=`<div id="fb"></div>
+    <div class="actions" style="margin-top:2rem"><button class="link" id="quitS">Quitter la partie</button></div>`;
   app.innerHTML=html;
   window.scrollTo({top:0});
+  $("#quitS").onclick=()=>leave(home);
 
   if(opts){
-    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    const choose=k=>{
       if(G.answered) return;
-      const o=opts[+b.dataset.k];
-      app.querySelectorAll(".opt").forEach((x,k)=>{ x.disabled=true; if(opts[k].ok) x.classList.add("ok"); });
-      if(!o.ok) b.classList.add("ko");
+      const o=opts[k], btns=app.querySelectorAll(".opt");
+      btns.forEach((x,j)=>{ x.disabled=true; if(opts[j].ok) x.classList.add("ok"); });
+      if(!o.ok) btns[k].classList.add("ko");
       answer(o.ok, o.ok?5:0);
+    };
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>choose(+b.dataset.k));
+    setKeys(ev=>{
+      if(ev.ctrlKey||ev.metaKey||ev.altKey||document.querySelector(".modal-bd")) return;
+      const n=parseInt(ev.key,10);
+      if(!G.answered && n>=1 && n<=opts.length){ ev.preventDefault(); choose(n-1); }
     });
   } else {
-    const inp=$("#ri"); inp.focus();
+    const inp=$("#ri"); inp.focus({preventScroll:true});
     $("#rf").onsubmit=ev=>{ ev.preventDefault(); if(G.answered||!inp.value.trim()) return;
-      const ok=norm(inp.value)===norm(e.w);
-      if(!ok && G.tries===undefined){ G.tries=1; inp.value=""; inp.placeholder="Pas tout à fait… encore un essai"; inp.focus(); return; }
-      delete G.tries; inp.disabled=true; answer(ok, ok?Math.max(10-3*G.hints,2):0, true);
+      const a=norm(inp.value), w=norm(e.w);
+      let ok=a===w, near=false;
+      if(!ok && w.length>=6 && editDist(a,w)===1){ ok=true; near=true; }
+      if(!ok && G.tries===undefined){ G.tries=1; inp.value=""; inp.placeholder="Pas tout à fait… encore un essai"; buzz(40);
+        inp.classList.remove("shake"); void inp.offsetWidth; inp.classList.add("shake"); inp.focus(); return; }
+      delete G.tries; inp.disabled=true;
+      answer(ok, ok?Math.max(10-3*G.hints-(near?2:0),2):0, true, near?inp.value.trim():null);
     };
     $("#hint").onclick=()=>{ if(G.answered) return; G.hints=Math.min(G.hints+1,2); $("#pattern").innerHTML=patternOf(e.w,G.hints); if(G.hints>=2) $("#hint").disabled=true; inp.focus(); };
     $("#giveup").onclick=()=>{ if(G.answered) return; delete G.tries; inp.disabled=true; answer(false,0,true); };
@@ -611,65 +889,96 @@ function patternOf(w,h){
 }
 
 /* ============ RÉPONSE & RÉPÉTITION ESPACÉE ============ */
-function answer(ok,pts,recall){
+function answer(ok,pts,recall,typed){
   G.answered=true;
   const {e}=G.qs[G.i], pd=pdata(), now=dayNum(today());
   const st=pd.words[e.w]||{box:0,ok:0,ko:0,due:now};
   if(ok){ st.box=Math.min(st.box+1,5); st.ok++; } else { st.box=1; st.ko++; }
   st.due=now+INTERVALS[st.box];
   pd.words[e.w]=st; pd.xp+=pts; G.pts+=pts; G.res[G.i]=ok;
-  save();
+  save(); if(ok) credit(1);
+  buzz(ok?15:[40,40,40]);
   const praise=["Exactement.","Bien vu.","Parfait.","C'est ça.","Très juste."];
+  const last=G.i+1>=G.qs.length;
   const fb=$("#fb");
   fb.innerHTML=`<div class="feedback ${ok?"good":"bad"}" role="status">
-    <div class="verdict">${ok?pick(praise)+(pts?` +${pts} points`:""):"Ce n'était pas ça."}</div>
+    <div class="verdict">${ok?(typed?"Presque parfait !":pick(praise))+(pts?` +${pts} points`:""):"Ce n'était pas ça."}</div>
+    ${typed?`<p class="near">Vous avez écrit « ${esc(typed)} » : attention à l'orthographe.</p>`:""}
     <div><strong style="font-family:Fraunces,Georgia,serif;font-size:1.3em">${esc(cap(e.w))}</strong> : ${esc(e.d)}</div>
     <p class="ex">${esc(e.ex.replace("___",e.w))}</p>
     ${e.s.length?`<p class="syn">Synonymes : ${e.s.map(esc).join(", ")}${e.a.length?`<br>Contraires : ${e.a.map(esc).join(", ")}`:""}</p>`:""}
-    <button class="btn" id="next">${G.i+1<G.qs.length?"Question suivante":"Voir mon résultat"}</button>
+    <div class="stickynext"><button class="btn" id="next">${last?"Voir mon résultat":"Question suivante"}</button></div>
   </div>`;
   if(recall) $("#pattern").textContent=e.w;
-  const nb=$("#next"); nb.focus({preventScroll:true});
-  fb.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"nearest"});
-  nb.onclick=()=>{ G.i++; G.i<G.qs.length?question():results(); };
+  const nb=$("#next");
+  let timer=null;
+  const go=()=>{ clearTimeout(timer); if(!G||!G.answered) return; G.i++; G.i<G.qs.length?question():results(); };
+  nb.onclick=go;
+  nb.focus({preventScroll:true});
+  fb.scrollIntoView({behavior:reduced()?"auto":"smooth",block:"nearest"});
+  setKeys(ev=>{ if(document.querySelector(".modal-bd")) return; if(ev.key==="Enter"&&document.activeElement!==nb){ ev.preventDefault(); go(); } });
+  if(ok && settings().auto && !typed && !last){
+    nb.textContent="Question suivante…";
+    timer=setTimeout(go,1400);
+    // Toucher n'importe où annule l'enchaînement automatique pour laisser le temps de lire
+    const stop=ev=>{ if(ev.target===nb) return; clearTimeout(timer); nb.textContent="Question suivante"; };
+    fb.addEventListener("pointerdown",stop,{once:true});
+  }
 }
 
 /* ============ RÉSULTATS ============ */
 function results(){
   const pd=pdata(); pd.sessions++; touchStreak(); save(); renderChips();
-  const good=G.res.filter(Boolean).length, L=unlockedLevel();
-  const msg = good>=9?"Remarquable.":good>=7?"Belle partie.":good>=5?"Bon entraînement, les mots manqués reviendront bientôt.":"Les mots manqués vont revenir plus souvent : c'est comme ça qu'on les retient.";
+  at("results",home);
+  setKeys(null);
+  const good=G.res.filter(Boolean).length, total=G.qs.length, L=unlockedLevel();
+  const ratio=good/total;
+  const msg = ratio>=.9?"Remarquable.":ratio>=.7?"Belle partie.":ratio>=.5?"Bon entraînement, les mots manqués reviendront bientôt.":"Les mots manqués vont revenir plus souvent : c'est comme ça qu'on les retient.";
+  const missed=G.qs.filter((q,k)=>!G.res[k]).map(q=>q.e);
   app.innerHTML=`
     <section class="hero">
-      <div class="result-score">${good}<span style="font-size:.4em;color:var(--ink-soft)"> / ${G.qs.length}</span></div>
+      <div class="result-score">${good}<span style="font-size:.4em;color:var(--ink-soft)"> / ${total}</span></div>
       <p style="font-size:1.15em;color:var(--ink)">${msg} Vous gagnez ${G.pts} points.</p>
       ${L>G.startL?`<div class="levelup">🎉 Nouveau niveau débloqué : <strong>${LEVEL_NAMES[L]}</strong>. Des mots plus exigeants vont apparaître.</div>`:""}
     </section>
-    <h2 style="font-size:1.2rem">Les mots de cette partie</h2>
-    <ul class="list">${G.qs.map((q,k)=>`<li><details><summary><strong>${esc(q.e.w)}</strong><span>${G.res[k]?"✓":"✗"}</span></summary><p class="dd">${esc(q.e.d)}</p></details></li>`).join("")}</ul>
-    <div class="actions"><button class="btn" id="again">Rejouer</button><button class="btn ghost" id="back">Retour à l'accueil</button></div>`;
-  $("#again").onclick=startSession; $("#back").onclick=home;
+    <div class="actions" style="margin-top:0">${missed.length?`<button class="btn" id="retry">Retravailler les ${missed.length} mot${missed.length>1?"s":""} manqué${missed.length>1?"s":""}</button>`:""}<button class="btn ${missed.length?"ghost":""}" id="again">Nouvelle partie</button><button class="btn ghost" id="back">Retour à l'accueil</button></div>
+    <h2 style="font-size:1.2rem;margin-top:1.8rem">Les mots de cette partie</h2>
+    <ul class="list">${G.qs.map((q,k)=>`<li><details><summary><strong>${esc(q.e.w)}</strong><span aria-label="${G.res[k]?"réussi":"manqué"}" style="color:var(--${G.res[k]?"ok":"ko"})">${G.res[k]?"✓":"✗"}</span></summary><p class="dd">${esc(q.e.d)}</p></details></li>`).join("")}</ul>`;
+  if(missed.length) $("#retry").onclick=()=>startSession(missed);
+  $("#again").onclick=()=>startSession(); $("#back").onclick=home;
   window.scrollTo({top:0});
 }
 
 /* ============ CARNET ============ */
-let carnetFilter="all";
+let carnetFilter="all", carnetQ="";
 function carnet(){
-  setKeys(null);
+  setKeys(null); at("carnet",home);
   const pd=pdata();
   const seen=bank().filter(e=>pd.words[e.w]).sort((a,b)=>a.w.localeCompare(b.w,"fr"));
-  const list=seen.filter(e=>carnetFilter==="all"||(carnetFilter==="weak"?pd.words[e.w].box<3:pd.words[e.w].box>=4));
+  const weak=seen.filter(e=>pd.words[e.w].box<3);
   app.innerHTML=`
     <h1 style="font-size:1.8rem;margin-bottom:.4rem">Mon carnet</h1>
-    <p class="muted">Les points verts indiquent l'ancrage de chaque mot en mémoire.</p>
+    <p class="muted">${seen.length} mot${seen.length>1?"s":""} rencontré${seen.length>1?"s":""} sur ${bank().length}. Les points verts indiquent l'ancrage de chaque mot en mémoire.</p>
+    ${weak.length?`<div class="actions" style="margin-top:.6rem"><button class="btn" id="revise">Réviser les ${Math.min(weak.length,SESSION_LEN)} mots les plus fragiles</button></div>`:""}
+    ${seen.length?`<input class="search" id="q" type="search" placeholder="Chercher un mot ou une définition…" value="${esc(carnetQ)}" aria-label="Chercher dans le carnet">`:""}
     <div class="filters" role="group" aria-label="Filtrer">
       ${[["all","Tous"],["weak","À travailler"],["strong","Maîtrisés"]].map(([k,t])=>`<button data-f="${k}" aria-pressed="${carnetFilter===k}">${t}</button>`).join("")}
     </div>
-    ${list.length?`<ul class="list">${list.map(e=>{const b=pd.words[e.w].box;return `<li><details><summary><strong>${esc(e.w)}</strong><span class="dots" aria-label="Niveau ${b} sur 5">${[1,2,3,4,5].map(n=>`<i class="${n<=b?"on":""}"></i>`).join("")}</span></summary><p class="dd">${esc(e.d)}</p><p class="dd"><em>${esc(e.ex.replace("___",e.w))}</em></p></details></li>`}).join("")}</ul>`
-      :`<p style="margin:1.5rem 0">${seen.length?"Aucun mot dans cette catégorie pour l'instant.":"Votre carnet se remplit au fil des parties. Lancez-en une pour y ajouter vos premiers mots."}</p>`}
-    <div class="actions"><button class="btn" id="play">Lancer une partie</button><button class="btn ghost" id="back">Retour à l'accueil</button></div>`;
-  app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{carnetFilter=b.dataset.f;carnet();});
-  $("#play").onclick=startSession; $("#back").onclick=home;
+    <div id="clist"></div>
+    <div class="actions"><button class="btn ghost" id="back">Retour à l'accueil</button></div>`;
+  const draw=()=>{
+    const q=norm(carnetQ);
+    const list=seen.filter(e=>(carnetFilter==="all"||(carnetFilter==="weak"?pd.words[e.w].box<3:pd.words[e.w].box>=4)) && (!q||norm(e.w).includes(q)||norm(e.d).includes(q)));
+    $("#clist").innerHTML=list.length?`<ul class="list">${list.map(e=>{const b=pd.words[e.w].box;return `<li><details><summary><strong>${esc(e.w)}</strong><span class="dots" aria-label="Niveau ${b} sur 5">${[1,2,3,4,5].map(n=>`<i class="${n<=b?"on":""}"></i>`).join("")}</span></summary><p class="dd">${esc(e.d)}</p><p class="dd"><em>${esc(e.ex.replace("___",e.w))}</em></p>${e.s.length?`<p class="dd">Synonymes : ${e.s.map(esc).join(", ")}</p>`:""}</details></li>`}).join("")}</ul>`
+      :`<p style="margin:1.5rem 0">${seen.length?(q?"Aucun mot ne correspond à cette recherche.":"Aucun mot dans cette catégorie pour l'instant."):"Votre carnet se remplit au fil des parties. Lancez-en une pour y ajouter vos premiers mots."}</p>${seen.length?"":`<button class="btn" id="play">Lancer une partie</button>`}`;
+    const pl=$("#play"); if(pl) pl.onclick=()=>startSession();
+  };
+  app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{ carnetFilter=b.dataset.f; app.querySelectorAll("[data-f]").forEach(x=>x.setAttribute("aria-pressed",x===b)); draw(); });
+  const qi=$("#q"); if(qi) qi.oninput=()=>{ carnetQ=qi.value; draw(); };
+  if(weak.length) $("#revise").onclick=()=>startSession([...weak].sort((a,b)=>pd.words[a.w].box-pd.words[b.w].box).slice(0,SESSION_LEN));
+  $("#back").onclick=home;
+  draw();
+  window.scrollTo({top:0});
 }
 
 /* ============ OUTILS V2 ============ */
@@ -684,6 +993,7 @@ function bump(e,ok,pts,soft){
   if(ok){ st.box=Math.min(st.box+1,5); st.ok++; } else { st.box=soft?Math.max(1,st.box-1):1; st.ko++; }
   st.due=now+INTERVALS[st.box];
   pd.words[e.w]=st; pd.xp+=pts; save();
+  if(ok) credit(1);
 }
 let lastBonus=null;
 function bonusWord(filter){
@@ -700,6 +1010,7 @@ function wordCard(e){
 
 /* ============ MENU JEUX ============ */
 function gamesHome(){
+  at("games",home);
   screen(`
     <h1 style="font-size:2rem">Jouer</h1>
     <p class="muted">Des jeux plus détendus. Chaque mot trouvé compte quand même pour vos révisions.</p>
@@ -713,6 +1024,7 @@ function gamesHome(){
   $("#g1").onclick=hangman; $("#g2").onclick=crossword; $("#g3").onclick=anagram; $("#g4").onclick=arrowWords; $("#back").onclick=home;
 }
 function endBox(ok,e,title,again){
+  ROUTE.guard=null; buzz(ok?[20,50,20]:[40,40,40]);
   const fb=$("#fb");
   fb.innerHTML=`<div class="feedback ${ok?"good":"bad"}" role="status">
     <div class="verdict">${title}</div>${e?wordCard(e):""}
@@ -720,7 +1032,7 @@ function endBox(ok,e,title,again){
     <button class="btn ghost" id="toGames" style="margin-top:.5rem">Autres jeux</button></div>`;
   $("#again").onclick=again; $("#toGames").onclick=gamesHome;
   $("#again").focus({preventScroll:true});
-  fb.scrollIntoView({behavior:"smooth",block:"nearest"});
+  fb.scrollIntoView({behavior:reduced()?"auto":"smooth",block:"nearest"});
 }
 
 /* ============ PENDU ============ */
@@ -732,6 +1044,7 @@ const HANG_PARTS=[
 function hangman(){
   const e=bonusWord(x=>norm(x.w).length>=5);
   const H={e,t:UP(e.w),used:new Set(),miss:0,max:HANG_PARTS.length,done:false};
+  at("hangman",gamesHome,()=>H.used.size&&!H.done?"Abandonner ce pendu ?":null);
   screen(`
     <div class="mode"><span>Le pendu</span><span id="lives"></span></div>
     <div class="hang-top"><svg class="hang" viewBox="0 0 120 120" aria-hidden="true" id="gallows"></svg>
@@ -752,7 +1065,7 @@ function hangman(){
     if(H.done||H.used.has(l)) return;
     H.used.add(l);
     const k=$(`.key[data-l="${l}"]`); k.disabled=true;
-    if(H.t.includes(l)) k.classList.add("ok"); else { k.classList.add("ko"); H.miss++; }
+    if(H.t.includes(l)) k.classList.add("ok"); else { k.classList.add("ko"); H.miss++; buzz(30); }
     const won=[...H.t].every(c=>!/[A-Z]/.test(c)||H.used.has(c));
     if(won||H.miss>=H.max){ H.done=true; setKeys(null); document.querySelectorAll(".key").forEach(b=>b.disabled=true);
       bump(e,won,won?6:0,true);
@@ -771,6 +1084,7 @@ function anagram(){
   const t=UP(e.w);
   let letters; do{ letters=shuffle([...t]); }while(letters.join("")===t);
   const A={e,t,tiles:letters.map((l,i)=>({l,i,used:false})),ans:[],hints:0,done:false};
+  at("anagram",gamesHome);
   screen(`
     <div class="mode"><span>L'anagramme</span><span>${t.length} lettres</span></div>
     <p class="defbox" style="margin:0 0 1.2rem">${esc(e.d)}</p>
@@ -875,6 +1189,7 @@ const crossword=()=>gridGame(false);
 const arrowWords=()=>gridGame(true);
 function gridGame(fleche){
   const X=genGrid(fleche); X.dir=0; X.active=null; X.done=false; X.revealed=0; X.showDef=false;
+  at(fleche?"arrow":"crossword",gamesHome,()=>!X.done&&[...document.querySelectorAll(".cell input")].some(i=>i.value)?"Quitter cette grille ? Elle ne sera pas conservée.":null);
   const order=X.words.map((w,wi)=>wi).sort((a,b)=>X.words[a].d-X.words[b].d||X.words[a].n-X.words[b].n);
   let grid=`<div class="cw ${fleche?"fl":""}" style="--cols:${X.C}">`;
   for(let r=0;r<X.R;r++) for(let c=0;c<X.C;c++){ const k=r+","+c, cl=X.cells.get(k);
@@ -941,6 +1256,7 @@ function gridGame(fleche){
   $("#prev").onclick=()=>nextWord(-1); $("#nextw").onclick=()=>nextWord(1);
   // Tiroir des définitions (mots croisés)
   const drawer=$("#drawer");
+  if(drawer) drawer.addEventListener("close",()=>setDrawer(false));
   const setDrawer=open=>{ if(!drawer) return; drawer.classList.toggle("open",open); drawer.setAttribute("aria-hidden",!open); $("#bd").hidden=!open; $("#dtab").setAttribute("aria-expanded",open); if(open) drawer.querySelector(".clue.on,.clue")?.focus({preventScroll:true}); };
   if(drawer){ $("#dtab").onclick=()=>setDrawer(true); $("#bd").onclick=()=>setDrawer(false); $("#dclose").onclick=()=>setDrawer(false);
     drawer.addEventListener("keydown",ev=>{ if(ev.key==="Escape") setDrawer(false); }); }
@@ -957,14 +1273,15 @@ function gridGame(fleche){
   $("#sol").onclick=()=>{ if(X.done) return; for(const [k,cl] of X.cells) inp(k).value=cl.ch; finish(false); };
   const win=()=>{ const pts=Math.max(X.words.length*4-X.revealed,4);
     X.words.forEach(w=>bump(w.e,true,0,true)); pdata().xp+=pts; save(); finish(true,pts); };
-  const finish=(ok,pts)=>{ X.done=true; document.activeElement?.blur();
+  const finish=(ok,pts)=>{ X.done=true; ROUTE.guard=null; document.activeElement?.blur(); buzz(ok?[20,50,20]:30);
     document.querySelectorAll(".cell input").forEach(el=>el.readOnly=true);
     document.querySelectorAll(".cell").forEach(c=>c.classList.remove("hl","cur","bad"));
     $("#fb").innerHTML=`<div class="backdrop"></div><div class="sheet" role="dialog" aria-label="Résultat"><div class="feedback ${ok?"good":"bad"}" style="margin:0">
       <div class="verdict">${ok?`Grille complète ! +${pts} points`:"Voici la solution."}</div>
       <ul class="list" style="margin:.2rem 0 0">${X.words.map(w=>`<li><strong style="font-family:Fraunces,Georgia,serif">${esc(w.e.w)}</strong> : <span class="muted">${esc(w.e.d)}</span></li>`).join("")}</ul>
       <button class="btn" id="again">Nouvelle grille</button><button class="btn ghost" id="seeGrid" style="margin-top:.5rem">Revoir la grille</button><button class="btn ghost" id="toGames" style="margin-top:.5rem">Autres jeux</button></div></div>`;
-    $("#again").onclick=()=>gridGame(fleche); $("#toGames").onclick=gamesHome; $("#seeGrid").onclick=()=>{ $("#fb").innerHTML=`<div class="actions"><button class="btn" id="again2">Nouvelle grille</button></div>`; $("#again2").onclick=()=>gridGame(fleche); };
+    $("#again").onclick=()=>gridGame(fleche); $("#toGames").onclick=gamesHome;
+    const sheet=$("#fb .sheet"); if(sheet) at(fleche?"arrow":"crossword",gamesHome); $("#seeGrid").onclick=()=>{ $("#fb").innerHTML=`<div class="actions"><button class="btn" id="again2">Nouvelle grille</button></div>`; $("#again2").onclick=()=>gridGame(fleche); };
     $("#again").focus({preventScroll:true}); };
   $("#quit").onclick=gamesHome;
   goWord(order[0]);
@@ -972,6 +1289,7 @@ function gridGame(fleche){
 
 /* ============ COMPRENDRE ============ */
 function learnHome(){
+  at("learn",home);
   const ls=learnState();
   const nr=Object.values(ls.roots).filter(v=>v>=2).length, ne=Object.values(ls.expr).filter(v=>v>=2).length;
   screen(`
@@ -985,6 +1303,7 @@ function learnHome(){
   $("#l1").onclick=rootsCards; $("#l2").onclick=exprCards; $("#back").onclick=home;
 }
 function rootsCards(){
+  at("roots",learnHome);
   const ls=learnState();
   screen(`
     <h1 style="font-size:1.8rem">Les racines</h1>
@@ -1006,6 +1325,7 @@ function rootsQuiz(){
   });
 }
 function exprCards(){
+  at("expr",learnHome);
   const ls=learnState();
   screen(`
     <h1 style="font-size:1.8rem">Les expressions</h1>
@@ -1029,6 +1349,7 @@ function runQuiz(factory,back,title){
   const Q={qs:factory(),i:0,res:[]};
   const show=()=>{
     const q=Q.qs[Q.i];
+    at("quiz",back,()=>Q.i>0&&Q.i<Q.qs.length?"Quitter ce quiz ?":null);
     screen(`<div class="progress">${Q.qs.map((_,k)=>`<i class="${k<Q.i?(Q.res[k]?"ok":"ko"):(k===Q.i?"cur":"")}"></i>`).join("")}</div>
       <div class="mode"><span>${q.mode}</span><span>${Q.i+1} / ${Q.qs.length}</span></div>
       <div class="q">${q.big?`<div class="word ${q.small?"sm":""}">${esc(q.big)}</div>`:`<p class="defbox" style="margin:0">${esc(q.text)}</p>`}<p class="prompt">${esc(q.prompt)}</p></div>
@@ -1037,16 +1358,16 @@ function runQuiz(factory,back,title){
       const o=q.opts[+b.dataset.k];
       document.querySelectorAll(".opt").forEach((x,k)=>{ x.disabled=true; if(q.opts[k].ok) x.classList.add("ok"); });
       if(!o.ok) b.classList.add("ko");
-      Q.res[Q.i]=o.ok; q.mark(o.ok); if(o.ok){ pdata().xp+=3; save(); }
+      Q.res[Q.i]=o.ok; q.mark(o.ok); if(o.ok){ pdata().xp+=3; save(); credit(1); } buzz(o.ok?15:[40,40,40]);
       const fb=$("#fb");
       fb.innerHTML=`<div class="feedback ${o.ok?"good":"bad"}" role="status"><div class="verdict">${o.ok?"Exactement. +3 points":"Ce n'était pas ça."}</div>${q.explain}
-        <button class="btn" id="next">${Q.i+1<Q.qs.length?"Question suivante":"Voir mon résultat"}</button></div>`;
-      $("#next").focus({preventScroll:true}); fb.scrollIntoView({behavior:"smooth",block:"nearest"});
+        <div class="stickynext"><button class="btn" id="next">${Q.i+1<Q.qs.length?"Question suivante":"Voir mon résultat"}</button></div></div>`;
+      $("#next").focus({preventScroll:true}); fb.scrollIntoView({behavior:reduced()?"auto":"smooth",block:"nearest"});
       $("#next").onclick=()=>{ Q.i++; Q.i<Q.qs.length?show():end(); };
     });
   };
   const end=()=>{
-    const good=Q.res.filter(Boolean).length; touchStreak(); save(); renderChips();
+    const good=Q.res.filter(Boolean).length; touchStreak(); save(); renderChips(); at("quizEnd",back);
     screen(`<section class="hero"><div class="result-score">${good}<span style="font-size:.4em;color:var(--ink-soft)"> / ${Q.qs.length}</span></div>
       <p style="font-size:1.15em">${esc(title)} terminé.</p></section>
       <div class="actions"><button class="btn" id="again">Refaire un quiz</button><button class="btn ghost" id="back">Revoir les fiches</button></div>`);
@@ -1055,10 +1376,19 @@ function runQuiz(factory,back,title){
   show();
 }
 
-$("#homeBtn").onclick=home;
+$("#homeBtn").onclick=()=>leave(home);
+$("#footSet").onclick=()=>leave(settingsScreen);
+applySettings();
 home();
 
-if("serviceWorker" in navigator){
+// Hors ligne + mises à jour : quand une nouvelle version est installée, on propose de recharger
+if("serviceWorker" in navigator && location.protocol!=="file:"){
+  const hadController=!!navigator.serviceWorker.controller;
+  let reloading=false;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{
+    if(!hadController||reloading) return;
+    toast("Une nouvelle version du jeu est prête.","Recharger",()=>{ reloading=true; location.reload(); },0);
+  });
   window.addEventListener("load",()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); });
 }
 </script>
