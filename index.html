@@ -5,11 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Le Mot Juste — entraînez votre vocabulaire</title>
 <meta name="theme-color" content="#1C2554">
-<script>try{var t=JSON.parse(localStorage.getItem("lemotjuste_v1")||"{}").settings||{};if(t.theme&&t.theme!=="auto")document.documentElement.dataset.theme=t.theme;}catch(e){}</script>
-<meta name="description" content="Jeu pour enrichir son vocabulaire : définitions, synonymes, pendu, mots croisés, mots fléchés, racines et expressions.">
+<meta name="description" content="Jeu pour enrichir son vocabulaire : langage soutenu, aïkido, bâtiment, cuisine, marine, musique… Pendu, mots croisés, mots fléchés, racines et expressions.">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="preload" href="fonts/atkinson-hyperlegible-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/fraunces-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -210,45 +207,25 @@ button{font:inherit;cursor:pointer}
 .badge{font-size:.78em;border:1px solid var(--line);border-radius:999px;padding:.1rem .55rem;white-space:nowrap;color:var(--ink-soft)}
 .badge.c-a{border-color:var(--ok);color:var(--ok)}
 .badge.c-d{border-color:var(--ko);color:var(--ko)}
+/* Thèmes */
+.themebar{display:flex;align-items:center;gap:.8rem;width:100%;text-align:left;background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:.7rem 1rem;color:var(--ink);margin-bottom:.4rem}
+.themebar:hover{border-color:var(--ink)}
+.themebar .ic{font-size:1.7rem}
+.themebar small{display:block;color:var(--ink-soft);font-size:.8em}
+.themebar strong{font-family:Fraunces,Georgia,serif;font-size:1.2rem}
+.themebar .chg{margin-left:auto;color:var(--ink-soft);text-decoration:underline;font-size:.92em}
+.note{font-size:.88em;color:var(--ink-soft);background:var(--hl-soft);border-radius:10px;padding:.55rem .8rem;margin:.5rem 0 0}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem;margin-top:1.2rem}
+.tcard{position:relative;text-align:left;background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:.85rem .9rem 1rem;color:var(--ink)}
+.tcard:hover{border-color:var(--ink)}
+.tcard.cur{border-color:var(--ink);box-shadow:inset 0 0 0 2px var(--hl)}
+.tcard .ic{font-size:1.6rem;display:block;margin-bottom:.25rem}
+.tcard strong{font-family:Fraunces,Georgia,serif;font-size:1.08rem;display:block;line-height:1.2}
+.tcard span:not(.ic){color:var(--ink-soft);font-size:.82em}
+.tcard .bar{position:absolute;left:.9rem;right:.9rem;bottom:.45rem;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.tcard .bar b{display:block;height:100%;background:var(--ok)}
+.door:disabled{opacity:.5;cursor:default}
 footer{margin-top:2.5rem;color:var(--ink-soft);font-size:.85em}
-/* v2 : barre « Suivant » collante, modale, toast, réglages, objectif du jour */
-.stickynext{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + .6rem);z-index:4;margin-top:1rem}
-.stickynext .btn{width:100%;box-shadow:0 6px 18px rgba(10,14,35,.25)}
-.feedback .stickynext .btn{margin-top:0}
-.kbdhint{display:none;color:var(--ink-soft);font-size:.8em;text-align:center;margin-top:.4rem}
-@media (hover:hover) and (pointer:fine){.kbdhint{display:block}}
-.opt .k{display:none;font-size:.78em;color:var(--ink-soft);border:1px solid var(--line);border-radius:5px;padding:0 .35em;margin-right:.6em;vertical-align:.1em}
-@media (hover:hover) and (pointer:fine){.opt .k{display:inline-block}}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem 1.5rem}
-@media (min-width:520px){.stats{grid-template-columns:repeat(4,auto);justify-content:space-between}}
-.goal{display:flex;align-items:center;gap:1rem;background:var(--paper);border:2px solid var(--line);border-radius:14px;padding:.85rem 1rem;margin:1rem 0}
-.goal svg{flex-shrink:0;width:56px;height:56px;transform:rotate(-90deg)}
-.goal circle{fill:none;stroke-width:7}
-.goal .bg{stroke:var(--line)} .goal .fg{stroke:var(--ok);stroke-linecap:round;transition:stroke-dashoffset .6s ease}
-.goal b{display:block;font-family:Fraunces,Georgia,serif;font-size:1.15rem}
-.goal span{color:var(--ink-soft);font-size:.9em}
-.modal-bd{position:fixed;inset:0;z-index:50;background:rgba(10,14,35,.5);display:flex;align-items:flex-end;justify-content:center;padding:1rem;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 1rem)}
-@media (min-width:520px){.modal-bd{align-items:center}}
-.modal{background:var(--paper);color:var(--ink);border-radius:16px;padding:1.3rem 1.2rem 1.1rem;width:min(100%,420px);box-shadow:0 10px 40px rgba(0,0,0,.3)}
-.modal p{margin:0 0 1rem;font-size:1.05em}
-.modal .row{display:flex;gap:.6rem}
-.modal .row .btn{flex:1}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 1rem);z-index:60;background:var(--ink);color:var(--bg);border-radius:12px;padding:.7rem 1rem;display:flex;gap:.9rem;align-items:center;box-shadow:0 8px 24px rgba(0,0,0,.3);max-width:calc(100% - 2rem)}
-.toast button{background:var(--hl);color:#1C2554;border:0;border-radius:8px;padding:.35rem .7rem;font-weight:700}
-.set{display:grid;gap:.2rem;margin:1rem 0}
-.set h2{font-size:1.1rem;margin:1.2rem 0 .3rem}
-.setrow{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:.75rem 1rem}
-.setrow label{flex:1}
-.setrow small{display:block;color:var(--ink-soft)}
-.seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;flex-shrink:0}
-.seg button{border:0;background:var(--paper);color:var(--ink);padding:.35rem .75rem;font-size:.9em}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
-.switch{appearance:none;-webkit-appearance:none;width:46px;height:28px;border-radius:999px;background:var(--line);position:relative;flex-shrink:0;cursor:pointer;margin:0}
-.switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .15s}
-.switch:checked{background:var(--ok)} .switch:checked::after{left:21px}
-.search{width:100%;font:inherit;padding:.65rem .9rem;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);margin:.8rem 0 .6rem}
-.search:focus{border-color:var(--ink);outline:none}
-.near{background:var(--hl-soft);border-radius:8px;padding:.4rem .6rem;margin:.4rem 0 0;font-size:.95em}
 </style>
 </head>
 <body>
@@ -258,7 +235,7 @@ footer{margin-top:2.5rem;color:var(--ink-soft);font-size:.85em}
     <div class="chips" id="chips"></div>
   </header>
   <main id="app"></main>
-  <footer>Vos progrès sont enregistrés dans ce navigateur, sur cet appareil. Pensez à les sauvegarder depuis les <button class="link" id="footSet" style="font-size:1em;padding:0">réglages</button>.</footer>
+  <footer>Vos progrès sont enregistrés dans ce navigateur, sur cet appareil.</footer>
 </div>
 
 <script>
@@ -292,29 +269,7 @@ junior:[
 {w:"vorace",l:3,d:"Qui mange avec un très gros appétit.",s:["glouton","goulu","affamé"],a:[],ex:"Le loup ___ dévora tout le repas."},
 {w:"limpide",l:3,d:"Très clair et transparent, comme de l'eau pure.",s:["clair","transparent","cristallin"],a:["trouble"],ex:"L'eau de la source était ___."},
 {w:"chétif",l:3,d:"Petit et faible, de santé fragile.",s:["malingre","frêle","faible"],a:["robuste","vigoureux"],ex:"Le petit oiseau ___ tremblait dans son nid."},
-{w:"émerveillé",l:3,d:"Rempli d'admiration devant quelque chose de beau ou d'étonnant.",s:["ébloui","fasciné","enchanté"],a:["indifférent","blasé"],ex:"Le public ___ applaudissait le magicien."},
-{w:"joyeux",l:1,d:"Qui est plein de joie, de bonne humeur.",s:["gai","content","enjoué"],a:["triste","maussade"],ex:"Les enfants ___ chantaient dans le car."},
-{w:"bruyant",l:1,d:"Qui fait beaucoup de bruit.",s:["tapageur","sonore","assourdissant"],a:["silencieux","calme"],ex:"La cour de récréation est très ___ à midi."},
-{w:"rapide",l:1,d:"Qui va vite.",s:["vif","prompt","véloce"],a:["lent"],ex:"Le guépard est l'animal le plus ___ du monde."},
-{w:"généreux",l:1,d:"Qui aime donner et partager.",s:["partageur","bon","large"],a:["égoïste","avare"],ex:"Mon cousin, très ___, m'a donné la moitié de son goûter."},
-{w:"têtu",l:1,d:"Qui ne veut jamais changer d'avis.",s:["entêté","obstiné","buté"],a:["docile","souple"],ex:"Mon petit frère est ___ comme une mule."},
-{w:"effrayé",l:1,d:"Qui a très peur.",s:["apeuré","terrifié","épouvanté"],a:["rassuré"],ex:"Le chaton ___ s'est caché sous le lit."},
-{w:"poli",l:1,d:"Qui respecte les règles de la politesse : dire bonjour, merci, s'il te plaît.",s:["courtois","bien élevé","respectueux"],a:["impoli","grossier"],ex:"Un enfant ___ dit merci quand on lui rend service."},
-{w:"ennuyeux",l:2,d:"Qui ne présente aucun intérêt, qui fait bâiller.",s:["lassant","monotone","assommant"],a:["passionnant","amusant"],ex:"Ce film était si ___ que je me suis endormi."},
-{w:"distrait",l:2,d:"Qui ne fait pas attention à ce qu'il fait, qui pense à autre chose.",s:["étourdi","rêveur","inattentif"],a:["attentif","concentré"],ex:"Trop ___, Hugo a oublié son cartable à l'école."},
-{w:"agile",l:2,d:"Qui bouge avec facilité et rapidité.",s:["souple","leste","adroit"],a:["pataud","maladroit"],ex:"Le singe ___ sautait de branche en branche."},
-{w:"radieux",l:2,d:"Qui rayonne de bonheur ou de lumière.",s:["rayonnant","resplendissant","épanoui"],a:["sombre","morose"],ex:"Le jour de son anniversaire, Inès avait un sourire ___."},
-{w:"immobile",l:2,d:"Qui ne bouge pas.",s:["figé","inerte","statique"],a:["mobile","agité"],ex:"Le héron restait ___ au bord de l'étang."},
-{w:"prudent",l:2,d:"Qui fait attention pour éviter le danger.",s:["précautionneux","avisé","sage"],a:["imprudent","téméraire"],ex:"Sois ___ en traversant la rue."},
-{w:"grincheux",l:2,d:"Qui est souvent de mauvaise humeur et se plaint de tout.",s:["grognon","ronchon","bougon"],a:["aimable","jovial"],ex:"Le vieux voisin ___ râlait contre le bruit du ballon."},
-{w:"ingénieux",l:3,d:"Qui trouve des solutions astucieuses et inventives.",s:["astucieux","inventif","habile"],a:["maladroit"],ex:"Grâce à une idée ___, elle a réparé le jouet avec un trombone."},
-{w:"vertigineux",l:3,d:"Si haut ou si grand qu'il donne le vertige.",s:["immense","colossal","démesuré"],a:["minime"],ex:"Du haut de la tour, la vue était ___."},
-{w:"redoutable",l:3,d:"Qu'on doit craindre, très dangereux ou très fort.",s:["terrible","menaçant","effrayant"],a:["inoffensif"],ex:"Le requin est un chasseur ___."},
-{w:"accablé",l:3,d:"Écrasé par la fatigue, la chaleur ou le chagrin.",s:["abattu","épuisé","découragé"],a:["soulagé"],ex:"Le chien, ___ par la chaleur, dormait à l'ombre."},
-{w:"chuchoter",l:3,d:"Parler très bas, à voix basse.",s:["murmurer","susurrer"],a:["crier","hurler"],ex:"Pendant la sieste, il faut ___ pour ne réveiller personne."},
-{w:"scintiller",l:3,d:"Briller en lançant de petits éclats de lumière.",s:["étinceler","briller","miroiter"],a:[],ex:"Les étoiles commencent à ___ dans le ciel."},
-{w:"impassible",l:3,d:"Qui ne montre aucune émotion.",s:["imperturbable","calme","flegmatique"],a:["ému","agité"],ex:"Le garde royal restait ___ malgré les grimaces des touristes."},
-{w:"somptueux",l:3,d:"D'une grande beauté, très riche et luxueux.",s:["magnifique","splendide","fastueux"],a:["modeste","pauvre"],ex:"Le roi donna un festin ___ dans son palais."}
+{w:"émerveillé",l:3,d:"Rempli d'admiration devant quelque chose de beau ou d'étonnant.",s:["ébloui","fasciné","enchanté"],a:["indifférent","blasé"],ex:"Le public ___ applaudissait le magicien."}
 ],
 ado:[
 {w:"ambigu",l:1,d:"Qui peut être compris de plusieurs façons.",s:["équivoque","flou","ambivalent"],a:["clair","explicite"],ex:"Sa réponse ___ n'a convaincu personne."},
@@ -342,28 +297,7 @@ ado:[
 {w:"ostentatoire",l:3,d:"Qui est fait pour être vu, pour se faire remarquer.",s:["voyant","tape-à-l'œil","ostensible"],a:["discret","sobre"],ex:"Sa montre en or, très ___, attirait tous les regards."},
 {w:"galvaniser",l:3,d:"Remplir d'énergie et d'enthousiasme.",s:["électriser","enflammer","stimuler"],a:["décourager","démotiver"],ex:"Le discours du capitaine a su ___ toute l'équipe."},
 {w:"iconoclaste",l:3,d:"Qui s'attaque aux traditions et aux idées établies.",s:["rebelle","anticonformiste","subversif"],a:["conformiste","traditionaliste"],ex:"Cet artiste ___ bouscule les codes de la peinture."},
-{w:"dithyrambique",l:3,d:"Qui fait un éloge enthousiaste, parfois excessif.",s:["élogieux","louangeur","enthousiaste"],a:["critique"],ex:"La critique du film était ___ : cinq étoiles partout."},
-{w:"anxieux",l:1,d:"Qui est inquiet, qui s'angoisse facilement.",s:["inquiet","angoissé","stressé"],a:["serein","détendu"],ex:"La veille du contrôle, Nina était ___."},
-{w:"hypocrite",l:1,d:"Qui fait semblant d'avoir des sentiments ou des opinions qu'il n'a pas.",s:["faux","fourbe","sournois"],a:["sincère","franc"],ex:"Ce compliment ___ cachait de la jalousie."},
-{w:"spontané",l:1,d:"Qui agit ou parle naturellement, sans calcul ni préparation.",s:["naturel","impulsif","franc"],a:["calculé","réfléchi"],ex:"Sa réaction ___ a fait rire toute la classe."},
-{w:"rancunier",l:1,d:"Qui garde longtemps le souvenir d'une offense et en veut aux autres.",s:["vindicatif","revanchard"],a:["indulgent","clément"],ex:"Ne sois pas ___, il s'est excusé."},
-{w:"futile",l:1,d:"Qui n'a pas d'importance, sans intérêt.",s:["insignifiant","frivole","dérisoire"],a:["essentiel","important"],ex:"Ils se sont disputés pour une raison ___."},
-{w:"ironie",l:1,d:"Façon de se moquer en disant le contraire de ce qu'on pense.",s:["moquerie","raillerie","sarcasme"],a:["sérieux"],ex:"« Super, encore de la pluie ! » dit-il avec ___."},
-{w:"assidu",l:1,d:"Qui est régulier et appliqué dans ce qu'il fait.",s:["régulier","appliqué","sérieux"],a:["irrégulier"],ex:"Grâce à un travail ___, il a rattrapé son retard."},
-{w:"cynique",l:2,d:"Qui exprime sans scrupule des opinions choquantes, qui se moque des valeurs morales.",s:["désabusé","impudent","sarcastique"],a:["idéaliste","naïf"],ex:"Sa remarque ___ sur la solidarité a choqué tout le monde."},
-{w:"éloquent",l:2,d:"Qui s'exprime avec facilité et sait convaincre.",s:["convaincant","persuasif","expressif"],a:["maladroit"],ex:"Lors du débat, la déléguée s'est montrée très ___."},
-{w:"intransigeant",l:2,d:"Qui refuse tout compromis.",s:["inflexible","intraitable","rigide"],a:["conciliant","souple"],ex:"L'arbitre est resté ___ malgré les protestations."},
-{w:"prétexte",l:2,d:"Fausse raison donnée pour cacher la vraie.",s:["excuse","alibi","échappatoire"],a:[],ex:"Il a trouvé un ___ pour ne pas venir à l'entraînement."},
-{w:"préjugé",l:2,d:"Opinion qu'on se fait à l'avance, sans vraiment connaître.",s:["a priori","cliché","stéréotype"],a:[],ex:"Juger quelqu'un sur son apparence, c'est un ___."},
-{w:"exhaustif",l:2,d:"Qui traite un sujet complètement, sans rien oublier.",s:["complet","intégral","détaillé"],a:["partiel","incomplet"],ex:"Le prof attend une liste ___ des causes de la guerre."},
-{w:"impulsif",l:2,d:"Qui agit sous le coup d'une émotion, sans réfléchir.",s:["irréfléchi","fougueux","emporté"],a:["réfléchi","posé"],ex:"Trop ___, il a répondu avant de lire la question."},
-{w:"pléthore",l:3,d:"Quantité excessive, trop grande abondance.",s:["profusion","surabondance","excès"],a:["pénurie","manque"],ex:"Il y a une ___ de séries, impossible de toutes les regarder."},
-{w:"apathique",l:3,d:"Qui n'a aucune énergie, aucune réaction.",s:["mou","indolent","amorphe"],a:["dynamique","énergique"],ex:"Après la nuit blanche, il était complètement ___."},
-{w:"démagogue",l:3,d:"Qui flatte la foule pour gagner sa faveur.",s:["populiste","flatteur","bonimenteur"],a:[],ex:"Ce candidat ___ promet tout à tout le monde."},
-{w:"fallacieux",l:3,d:"Qui cherche à tromper par de fausses apparences.",s:["trompeur","mensonger","spécieux"],a:["vrai","honnête"],ex:"Cette publicité repose sur un argument ___."},
-{w:"inexorable",l:3,d:"Qu'on ne peut arrêter ni fléchir.",s:["implacable","inéluctable","inflexible"],a:["évitable"],ex:"La montée des eaux semblait ___."},
-{w:"prosaïque",l:3,d:"Banal, terre à terre, sans poésie.",s:["banal","terre à terre","ordinaire"],a:["poétique","lyrique"],ex:"Après ce rêve de voyage, retour à une réalité bien ___."},
-{w:"stoïque",l:3,d:"Qui supporte la douleur ou le malheur avec courage, sans se plaindre.",s:["courageux","impassible","imperturbable"],a:["douillet"],ex:"Malgré sa cheville foulée, elle est restée ___."}
+{w:"dithyrambique",l:3,d:"Qui fait un éloge enthousiaste, parfois excessif.",s:["élogieux","louangeur","enthousiaste"],a:["critique"],ex:"La critique du film était ___ : cinq étoiles partout."}
 ],
 adulte:[
 {w:"volubile",l:1,d:"Qui parle beaucoup, avec facilité et rapidité.",s:["bavard","loquace","disert"],a:["taciturne","laconique"],ex:"Notre guide, très ___, nous a raconté mille anecdotes."},
@@ -400,29 +334,7 @@ adulte:[
 {w:"palinodie",l:3,d:"Changement complet d'opinion, revirement.",s:["revirement","volte-face","retournement"],a:["constance"],ex:"Après sa ___, plus personne ne croyait à ses promesses."},
 {w:"vaticiner",l:3,d:"Prédire l'avenir avec emphase, parler comme un prophète.",s:["prophétiser","prédire","augurer"],a:[],ex:"Il aimait ___ sur la fin prochaine du monde."},
 {w:"incoercible",l:3,d:"Qu'on ne peut contenir ni réprimer.",s:["irrépressible","irrésistible","incontrôlable"],a:["maîtrisable"],ex:"Un fou rire ___ s'empara de la salle."},
-{w:"margoulin",l:3,d:"Commerçant peu scrupuleux.",s:["escroc","filou","aigrefin"],a:[],ex:"Ce ___ lui a vendu une voiture sans moteur."},
-{w:"affable",l:1,d:"Qui accueille les autres avec douceur et bienveillance.",s:["aimable","courtois","avenant"],a:["revêche","bourru"],ex:"La libraire, toujours ___, connaît chaque client par son prénom."},
-{w:"candide",l:1,d:"D'une grande naïveté, d'une innocence sans méfiance.",s:["naïf","ingénu","crédule"],a:["méfiant","rusé"],ex:"Sa question ___ a fait sourire toute l'assemblée."},
-{w:"cupide",l:1,d:"Avide d'argent, de richesses.",s:["avide","rapace","vénal"],a:["désintéressé","généreux"],ex:"Un héritier ___ guettait la fortune de son oncle."},
-{w:"désuet",l:1,d:"Qui n'est plus en usage, démodé.",s:["démodé","suranné","obsolète"],a:["moderne","actuel"],ex:"Ce mot un peu ___ fait sourire les plus jeunes."},
-{w:"laborieux",l:1,d:"Qui coûte beaucoup d'efforts, pénible.",s:["pénible","difficile","ardu"],a:["facile","aisé"],ex:"Après des négociations ___, l'accord a été signé."},
-{w:"probité",l:1,d:"Honnêteté scrupuleuse dans l'accomplissement de ses devoirs.",s:["honnêteté","intégrité","droiture"],a:["malhonnêteté"],ex:"Sa ___ ne fut jamais mise en doute."},
-{w:"circonspect",l:2,d:"Qui agit avec prudence et réserve.",s:["prudent","réservé","mesuré"],a:["imprudent","téméraire"],ex:"Face à cette offre trop belle, restons ___."},
-{w:"vétille",l:2,d:"Chose sans importance, détail insignifiant.",s:["broutille","bagatelle","futilité"],a:[],ex:"Ils se sont fâchés pour une ___."},
-{w:"péjoratif",l:2,d:"Qui exprime un jugement défavorable, qui déprécie.",s:["dépréciatif","négatif","dévalorisant"],a:["mélioratif","élogieux"],ex:"Le suffixe « -ard » donne souvent un sens ___."},
-{w:"inique",l:2,d:"Profondément injuste.",s:["injuste","partial","inéquitable"],a:["équitable","juste"],ex:"Ce jugement ___ a révolté l'opinion."},
-{w:"veule",l:2,d:"Sans énergie ni volonté, faible et lâche.",s:["mou","lâche","faible"],a:["énergique","courageux"],ex:"Un dirigeant ___ cède à toutes les pressions."},
-{w:"subreptice",l:2,d:"Qui se fait en cachette, à la dérobée.",s:["furtif","clandestin","discret"],a:["ostensible","manifeste"],ex:"Il jeta un regard ___ sur la copie de son voisin."},
-{w:"hétéroclite",l:2,d:"Fait d'éléments disparates, mal assortis.",s:["disparate","composite","hybride"],a:["homogène","uniforme"],ex:"Le grenier abritait une collection ___ d'objets."},
-{w:"sempiternel",l:2,d:"Qui se répète sans fin, au point de lasser.",s:["perpétuel","éternel","incessant"],a:["passager","bref"],ex:"Il a ressorti son ___ refrain sur le bon vieux temps."},
-{w:"atrabilaire",l:3,d:"D'humeur sombre et irritable.",s:["grincheux","acariâtre","bilieux"],a:["jovial","enjoué"],ex:"Le vieil oncle ___ trouvait à redire à tout."},
-{w:"logorrhée",l:3,d:"Flot de paroles intarissable et souvent inutile.",s:["verbiage","bavardage","verbosité"],a:["mutisme"],ex:"Sa ___ a épuisé tous les participants de la réunion."},
-{w:"sérendipité",l:3,d:"Fait de découvrir par hasard quelque chose qu'on ne cherchait pas.",s:["hasard heureux","découverte fortuite"],a:[],ex:"La pénicilline est un célèbre exemple de ___."},
-{w:"pantagruélique",l:3,d:"Énorme, digne de Pantagruel, en parlant d'un repas.",s:["gargantuesque","copieux","plantureux"],a:["frugal"],ex:"Après ce repas ___, une sieste s'imposait."},
-{w:"oxymore",l:3,d:"Figure qui associe deux mots de sens opposés, comme « obscure clarté ».",s:["alliance de mots","antilogie"],a:[],ex:"« Un silence assourdissant » est un ___."},
-{w:"prévarication",l:3,d:"Manquement grave d'un responsable aux devoirs de sa charge.",s:["forfaiture","malversation","corruption"],a:["probité","intégrité"],ex:"Le maire a été condamné pour ___."},
-{w:"zélateur",l:3,d:"Partisan ardent d'une cause ou d'une personne.",s:["partisan","adepte","défenseur"],a:["détracteur","adversaire"],ex:"Ce ___ du vélo en ville ne prend jamais la voiture."},
-{w:"vilipender",l:3,d:"Dénoncer comme méprisable, traiter avec mépris.",s:["dénigrer","décrier","conspuer"],a:["louer","encenser"],ex:"La presse s'est empressée de ___ le perdant."}
+{w:"margoulin",l:3,d:"Commerçant peu scrupuleux.",s:["escroc","filou","aigrefin"],a:[],ex:"Ce ___ lui a vendu une voiture sans moteur."}
 ]};
 
 /* ============ RACINES ============ */
@@ -453,15 +365,7 @@ const ROOTS = [
 {r:"-fuge",o:"latin",m:"qui fait fuir",ex:[["ignifuge","qui protège du feu"],["vermifuge","qui chasse les vers"],["centrifuge","qui éloigne du centre"]]},
 {r:"-cole",o:"latin",m:"qui cultive ou qui habite",ex:[["agricole","qui concerne la culture des champs"],["viticole","qui concerne la culture de la vigne"],["arboricole","qui vit dans les arbres"]]},
 {r:"-fère",o:"latin",m:"qui porte",ex:[["mammifère","animal qui porte des mamelles"],["conifère","arbre qui porte des cônes"],["somnifère","qui apporte le sommeil"]]},
-{r:"sub-",o:"latin",m:"sous",ex:[["submerger","recouvrir complètement d'eau"],["subalterne","placé sous l'autorité d'un autre"],["subaquatique","qui se fait sous l'eau"]]},
-{r:"géo-",o:"grec",m:"la terre",ex:[["géographie","description de la Terre"],["géologie","science des roches et du sol"],["géométrie","à l'origine, mesure de la terre"]]},
-{r:"psych-",o:"grec",m:"l'esprit, l'âme",ex:[["psychologie","étude de l'esprit et du comportement"],["psychiatre","médecin des maladies mentales"],["psychique","qui concerne l'esprit"]]},
-{r:"-logie",o:"grec",m:"l'étude, le discours",ex:[["zoologie","étude des animaux"],["météorologie","étude de l'atmosphère et du temps qu'il fait"],["étymologie","étude de l'origine des mots"]]},
-{r:"cardio-",o:"grec",m:"le cœur",ex:[["cardiologue","médecin du cœur"],["cardiaque","qui concerne le cœur"],["tachycardie","accélération du rythme du cœur"]]},
-{r:"aqua-, aqu-",o:"latin",m:"l'eau",ex:[["aquarium","réservoir où vivent des animaux aquatiques"],["aqueduc","canal qui conduit l'eau"],["aquatique","qui vit dans l'eau"]]},
-{r:"péd-, -pède",o:"latin",m:"le pied",ex:[["bipède","qui marche sur deux pieds"],["quadrupède","qui a quatre pattes"],["pédestre","qui se fait à pied"]]},
-{r:"rétro-",o:"latin",m:"en arrière",ex:[["rétroviseur","miroir pour voir derrière soi"],["rétrograde","qui va en arrière"],["rétrospective","regard en arrière sur une période"]]},
-{r:"vid-, vis-",o:"latin",m:"voir",ex:[["visible","qui peut être vu"],["vidéo","du latin video, « je vois »"],["providence","qui voit et pourvoit à l'avance"]]}
+{r:"sub-",o:"latin",m:"sous",ex:[["submerger","recouvrir complètement d'eau"],["subalterne","placé sous l'autorité d'un autre"],["subaquatique","qui se fait sous l'eau"]]}
 ];
 
 /* ============ EXPRESSIONS ============ */
@@ -488,18 +392,457 @@ const EXPR = [
 {e:"Passer l'arme à gauche",s:"Mourir.",o:"Souvent reliée au vocabulaire militaire (reposer son arme du côté gauche, au repos), mais aucune explication n'est vraiment établie.",c:"d"},
 {e:"Tirer le diable par la queue",s:"Avoir du mal à joindre les deux bouts, vivre pauvrement.",o:"L'idée d'une lutte pénible et vaine contre la misère, personnifiée par le diable. Le détail de l'image reste obscur.",c:"d"},
 {e:"Faire la grasse matinée",s:"Rester longtemps au lit le matin.",o:"« Gras » avait autrefois le sens d'abondant, de confortable : une matinée grasse est une matinée généreuse en sommeil.",c:"p"},
-{e:"Prendre des vessies pour des lanternes",s:"Se tromper grossièrement, croire n'importe quoi.",o:"Une vessie de porc séchée et gonflée pouvait ressembler de loin à une lanterne. Confondre les deux, c'était se laisser abuser par l'apparence.",c:"p"},
-{e:"Être dans de beaux draps",s:"Être dans une situation difficile.",o:"« Draps » désignait autrefois les vêtements, l'étoffe. L'expression est ironique : de « beaux » habits pour une bien mauvaise posture.",c:"p"},
-{e:"Être aux anges",s:"Être extrêmement heureux.",o:"Être transporté de joie au point de se croire parmi les anges, au paradis.",c:"p"},
-{e:"Battre son plein",s:"Être à son point culminant, au plus fort de son activité.",o:"Vient de la marée : la mer « bat son plein » quand elle atteint sa hauteur maximale et semble s'immobiliser.",c:"a"},
-{e:"Casser sa pipe",s:"Mourir.",o:"On raconte que des soldats serraient une pipe entre leurs dents pendant les opérations ; si elle tombait et se cassait, c'est qu'ils étaient morts. Rien ne le prouve vraiment.",c:"d"},
-{e:"Ménager la chèvre et le chou",s:"Chercher à ne mécontenter personne entre deux partis opposés.",o:"L'énigme du passeur qui doit faire traverser une rivière à un loup, une chèvre et un chou, sans jamais laisser la chèvre seule avec le chou.",c:"p"},
-{e:"Prendre la poudre d'escampette",s:"S'enfuir, filer sans demander son reste.",o:"« Escampette » vient de l'ancien verbe « escamper », s'enfuir, emprunté à l'italien. La « poudre » est un trait d'humour : une poudre magique qui ferait disparaître.",c:"p"},
-{e:"Avoir du pain sur la planche",s:"Avoir beaucoup de travail devant soi.",o:"Autrefois, on conservait le pain sur une planche fixée au mur : en avoir beaucoup voulait dire avoir des réserves. Le sens a glissé vers « beaucoup à faire ».",c:"p"},
-{e:"Mettre du beurre dans les épinards",s:"Améliorer sa situation financière.",o:"Les épinards, plat modeste, deviennent bien meilleurs avec du beurre, ingrédient plus coûteux.",c:"p"},
-{e:"Avoir le cafard",s:"Avoir des idées noires, être déprimé.",o:"Le cafard, insecte noir qui fuit la lumière, est devenu au XIXe siècle l'image des idées sombres ; Baudelaire a contribué à répandre ce sens.",c:"p"}
+{e:"Prendre des vessies pour des lanternes",s:"Se tromper grossièrement, croire n'importe quoi.",o:"Une vessie de porc séchée et gonflée pouvait ressembler de loin à une lanterne. Confondre les deux, c'était se laisser abuser par l'apparence.",c:"p"}
 ];
 const CERT = {a:"Origine attestée",p:"Origine probable",d:"Origine discutée"};
+
+/* ============ THÈMES ============ */
+// Format d'une ligne : mot | niveau (1-3) | famille | indice court (mots fléchés) | définition | phrase à trous | synonymes | contraires
+const THEMES_RAW = [
+{id:"aikido",name:"Aïkido",icon:"🥋",note:"Terminologie usuelle à la FFAB. Les usages varient selon les enseignants : n'hésitez pas à faire valider par le vôtre.",
+cats:["Postures et principes","Déplacements","Attaques et saisies","Techniques","Dojo et pratique"],raw:`
+kamae|1|0|garde|Posture de garde, le corps prêt à agir.|Avant chaque technique, tori se place en ___ face à uke.||
+hanmi|1|0|de profil|Position en demi-profil, un pied devant l'autre, le corps de biais.|En ___, on offre moins de surface à l'attaque.||
+ai hanmi|2|0|même garde|Garde où les deux partenaires ont le même pied devant.|En ___, les partenaires avancent le même pied, droit contre droit.||gyaku hanmi
+gyaku hanmi|2|0|garde inverse|Garde où les partenaires ont des pieds opposés devant.|En ___, le pied droit de l'un fait face au pied gauche de l'autre.||ai hanmi
+ma-ai|1|0|distance|Distance juste entre les partenaires.|Garder un bon ___ évite d'être surpris par l'attaque.||
+zanshin|2|0|vigilance|Vigilance maintenue après la technique : l'attention ne se relâche pas.|Même après la projection, tori conserve son ___.||
+metsuke|3|0|regard|Façon de porter le regard, englobant le partenaire sans se fixer sur un détail.|Un bon ___ permet de voir venir l'attaque sans fixer la main.||
+kokyu|2|0|souffle|Respiration ; par extension, la puissance coordonnée par le souffle.|Cette projection repose sur le ___ plus que sur la force des bras.||
+ki|1|0|énergie|Énergie vitale, notion qui donne sa syllabe centrale au mot aïkido.|Dans « aïkido », la syllabe centrale désigne le ___.||
+irimi|1|1|entrer|Mouvement d'entrée vers ou derrière le partenaire.|Par un ___, tori se glisse à côté de l'attaque.||
+tenkan|1|1|pivot|Pivot du corps sur le pied avant.|Avec un ___, tori accompagne la saisie au lieu de s'y opposer.||
+tai sabaki|2|1|esquive|Déplacement du corps pour sortir de la ligne d'attaque.|Un ___ bien placé met tori hors de portée du coup.||
+tsugi ashi|2|1|pas chassé|Pas glissé où le pied arrière rejoint le pied avant, sans les croiser.|En ___, on avance sans jamais croiser les jambes.||
+ayumi ashi|3|1|pas alterné|Pas naturel où les pieds passent alternativement devant.|En ___, le déplacement ressemble à la marche ordinaire.||
+shikko|2|1|à genoux|Marche à genoux utilisée dans le travail au sol.|Les débutants trouvent le ___ éprouvant pour les genoux.||
+omote|2|1|devant|Forme d'une technique exécutée en entrant devant le partenaire.|Ikkyo ___ se fait en entrant devant uke.||ura
+ura|2|1|derrière|Forme d'une technique exécutée en tournant derrière le partenaire.|En ___, tori pivote dans le dos de uke.||omote
+shomen uchi|1|2|frappe front|Frappe verticale descendant vers le sommet de la tête.|Uke attaque en ___, le tranchant de la main vers le front.||
+yokomen uchi|2|2|frappe tempe|Frappe circulaire visant le côté de la tête.|Le ___ arrive en diagonale vers la tempe.||
+tsuki|1|2|coup poing|Coup de poing direct.|Sur un ___, tori s'efface puis saisit le poignet.||
+katate dori|1|2|un poignet|Saisie d'un poignet par une main.|En ___, uke saisit un seul poignet de tori.||
+ryote dori|2|2|deux poignets|Saisie des deux poignets par les deux mains.|En ___, uke saisit les deux poignets de tori.||
+morote dori|2|2|deux mains|Saisie d'un avant-bras avec les deux mains.|En ___, uke s'agrippe à un seul bras avec ses deux mains.||
+kata dori|2|2|épaule|Saisie du vêtement au niveau de l'épaule.|En ___, uke attrape le keikogi au niveau de l'épaule.||
+ushiro ryote dori|3|2|par derrière|Saisie des deux poignets par l'arrière.|En ___, uke passe dans le dos de tori pour saisir ses poignets.||
+ikkyo|1|3|1er principe|Premier principe d'immobilisation, contrôle du bras par le coude.|___ est souvent la première immobilisation enseignée.||
+nikyo|2|3|2e principe|Deuxième principe : torsion du poignet vers l'intérieur.|___ se reconnaît à sa clé de poignet très sensible.||
+sankyo|2|3|3e principe|Troisième principe : torsion du poignet en spirale, qui remonte le long du bras.|Avec ___, la torsion fait monter uke sur la pointe des pieds.||
+yonkyo|3|3|4e principe|Quatrième principe : pression sur un point sensible de l'avant-bras.|___ agit par une pression sur l'avant-bras plutôt que par une torsion.||
+gokyo|3|3|5e principe|Cinquième principe, étudié notamment contre une attaque au couteau.|___ s'étudie notamment face à un tanto.||
+shiho nage|1|3|4 directions|Projection « dans les quatre directions », le bras de uke passant au-dessus de la tête de tori.|Dans ___, tori passe sous le bras de uke avant de projeter.||
+irimi nage|1|3|entrée|Projection en entrant derrière le partenaire.|___ commence par une entrée dans le dos de uke.||
+kote gaeshi|1|3|retournement|Projection par retournement du poignet vers l'extérieur.|Avec ___, le poignet retourné fait chuter uke sur le dos.||
+kaiten nage|2|3|rotation|Projection en rotation, le bras de uke entraîné dans un grand cercle.|Dans ___, la tête de uke est guidée vers le bas avant la projection.||
+tenchi nage|2|3|ciel-terre|Projection « ciel et terre » : une main monte, l'autre descend.|Dans ___, une main de tori monte vers le ciel, l'autre vers le sol.||
+kokyu nage|2|3|souffle|Projection par le souffle et le timing, sans clé articulaire.|___ désigne des projections où le placement remplace la clé.||
+koshi nage|3|3|hanches|Projection par les hanches, uke basculant par-dessus le bassin de tori.|En ___, uke passe par-dessus les hanches de tori.||
+tori|1|4|qui exécute|Celui qui exécute la technique.|Pendant l'exercice, ___ applique la technique et uke l'accompagne.||uke
+uke|1|4|qui reçoit|Celui qui attaque puis reçoit la technique.|Le rôle de ___ est d'attaquer sincèrement puis de chuter.||tori
+ukemi|1|4|chute|Art de chuter sans se blesser.|Apprendre l'___ est la base de la sécurité sur le tatami.||
+seiza|1|4|assis|Position assise à genoux, sur les talons.|Le cours commence et se termine en ___.||
+rei|1|4|salut|Salut.|On fait le ___ en montant sur le tatami.||
+hakama|2|4|pantalon|Large pantalon plissé porté par-dessus le keikogi.|Selon les clubs, on porte le ___ à partir d'un certain grade.||
+keikogi|2|4|tenue|Tenue d'entraînement en coton, veste et pantalon.|Le ___ doit être assez solide pour supporter les saisies.||
+bokken|2|4|sabre|Sabre en bois utilisé pour l'entraînement.|Le travail au ___ éclaire beaucoup de mouvements à mains nues.||
+jo|2|4|bâton|Bâton d'environ 1,30 m utilisé en aïkido.|Le ___ se manie le plus souvent à deux mains.||
+tanto|2|4|couteau|Couteau, généralement en bois à l'entraînement.|Les attaques au ___ demandent un contrôle précis.||
+suwari waza|2|4|à genoux|Travail où les deux partenaires sont à genoux.|En ___, on se déplace en shikko.||
+hanmi handachi|3|4|un debout|Travail où tori est à genoux et uke debout.|En ___, tori à genoux répond à uke debout.||
+`},
+{id:"batiment",name:"Bâtiment et toiture",icon:"🏗️",cats:["Toiture","Structure","Étanchéité et eaux","Chantier"],raw:`
+faîtage|1|0|crête|Ligne haute où se rejoignent les deux versants d'un toit.|Les panneaux ne doivent pas dépasser le ___ du toit.||
+noue|2|0|angle rentrant|Angle rentrant formé par deux versants, où l'eau se concentre.|La ___ collecte l'eau de deux pans de toiture.||
+arêtier|2|0|angle saillant|Angle saillant formé par la rencontre de deux versants.|L'___ descend du faîtage jusqu'à l'angle de la maison.||
+rive|2|0|bord|Bord latéral d'un versant de toiture.|Les tuiles de ___ protègent le bord du pignon.||
+égout|2|0|bas de pente|Partie basse d'un versant, d'où l'eau s'écoule.|L'eau ruisselle jusqu'à l'___ du toit.||
+pente|1|0|inclinaison|Inclinaison d'un toit, en pourcentage ou en degrés.|Une ___ trop faible ralentit l'écoulement de l'eau.||
+bac acier|1|0|tôle|Tôle d'acier nervurée utilisée en couverture.|Le hangar est couvert en ___.||
+lanterneau|3|0|ouverture|Ouvrant vitré en toiture qui laisse entrer la lumière.|Le ___ éclaire l'atelier par le toit.||
+gouttière|1|2|canal|Canal suspendu en bas de pente qui recueille l'eau de pluie.|Il a fallu nettoyer la ___ pleine de feuilles.||
+chéneau|2|2|canal|Canal de recueil des eaux de pluie, souvent intégré à la toiture ou au mur.|Le ___ déborde quand les feuilles l'obstruent.||
+descente|1|2|tuyau|Tuyau vertical qui évacue l'eau de pluie vers le sol.|La ___ d'eau pluviale longe la façade.||
+avaloir|3|2|évacuation|Ouverture qui reçoit l'eau d'une toiture pour l'envoyer vers une descente.|Un ___ bouché transforme la terrasse en piscine.||
+membrane|2|2|revêtement|Revêtement souple qui assure l'étanchéité d'une toiture.|Une ___ bitumineuse recouvre la toiture-terrasse.||
+relevé|3|2|remontée|Remontée de l'étanchéité le long d'une paroi verticale.|Le ___ d'étanchéité protège le pied de l'acrotère.||
+pare-vapeur|2|2|barrière|Couche qui empêche la vapeur d'eau d'atteindre l'isolant.|Sans ___, l'isolant finit par se gorger d'humidité.||
+isolant|1|2|laine|Matériau qui limite les échanges de chaleur.|Un ___ épais réduit les pertes de chaleur.||
+acrotère|2|1|rebord|Muret en bordure d'une toiture-terrasse.|L'étanchéité remonte le long de l'___.||
+pignon|1|1|mur|Partie haute, souvent triangulaire, d'un mur extérieur.|Le ___ de la maison donne sur la rue.||
+panne|2|1|poutre|Pièce horizontale de charpente qui porte les chevrons ou la couverture.|Les bacs acier sont fixés sur chaque ___.||
+chevron|2|1|pièce|Pièce de bois posée dans le sens de la pente, qui porte les liteaux.|Chaque ___ est cloué sur les pannes.||
+liteau|2|1|tasseau|Petite pièce de bois horizontale sur laquelle s'accrochent les tuiles.|La tuile s'accroche sur le ___ grâce à son ergot.||
+ferme|3|1|triangle|Assemblage triangulé de charpente qui porte les pannes.|Une ___ de charpente supporte les pannes.||
+entraxe|2|1|écartement|Distance entre les axes de deux éléments voisins.|L'___ des pannes conditionne la fixation des modules.||
+surcharge|2|1|poids|Charge supplémentaire qu'une structure doit supporter.|Avant de poser les panneaux, on vérifie que la charpente supporte la ___.||
+échafaudage|1|3|structure|Structure provisoire qui permet de travailler en hauteur.|L'___ est monté le long de la façade.||
+garde-corps|1|3|protection|Protection qui empêche les chutes depuis un bord.|Un ___ provisoire sécurise la rive de la toiture.||
+ligne de vie|2|3|câble|Câble ou rail auquel on s'attache pour travailler en hauteur.|Le couvreur s'attache à la ___ avant de s'avancer.||
+nacelle|1|3|plateforme|Plateforme élévatrice pour travailler en hauteur.|La ___ amène les techniciens au niveau du toit.||
+calepinage|2|3|plan|Plan qui définit la disposition des éléments à poser.|Le ___ indique la place exacte de chaque panneau.||
+`},
+{id:"animaux",name:"Les animaux",icon:"🦉",cats:["Cris","Petits","Groupes","Habitats"],raw:`
+hennir|1|0|cheval|Crier, pour un cheval.|Le cheval se met à ___ en voyant son maître.||
+bêler|1|0|mouton|Crier, pour un mouton ou une chèvre.|Les moutons se mettent à ___ dans la bergerie.||
+rugir|1|0|lion|Crier, pour un lion.|Le lion se met à ___ pour défendre son territoire.||
+meugler|1|0|vache|Crier, pour une vache.|La vache se met à ___ quand vient l'heure de la traite.||
+coasser|1|0|grenouille|Crier, pour une grenouille.|Les grenouilles se mettent à ___ près de la mare.||
+bramer|2|0|cerf|Crier, pour un cerf.|En automne, on entend le cerf ___ dans la forêt.||
+hululer|2|0|chouette|Crier, pour la chouette ou le hibou.|La nuit, la chouette se met à ___.||
+braire|2|0|âne|Crier, pour un âne.|L'âne commence à ___ dès qu'il a faim.||
+barrir|2|0|éléphant|Crier, pour un éléphant.|Dans la savane, l'éléphant se met à ___.||
+croasser|2|0|corbeau|Crier, pour un corbeau.|Perché sur sa branche, le corbeau se met à ___.||
+caqueter|2|0|poule|Crier, pour une poule.|La poule se met à ___ après avoir pondu.||
+roucouler|2|0|pigeon|Crier doucement, pour un pigeon ou une tourterelle.|Sur le toit, les pigeons se mettent à ___.||
+glapir|3|0|renard|Crier, pour un renard ou un petit chien.|Le renard se met à ___ dans le sous-bois.||
+blatérer|3|0|chameau|Crier, pour un chameau ou un bélier.|Le chameau se met à ___ quand on le charge.||
+poulain|1|1|bébé cheval|Petit du cheval.|Le ___ tient à peine sur ses longues pattes.||
+lionceau|1|1|bébé lion|Petit du lion.|Le ___ joue avec la queue de sa mère.||
+faon|1|1|bébé biche|Petit de la biche et du cerf.|Le ___ se cache dans les fougères.||
+marcassin|1|1|bébé sanglier|Petit du sanglier, au pelage rayé.|Le ___ suit sa mère en file indienne.||
+chevreau|2|1|bébé chèvre|Petit de la chèvre.|Le ___ gambade dans le pré.||
+ânon|2|1|bébé âne|Petit de l'âne.|L'___ suit sa mère partout.||
+caneton|2|1|bébé canard|Petit du canard.|Le ___ nage derrière sa mère.||
+renardeau|2|1|bébé renard|Petit du renard.|Le ___ sort du terrier pour jouer.||
+éléphanteau|2|1|bébé éléphant|Petit de l'éléphant.|L'___ se cache sous le ventre de sa mère.||
+levraut|3|1|bébé lièvre|Petit du lièvre.|Le ___ naît déjà couvert de poils.||
+meute|1|2|loups|Groupe de loups ou de chiens.|La ___ de loups chasse ensemble.||
+banc|1|2|poissons|Groupe de poissons nageant ensemble.|Un ___ de sardines passe sous le bateau.||
+troupeau|1|2|bétail|Groupe d'animaux d'élevage.|Le berger rentre le ___ de moutons.||
+essaim|2|2|abeilles|Groupe d'abeilles.|Un ___ d'abeilles s'est posé sur la branche.||
+nuée|2|2|oiseaux|Grand groupe d'oiseaux ou d'insectes.|Une ___ d'étourneaux obscurcit le ciel.||
+harde|3|2|cerfs|Groupe de cerfs, de biches ou de chamois.|Une ___ de biches traverse la clairière.||
+terrier|1|3|trou|Trou creusé dans le sol où vit un animal.|Le lapin disparaît dans son ___.||
+tanière|1|3|abri|Abri d'une bête sauvage.|L'ours hiberne dans sa ___.||
+ruche|1|3|maison|Abri où vivent les abeilles.|Les abeilles rentrent à la ___.||
+fourmilière|1|3|nid|Nid des fourmis.|Une ___ grouille sous la pierre.||
+clapier|2|3|cage|Cage où l'on élève des lapins.|Le lapin dort dans son ___.||
+bauge|3|3|boue|Lieu boueux où se vautre le sanglier.|Le sanglier se roule dans sa ___.||
+aire|3|3|nid|Nid d'un grand rapace, comme l'aigle.|L'aigle regagne son ___ au sommet de la falaise.||
+`},
+{id:"cuisine",name:"Cuisine",icon:"🍳",cats:["Découpes","Techniques","Ustensiles","Préparations"],raw:`
+julienne|1|0|bâtonnets|Découpe en fins bâtonnets.|Taillez les carottes en ___ pour la salade.||
+émincer|1|0|trancher|Couper en tranches fines.|Il faut ___ les oignons avant de les faire revenir.||
+brunoise|2|0|petits dés|Découpe en tout petits dés réguliers.|L'oignon est coupé en ___ très fine.||
+chiffonnade|2|0|lanières|Découpe de feuilles en fines lanières.|Une ___ de basilic parfume les tomates.||
+ciseler|2|0|hacher|Couper finement des herbes ou un oignon sans les écraser.|Il suffit de ___ la ciboulette au dernier moment.||
+paysanne|3|0|découpe|Découpe en fines tranches carrées ou rondes, pour les potages.|Les légumes du potage sont taillés en ___.||
+mirepoix|3|0|dés|Mélange de légumes taillés en dés, base aromatique de nombreux plats.|Faites revenir une ___ de carotte, oignon et céleri.||
+monter|1|1|fouetter|Fouetter pour incorporer de l'air.|Il faut ___ les blancs en neige bien ferme.||
+réduire|1|1|concentrer|Faire évaporer un liquide pour le concentrer.|Laissez ___ la sauce de moitié.||
+flamber|1|1|enflammer|Arroser d'alcool chaud puis l'enflammer.|Le chef va ___ les crêpes au dernier moment.||
+mijoter|1|1|cuire doux|Cuire lentement à petit feu.|Le bœuf bourguignon doit ___ pendant des heures.||
+bain-marie|1|1|cuisson|Cuisson douce d'un récipient posé dans de l'eau chaude.|Le chocolat fond au ___ sans brûler.||
+déglacer|2|1|décoller|Verser un liquide dans un récipient chaud pour dissoudre les sucs de cuisson.|Il faut ___ la poêle au vin blanc pour la sauce.||
+blanchir|2|1|ébouillanter|Plonger brièvement un aliment dans l'eau bouillante.|Pensez à ___ les haricots avant de les faire sauter.||
+napper|2|1|recouvrir|Recouvrir un aliment d'une couche de sauce ou de crème.|Il reste à ___ le gâteau de chocolat fondu.||
+pocher|2|1|cuire|Cuire dans un liquide frémissant.|On peut ___ un œuf dans de l'eau vinaigrée.||
+frémir|2|1|bouillir|Être sur le point de bouillir, avec de petites bulles.|L'eau doit seulement ___ pour pocher les œufs.||
+abaisser|3|1|étaler|Étaler une pâte au rouleau.|Il faut ___ la pâte sur une faible épaisseur.||
+maryse|2|2|spatule|Spatule souple pour racler les récipients.|La ___ récupère la pâte jusqu'au dernier gramme.||
+chinois|2|2|passoire|Passoire fine en forme de cône.|La sauce est filtrée au ___.||
+sauteuse|2|2|poêle|Casserole large à bords droits pour faire sauter les aliments.|Les légumes sont saisis dans une ___.||
+mandoline|2|2|trancheur|Ustensile à lame pour trancher finement et régulièrement.|La ___ coupe les pommes de terre en lamelles régulières.||
+cul-de-poule|3|2|bol|Bol hémisphérique en métal, idéal pour fouetter.|Fouettez les blancs dans un ___.||
+marinade|1|3|bain|Liquide aromatique dans lequel on fait reposer un aliment.|La viande repose une nuit dans la ___.||
+coulis|1|3|purée|Purée fluide de fruits ou de légumes.|Un ___ de framboise accompagne le gâteau.||
+roux|2|3|liaison|Mélange cuit de beurre et de farine qui sert à lier une sauce.|La béchamel commence par un ___.||
+fumet|3|3|bouillon|Bouillon concentré de poisson ou de champignons.|Le ___ de poisson sert de base à la sauce.||
+appareil|3|3|mélange|Mélange d'ingrédients prêt à être cuit ou utilisé.|Versez l'___ à quiche sur la pâte.||
+duxelles|3|3|hachis|Hachis de champignons et d'échalotes revenus au beurre.|Le filet est enrobé d'une ___ de champignons.||
+`},
+{id:"marine",name:"Marine et voile",icon:"⛵",cats:["Le bateau","Manœuvres","Navigation"],raw:`
+proue|1|0|avant|Partie avant d'un navire.|Les vagues se brisent sur la ___.||poupe
+poupe|1|0|arrière|Partie arrière d'un navire.|Le pavillon flotte à la ___.||proue
+mât|1|0|poteau|Pièce verticale qui porte les voiles.|Le ___ porte la grand-voile.||
+barre|1|0|direction|Pièce qui actionne le gouvernail.|Prends la ___ et garde le cap.||
+étrave|2|0|avant|Pièce qui forme l'avant de la coque et fend l'eau.|L'___ fend les vagues.||
+quille|2|0|lest|Pièce sous la coque qui stabilise le voilier.|La ___ empêche le voilier de chavirer.||
+bôme|2|0|espar|Barre horizontale fixée au mât, qui tient le bas de la grand-voile.|Baisse la tête quand la ___ passe !||
+foc|2|0|voile|Voile triangulaire placée à l'avant du mât.|On hisse le ___ pour gagner de la vitesse.||
+haubans|2|0|câbles|Câbles qui tiennent le mât sur les côtés.|Les ___ sifflent dans le vent.||
+safran|3|0|gouvernail|Partie immergée du gouvernail.|Le ___ dirige le bateau sous l'eau.||
+hisser|1|1|monter|Faire monter une voile ou un pavillon.|L'équipage aide à ___ les voiles.||affaler
+amarrer|1|1|attacher|Attacher un bateau à quai avec des cordages.|Il faut ___ le bateau solidement au ponton.||
+écoute|2|1|cordage|Cordage qui règle l'angle d'une voile.|Tire sur l'___ pour border la voile.||
+border|2|1|tendre|Tirer sur l'écoute pour rapprocher la voile de l'axe du bateau.|Pour remonter au vent, il faut ___ la voile.||choquer
+choquer|2|1|relâcher|Relâcher une écoute pour ouvrir la voile.|Le vent forcit, il faut ___ l'écoute.||border
+affaler|2|1|descendre|Faire descendre une voile.|Avant d'entrer au port, on va ___ la grand-voile.||hisser
+virer|2|1|tourner|Changer de bord en faisant passer l'avant du bateau face au vent.|Pour remonter le chenal, il faut ___ de bord plusieurs fois.||
+mouiller|2|1|ancrer|Jeter l'ancre.|Nous allons ___ dans la crique pour la nuit.||
+empanner|3|1|virer|Changer de bord en faisant passer l'arrière du bateau dans le vent.|Attention à la bôme quand on va ___ !||
+louvoyer|3|1|zigzaguer|Avancer contre le vent en tirant des bords successifs.|Pour remonter le chenal, le voilier doit ___.||
+bâbord|1|2|gauche|Côté gauche d'un bateau quand on regarde vers l'avant.|Le phare est à ___, sur notre gauche.||tribord
+tribord|1|2|droite|Côté droit d'un bateau quand on regarde vers l'avant.|Une bouée passe à ___, sur notre droite.||bâbord
+cap|1|2|direction|Direction suivie par le bateau.|Garde le ___ au nord.||
+gîter|2|2|pencher|Pencher sur le côté sous l'effet du vent.|Avec cette rafale, le voilier commence à ___.||
+encablure|3|2|distance|Ancienne mesure de distance en mer, d'environ 200 mètres.|Le récif est à une ___ de la côte.||
+estran|3|2|grève|Partie du littoral découverte à marée basse.|À marée basse, on ramasse des coques sur l'___.||
+`},
+{id:"mythologie",name:"Mythologie",icon:"🏛️",cats:["Personnages","Mots et expressions","Créatures"],raw:`
+Zeus|1|0|roi dieux|Roi des dieux grecs, maître de la foudre.|___ lance la foudre depuis l'Olympe.||
+Athéna|2|0|sagesse|Déesse grecque de la sagesse et de la guerre.|La chouette est l'animal d'___.||
+Hermès|2|0|messager|Messager des dieux, aux sandales ailées.|___ porte les messages des dieux.||
+Achille|2|0|héros|Héros grec invulnérable, sauf au talon.|___ fut blessé au talon par une flèche.||
+Icare|2|0|ailes|Jeune homme qui vola trop près du soleil avec des ailes de cire.|___ tomba dans la mer quand la cire de ses ailes fondit.||
+Prométhée|3|0|titan|Titan qui vola le feu aux dieux pour le donner aux hommes.|___ fut puni pour avoir donné le feu aux hommes.||
+Méduse|3|0|gorgone|Gorgone dont le regard changeait en pierre.|Persée trancha la tête de ___.||
+odyssée|1|1|périple|Long voyage plein d'aventures, comme celui d'Ulysse.|Leur retour en train fut une véritable ___.||
+talon d'Achille|1|1|point faible|Point faible d'une personne.|Le revers, c'est le ___ de ce joueur de tennis.||
+cheval de Troie|2|1|piège|Ruse pour s'introduire chez l'ennemi ; programme malveillant déguisé.|Ce logiciel gratuit était un ___.||
+boîte de Pandore|2|1|source maux|Source de malheurs qu'on libère sans pouvoir les arrêter.|Ouvrir ce dossier, c'est ouvrir la ___.||
+travail de Sisyphe|2|1|tâche vaine|Tâche interminable, toujours à recommencer.|Ranger cette chambre est un vrai ___.||
+fil d'Ariane|2|1|guide|Ce qui permet de se retrouver dans une situation compliquée.|Ce plan est notre ___ dans le dédale administratif.||
+pomme de discorde|2|1|dispute|Sujet de dispute.|L'héritage est devenu une ___ entre les frères.||
+dédale|2|1|labyrinthe|Lieu où l'on se perd, du nom de l'architecte du Labyrinthe.|Nous nous sommes perdus dans le ___ des ruelles.||
+mentor|2|1|guide|Conseiller expérimenté, du nom de l'ami d'Ulysse.|Elle a trouvé un ___ qui l'accompagne dans sa carrière.||
+panique|2|1|peur|Peur soudaine et collective, dont le nom vient du dieu Pan.|Une ___ générale a gagné la foule.||
+herculéen|2|1|colossal|D'une force ou d'une ampleur extraordinaire, comme Hercule.|Déménager ce piano demande un effort ___.||
+titanesque|2|1|démesuré|Démesuré, digne des Titans.|Ce chantier est un projet ___.||
+narcissique|2|1|vaniteux|Qui s'admire soi-même avec excès, comme Narcisse.|Ce chanteur ___ ne parle que de lui.|vaniteux,égocentrique|modeste
+supplice de Tantale|3|1|frustration|Situation où l'on voit, sans pouvoir l'atteindre, ce qu'on désire.|Regarder ce buffet sans y toucher, quel ___ !||
+écuries d'Augias|3|1|saleté|Lieu très sale ou affaire très corrompue, qu'il faut nettoyer.|Ce grenier, ce sont les ___ !||
+Cassandre|3|1|prophète|Personne qui annonce des malheurs sans être écoutée.|Il jouait les ___, mais personne ne le croyait.||
+sirène|1|2|enchanteresse|Créature dont le chant attirait les marins vers leur perte.|Ulysse se fit attacher au mât pour résister au chant de la ___.||
+cyclope|1|2|un œil|Géant n'ayant qu'un œil au milieu du front.|Ulysse aveugla le ___ Polyphème.||
+chimère|2|2|illusion|Monstre fabuleux ; au figuré, idée irréalisable.|Ce projet de fortune rapide est une ___.||
+hydre|2|2|serpent|Serpent aux têtes qui repoussaient ; au figuré, mal qui renaît sans cesse.|La corruption est une ___ difficile à vaincre.||
+`},
+{id:"couleurs",name:"Couleurs et nuances",icon:"🎨",cats:["Rouges et roses","Bleus et verts","Jaunes et bruns","Autres nuances"],raw:`
+vermillon|1|0|rouge vif|Rouge vif tirant sur l'orangé.|Le soleil couchant teinte le ciel de ___.||
+pourpre|1|0|rouge violet|Rouge foncé tirant sur le violet.|Les empereurs romains portaient un manteau ___.||
+bordeaux|1|0|rouge vin|Rouge foncé, couleur du vin.|Elle porte une écharpe ___.||
+carmin|2|0|rouge vif|Rouge éclatant et profond.|Ses lèvres étaient d'un ___ intense.||
+fuchsia|2|0|rose vif|Rose vif tirant sur le violet.|Elle a repeint sa porte en ___.||
+incarnat|3|0|rouge chair|Rouge clair et vif, couleur de chair rosée.|Ses joues prirent une teinte ___.||
+nacarat|3|0|rouge orangé|Rouge clair tirant sur l'orangé.|Une soie ___ recouvrait le fauteuil.||
+azur|1|1|bleu ciel|Bleu clair et lumineux du ciel.|Un ciel d'___ sans un nuage.||
+turquoise|1|1|bleu-vert|Bleu tirant sur le vert, comme la pierre du même nom.|Ils se baignent dans l'eau ___ du lagon.||
+émeraude|1|1|vert vif|Vert vif et lumineux, comme la pierre précieuse.|La mer ___ scintille au soleil.||
+indigo|2|1|bleu foncé|Bleu foncé tirant sur le violet.|Le jean doit sa couleur à l'___.||
+outremer|2|1|bleu intense|Bleu profond et intense.|Le peintre utilise un bleu ___.||
+céladon|3|1|vert pâle|Vert pâle tirant sur le gris-bleu.|Un vase en porcelaine ___ trône sur la table.||
+glauque|3|1|vert terne|Vert tirant sur le bleu, d'un ton terne ; au figuré, sinistre.|L'eau ___ de l'étang ne donnait pas envie de se baigner.||
+cyan|3|1|bleu clair|Bleu-vert clair, l'une des couleurs de base de l'imprimerie.|L'imprimante manque d'encre ___.||
+ocre|1|2|jaune-brun|Jaune-brun tiré d'une terre colorée.|Les façades ___ du village provençal.||
+safran|2|2|jaune|Jaune orangé vif, comme l'épice.|Le moine porte une robe ___.||
+sépia|2|2|brun|Brun foncé, aux tons des vieilles photos.|Une vieille photo aux tons ___.||
+fauve|2|2|roux|Jaune tirant sur le roux.|Le lion au pelage ___ se repose à l'ombre.||
+mordoré|3|2|brun doré|Brun chaud aux reflets dorés.|Le plumage ___ du faisan brille au soleil.||
+bistre|3|2|brun-noir|Brun noirâtre, comme la suie.|Des cernes ___ marquaient ses yeux.||
+mauve|1|3|violet pâle|Violet pâle.|Des fleurs ___ bordent le chemin.||
+lavande|1|3|violet doux|Violet bleuté et doux, comme la fleur.|Elle porte un pull ___.||
+anthracite|2|3|gris foncé|Gris très foncé, presque noir.|Il a choisi une voiture gris ___.||
+écru|2|3|blanc cassé|Couleur naturelle, ni blanchie ni teinte.|Une nappe en lin ___ couvre la table.||
+opalin|3|3|laiteux|Blanc laiteux aux reflets irisés, comme l'opale.|La lumière ___ du petit matin.||
+zinzolin|3|3|violet rouge|Violet tirant sur le rouge.|Un rideau de velours ___ encadre la fenêtre.||
+`},
+{id:"coutellerie",name:"Coutellerie",icon:"🔪",cats:["La lame","Le manche","Mécanismes","Matériaux et savoir-faire"],raw:`
+lame|1|0|fer|Partie tranchante du couteau.|La ___ est en acier inoxydable.||
+pointe|1|0|bout|Extrémité effilée de la lame.|La ___ effilée permet des coupes précises.||
+fil|1|0|tranchant|Partie la plus fine du tranchant, celle qui coupe.|Un ___ bien entretenu coupe le papier sans effort.||
+talon|2|0|base|Partie de la lame la plus proche du manche.|Le ___ de la lame sert à couper les choses dures.||
+émouture|2|0|profil|Forme donnée à la lame par le meulage, qui détermine sa coupe.|Une ___ plate donne une coupe très fine.||
+onglet|2|0|encoche|Encoche creusée dans la lame pour l'ouvrir avec l'ongle.|On ouvre la lame en glissant l'ongle dans l'___.||
+ricasso|3|0|zone plate|Partie non affûtée de la lame, juste avant la garde ou le manche.|Le poinçon du coutelier est souvent frappé sur le ___.||
+plaquettes|2|1|côtés|Pièces qui habillent les côtés du manche.|Les ___ sont en corne de bélier.||
+mitre|2|1|renfort|Pièce métallique entre la lame et le manche, qui renforce la jonction.|La ___ en laiton protège le bois du manche.||
+platine|2|1|armature|Pièce métallique formant l'armature du manche d'un couteau pliant.|Les plaquettes de bois sont rivetées sur la ___.||
+soie|2|1|prolongement|Prolongement de la lame qui s'enfonce dans le manche.|Une ___ traversante rend le couteau très solide.||
+ressort|1|2|rappel|Pièce qui maintient la lame ouverte ou fermée.|Le ___ claque quand on ferme la lame.||
+virole|2|2|bague|Bague métallique qui, en tournant, bloque la lame, comme sur l'Opinel.|On tourne la ___ pour verrouiller la lame.||
+cran forcé|2|2|point dur|Système où le ressort maintient la lame ouverte par un point dur, sans verrou.|Un couteau à ___ reste ouvert sans être verrouillé.||
+mouche|2|2|abeille|Décor en forme d'insecte placé au bout du ressort, emblème du Laguiole.|La célèbre ___ du Laguiole orne le ressort.||
+liner lock|3|2|verrou|Verrou où une languette de la platine vient bloquer le talon de la lame ouverte.|Avec un ___, on débloque la lame du pouce.||
+coutelier|1|3|artisan|Artisan qui fabrique des couteaux.|Le ___ signe chaque lame de son poinçon.||
+forge|1|3|atelier|Atelier où l'on chauffe et martèle le métal.|La lame sort de la ___ encore rouge.||
+affûtage|1|3|aiguisage|Action de redonner du tranchant à une lame.|Un bon ___ se fait à la pierre.||
+inox|1|3|sans rouille|Acier qui ne rouille pas, ou très peu.|Une lame en ___ supporte bien l'humidité.||
+damas|2|3|acier motif|Acier formé de couches superposées qui dessinent des motifs sur la lame.|Les motifs du ___ apparaissent après l'attaque à l'acide.||
+trempe|2|3|durcissement|Refroidissement rapide de l'acier chauffé, qui le durcit.|La ___ donne à la lame sa dureté.||
+carbone|2|3|acier|Acier non inoxydable, apprécié pour son tranchant.|Une lame en acier ___ se patine avec le temps.||
+patine|2|3|oxydation|Coloration qui se forme avec le temps sur certains aciers.|La ___ protège un peu l'acier carbone.||
+Thiers|2|3|capitale|Ville d'Auvergne, capitale française de la coutellerie.|___ est la capitale de la coutellerie en France.||
+revenu|3|3|chauffe|Chauffe modérée après la trempe, qui réduit la fragilité de l'acier.|Sans ___, la lame serait dure mais cassante.||
+morfil|3|3|bavure|Fine bavure de métal qui se forme sur le fil pendant l'affûtage.|On retire le ___ en passant la lame sur un cuir.||
+`},
+{id:"droit",name:"Droit et vie quotidienne",icon:"⚖️",cats:["Famille et patrimoine","Contrats et argent","Justice et démarches"],raw:`
+notaire|1|0|officier|Officier public qui rédige et authentifie les actes.|L'acte de vente est signé chez le ___.||
+succession|1|0|héritage|Transmission du patrimoine d'une personne décédée.|Le notaire règle la ___.||
+donation|1|0|cadeau|Transmission d'un bien de son vivant, à titre gratuit.|Les parents ont fait une ___ à leurs enfants.||
+usufruit|2|0|jouissance|Droit d'utiliser un bien et d'en percevoir les revenus sans en être propriétaire.|Elle garde l'___ de la maison et peut continuer à y vivre.||nue-propriété
+nue-propriété|2|0|sans usufruit|Propriété d'un bien sans le droit d'en jouir ni d'en percevoir les revenus.|Les enfants reçoivent la ___ de la maison.||usufruit
+indivision|2|0|copropriété|Situation où plusieurs personnes possèdent ensemble un même bien.|Les trois héritiers sont en ___ sur la maison.||
+legs|2|0|don|Don fait par testament.|L'association a reçu un ___ important.||
+caution|1|1|garant|Personne qui s'engage à payer si le débiteur ne le fait pas.|Ses parents se portent ___ pour son appartement.||
+préavis|1|1|délai|Délai à respecter avant de mettre fin à un contrat.|Le locataire doit respecter un ___ avant de partir.||
+échéance|1|1|date limite|Date à laquelle une obligation doit être exécutée.|Le prochain loyer arrive à ___ le 5 du mois.||
+avenant|2|1|modification|Document qui modifie un contrat existant.|Un ___ au contrat a ajouté une option.||
+résiliation|2|1|rupture|Fin d'un contrat décidée par l'une des parties.|Il a envoyé la ___ de son abonnement.||
+créancier|2|1|prêteur|Personne à qui l'on doit de l'argent.|Le ___ réclame son dû.||débiteur
+débiteur|2|1|qui doit|Personne qui doit de l'argent.|Le ___ a obtenu un délai de paiement.||créancier
+quittance|2|1|reçu|Document qui atteste qu'un paiement a été fait.|Le propriétaire envoie une ___ de loyer chaque mois.||
+franchise|2|1|reste|Somme qui reste à la charge de l'assuré en cas de sinistre.|Après l'accident, il a payé la ___.||
+sinistre|2|1|dommage|Événement qui cause un dommage couvert par une assurance.|Il faut déclarer le ___ à l'assureur.||
+procuration|1|2|mandat|Document qui autorise quelqu'un à agir à sa place.|Il a donné ___ à sa femme pour voter.||
+plaignant|2|2|qui se plaint|Personne qui porte plainte.|Le ___ a raconté les faits au juge.||
+recours|2|2|contestation|Démarche pour contester une décision.|Il a formé un ___ contre l'amende.||
+mise en demeure|2|2|sommation|Lettre officielle exigeant d'exécuter une obligation dans un délai.|Sans réponse, envoyez une ___.||
+commissaire de justice|2|2|officier|Officier public qui signifie les actes et fait exécuter les décisions, autrefois appelé huissier.|Le ___ est venu constater les dégâts.||
+prescription|3|2|délai|Délai au-delà duquel on ne peut plus agir en justice.|Les faits sont trop anciens : il y a ___.||
+jurisprudence|3|2|décisions|Ensemble des décisions de justice qui font référence.|Les avocats s'appuient sur la ___.||
+`},
+{id:"informatique",name:"Informatique",icon:"💻",cats:["Matériel","Logiciel","Réseaux et internet","Sécurité"],raw:`
+processeur|1|0|puce|Composant qui exécute les calculs d'un ordinateur.|Le ___ chauffe quand l'ordinateur travaille dur.||
+périphérique|1|0|accessoire|Appareil branché à un ordinateur, comme une souris ou une imprimante.|L'imprimante est un ___.||
+pixel|1|0|point|Plus petit point d'une image numérique.|Zoomez assez et vous verrez chaque ___.||
+mémoire vive|2|0|RAM|Mémoire rapide et temporaire, effacée à l'extinction.|Avec plus de ___, on ouvre plus de programmes à la fois.||
+carte mère|2|0|circuit|Circuit principal qui relie tous les composants.|Tous les composants se branchent sur la ___.||
+bogue|1|1|bug|Erreur dans un programme.|Ce ___ fait planter l'application au démarrage.||
+mise à jour|1|1|update|Nouvelle version qui corrige ou améliore un logiciel.|Installez la ___ pour corriger la faille.||
+interface|1|1|écran|Ce qui permet à l'utilisateur d'interagir avec un programme.|L'___ est claire, on trouve tout facilement.||
+algorithme|2|1|procédé|Suite d'instructions pour résoudre un problème.|Cet ___ trie les fichiers par date.||
+logiciel libre|2|1|ouvert|Logiciel dont le code peut être librement utilisé, étudié et modifié.|Firefox est un ___.||
+système d'exploitation|2|1|OS|Logiciel de base qui gère l'ordinateur et ses programmes.|Linux est un ___ gratuit.||
+compilateur|3|1|traducteur|Programme qui traduit un code source en programme exécutable.|Le ___ signale une erreur à la ligne 12.||
+navigateur|1|2|browser|Logiciel pour consulter des sites web.|Ouvrez votre ___ pour accéder au site.||
+URL|1|2|adresse|Adresse d'une page web.|Copiez l'___ et envoyez-la par mail.||
+serveur|2|2|machine|Ordinateur qui fournit des services ou des données à d'autres.|Le site est hébergé sur un ___ en France.||
+routeur|2|2|box|Appareil qui achemine les données entre réseaux.|Le ___ distribue le wifi dans la maison.||
+bande passante|2|2|débit|Quantité de données qu'une connexion peut transmettre.|La vidéo consomme beaucoup de ___.||
+hébergement|2|2|stockage|Service qui stocke un site et le rend accessible sur internet.|Cet ___ gratuit suffit pour un petit site.||
+sauvegarde|1|3|copie|Copie de données pour pouvoir les restaurer.|Sans ___, les photos perdues ne reviendront pas.||
+hameçonnage|2|3|phishing|Arnaque qui imite un organisme connu pour voler des informations.|Ce faux mail de la banque est une tentative d'___.||
+pare-feu|2|3|firewall|Dispositif qui filtre les connexions d'un réseau.|Le ___ bloque les connexions suspectes.||
+chiffrement|2|3|codage|Procédé qui rend des données illisibles sans la clé.|Le ___ protège les messages des regards indiscrets.||
+authentification|2|3|identité|Vérification de l'identité d'un utilisateur.|L'___ à deux facteurs demande un code par SMS.||
+rançongiciel|3|3|ransomware|Logiciel malveillant qui bloque les fichiers et exige une rançon.|L'hôpital a été paralysé par un ___.||
+`},
+{id:"sciences",name:"Sciences",icon:"🔬",cats:["Physique","Chimie","Le vivant","Terre et ciel"],raw:`
+gravitation|1|0|attraction|Force qui attire les masses les unes vers les autres.|La ___ maintient la Lune autour de la Terre.||
+frottement|1|0|friction|Force qui s'oppose au glissement de deux surfaces.|Le ___ use les pneus.||
+condensation|1|0|liquéfaction|Passage de l'état gazeux à l'état liquide.|La ___ couvre de buée la vitre froide.||évaporation
+conducteur|1|0|qui transmet|Matériau qui laisse passer le courant ou la chaleur.|Le cuivre est un excellent ___.||isolant
+inertie|2|0|résistance|Tendance d'un corps à conserver son état de repos ou de mouvement.|Par ___, les passagers sont projetés en avant au freinage.||
+réfraction|2|0|déviation|Déviation de la lumière quand elle change de milieu.|La paille semble cassée dans le verre à cause de la ___.||
+sublimation|3|0|gaz|Passage direct de l'état solide à l'état gazeux.|La glace sèche disparaît par ___.||
+atome|1|1|particule|Plus petite partie d'un élément chimique.|Chaque ___ possède un noyau entouré d'électrons.||
+molécule|1|1|assemblage|Assemblage d'atomes liés entre eux.|Une ___ d'eau contient deux atomes d'hydrogène.||
+acide|1|1|aigre|Se dit d'une substance de pH inférieur à 7.|Le jus de citron est très ___.||basique
+oxydation|2|1|rouille|Réaction chimique avec l'oxygène, dont la rouille est un exemple.|L'___ fait rouiller le fer.||
+solvant|2|1|diluant|Liquide qui dissout d'autres substances.|L'eau est le ___ le plus courant.||
+catalyseur|3|1|accélérateur|Substance qui accélère une réaction sans être consommée.|Cette enzyme agit comme un ___.||
+photosynthèse|1|2|chlorophylle|Fabrication de matière par les plantes grâce à la lumière.|Grâce à la ___, les feuilles fabriquent leur nourriture.||
+prédateur|1|2|chasseur|Animal qui chasse d'autres animaux pour se nourrir.|Le loup est un ___.||proie
+écosystème|1|2|milieu|Ensemble des êtres vivants et de leur milieu.|La mare est un ___ fragile.||
+métamorphose|1|2|transformation|Transformation profonde au cours du développement d'un animal.|La chenille devient papillon par ___.||
+symbiose|2|2|association|Association durable et bénéfique entre deux espèces.|Le poisson-clown vit en ___ avec l'anémone.||
+chromosome|2|2|ADN|Structure qui porte les gènes dans la cellule.|Chaque ___ porte des milliers de gènes.||
+mitose|3|2|division|Division d'une cellule en deux cellules identiques.|La ___ permet aux tissus de se renouveler.||
+érosion|1|3|usure|Usure du relief par l'eau, le vent ou la glace.|L'___ creuse les falaises.||
+galaxie|1|3|étoiles|Immense ensemble d'étoiles.|La Voie lactée est notre ___.||
+magma|2|3|roche fondue|Roche en fusion sous la surface de la Terre.|Le ___ remonte par la cheminée du volcan.||
+équinoxe|2|3|jour = nuit|Moment où le jour et la nuit ont la même durée.|L'___ de printemps a lieu vers le 20 mars.||solstice
+solstice|2|3|jour extrême|Moment de l'année où le jour est le plus long ou le plus court.|Le ___ d'été est le jour le plus long.||équinoxe
+tectonique|3|3|plaques|Étude des mouvements des plaques de la croûte terrestre.|La ___ des plaques explique les séismes.||
+nébuleuse|3|3|nuage|Nuage de gaz et de poussières dans l'espace.|Les étoiles naissent dans une ___.||
+`},
+{id:"bricolage",name:"Bricolage",icon:"🔧",cats:["Outils","Quincaillerie","Techniques"],raw:`
+équerre|1|0|angle droit|Instrument pour tracer ou vérifier un angle droit.|Vérifiez l'angle avec une ___.||
+niveau|1|0|à bulle|Outil à bulle qui vérifie qu'une surface est horizontale ou verticale.|Avec un ___, le cadre sera bien droit.||
+visseuse|1|0|tournevis|Outil électrique pour visser et dévisser.|La ___ fait gagner un temps fou au montage du meuble.||
+scie sauteuse|1|0|découpeuse|Scie électrique à lame fine, pour les découpes courbes.|La ___ découpe le contreplaqué en arrondi.||
+serre-joint|2|0|presse|Outil qui maintient deux pièces serrées l'une contre l'autre.|Un ___ tient les planches pendant que la colle sèche.||
+rabot|2|0|lame|Outil qui enlève de fines couches de bois.|Un coup de ___ et la porte ne frotte plus.||
+pied-de-biche|2|0|levier|Levier à extrémité fendue pour arracher les clous.|Le ___ arrache les vieux clous.||
+fil à plomb|2|0|verticale|Fil lesté qui indique la verticale.|Le ___ montre que le mur penche.||
+fraise|3|0|évaseur|Outil qui évase l'entrée d'un trou pour noyer la tête de vis.|Avec une ___, la tête de vis affleure.||
+taraud|3|0|filetage|Outil qui crée un filetage dans un trou.|Le ___ permet de visser directement dans le métal.||
+cheville|1|1|fixation|Pièce glissée dans un trou pour qu'une vis y tienne.|Sans ___, la vis ne tiendra pas dans le placo.||
+écrou|1|1|pièce|Pièce percée et filetée qui se visse sur une vis.|Serrez l'___ avec une clé plate.||
+rondelle|1|1|disque|Disque percé placé sous une vis ou un écrou.|La ___ répartit l'effort sur le bois.||
+boulon|1|1|vis|Ensemble d'une vis et d'un écrou.|Le pied de la table est fixé par un ___.||
+tasseau|1|1|baguette|Petite pièce de bois de section carrée.|On fixe l'étagère sur un ___.||
+cornière|2|1|profilé|Profilé métallique en forme de L.|Une ___ renforce l'angle du cadre.||
+enduit|1|2|pâte|Pâte appliquée pour boucher ou lisser une surface.|Passez une couche d'___ avant de peindre.||
+ponçage|1|2|abrasion|Action de lisser une surface avec un abrasif.|Le ___ prépare le bois à la peinture.||
+joint|1|2|calfeutrage|Matière qui comble l'espace entre deux éléments.|Refaites le ___ de la baignoire au silicone.||
+aplomb|2|2|verticalité|Verticalité, telle que l'indique le fil à plomb.|Ce mur n'est pas d'___.||
+chanfrein|2|2|biseau|Petite surface oblique obtenue en abattant une arête.|Un ___ évite que l'angle ne s'écaille.||
+gabarit|2|2|modèle|Modèle qui sert à reproduire une forme ou une mesure.|Un ___ en carton aide à percer au bon endroit.||
+mortaise|3|2|cavité|Cavité creusée dans une pièce pour recevoir un tenon.|Le tenon s'emboîte dans la ___.||
+tenon|3|2|languette|Extrémité amincie d'une pièce qui s'emboîte dans une mortaise.|Le ___ entre dans la mortaise.||
+`},
+{id:"automobile",name:"Automobile",icon:"🚗",cats:["Moteur","Transmission et liaisons","Freinage et conduite","Carrosserie"],raw:`
+piston|1|0|pièce mobile|Pièce qui coulisse dans le cylindre sous la pression de la combustion.|Le ___ monte et descend dans le cylindre.||
+bougie|1|0|étincelle|Pièce qui produit l'étincelle allumant le mélange dans un moteur à essence.|Une ___ encrassée fait tousser le moteur.||
+radiateur|1|0|refroidisseur|Échangeur qui refroidit le liquide du moteur.|Le ___ fuit, le moteur chauffe.||
+cylindrée|2|0|volume|Volume total des cylindres d'un moteur.|C'est une moto de grosse ___.||
+turbo|2|0|compresseur|Compresseur entraîné par les gaz d'échappement, qui augmente la puissance.|Le ___ donne un coup de fouet à l'accélération.||
+injecteur|2|0|pulvérisateur|Pièce qui pulvérise le carburant dans le moteur.|Un ___ encrassé augmente la consommation.||
+courroie de distribution|2|0|synchro|Courroie qui synchronise l'ouverture des soupapes avec la rotation du moteur.|Il faut changer la ___ avant qu'elle casse.||
+vilebrequin|3|0|arbre|Arbre qui transforme le mouvement des pistons en rotation.|Les bielles entraînent le ___.||
+embrayage|1|1|pédale|Mécanisme qui relie ou sépare le moteur et la boîte de vitesses.|Appuyez sur l'___ avant de passer la vitesse.||
+amortisseur|1|1|absorbeur|Pièce qui atténue les oscillations de la suspension.|Un ___ fatigué fait rebondir la voiture.||
+essieu|2|1|axe|Axe qui relie deux roues.|L'___ arrière supporte le poids du coffre.||
+parallélisme|2|1|alignement|Réglage de l'alignement des roues.|Un mauvais ___ use les pneus de travers.||
+cardan|3|1|articulation|Articulation qui transmet la rotation aux roues malgré les angles.|Un ___ usé claque dans les virages.||
+différentiel|3|1|répartiteur|Mécanisme qui permet aux roues d'un même essieu de tourner à des vitesses différentes.|Grâce au ___, la roue extérieure tourne plus vite en virage.||
+plaquettes|1|2|garnitures|Garnitures qui frottent sur le disque pour freiner.|Les ___ sont usées, ça grince au freinage.||
+étrier|2|2|pince|Pièce qui serre les plaquettes contre le disque.|L'___ de frein est grippé.||
+ABS|2|2|antiblocage|Système qui empêche les roues de se bloquer au freinage.|Grâce à l'___, on garde le contrôle en freinant fort.||
+aquaplaning|2|2|glisse|Perte d'adhérence quand les pneus glissent sur une couche d'eau.|Sous la pluie, l'___ guette les pneus usés.||
+survirage|3|2|arrière glisse|Perte d'adhérence de l'arrière dans un virage.|En ___, l'arrière de la voiture décroche.||sous-virage
+sous-virage|3|2|avant glisse|Perte d'adhérence de l'avant, qui élargit la trajectoire.|En ___, la voiture tire tout droit dans le virage.||survirage
+capot|1|3|couvercle|Partie qui recouvre le moteur.|Ouvrez le ___ pour vérifier l'huile.||
+aile|1|3|côté|Partie de la carrosserie au-dessus des roues.|L'___ avant gauche est rayée.||
+pare-chocs|1|3|protection|Élément qui protège l'avant ou l'arrière en cas de choc.|Le ___ a amorti le choc.||
+hayon|2|3|porte|Porte arrière relevable d'une voiture.|Le ___ s'ouvre sur un grand coffre.||
+bas de caisse|2|3|sous portes|Partie basse de la carrosserie, sous les portières.|La rouille attaque le ___.||
+`},
+{id:"musique",name:"Musique",icon:"🎼",cats:["Rythme et tempo","Nuances et jeu","Instruments","Écriture et formes"],raw:`
+tempo|1|0|vitesse|Vitesse d'exécution d'un morceau.|Le chef accélère le ___.||
+mesure|1|0|cadre|Division d'un morceau en groupes de temps égaux.|Une valse se joue à trois temps par ___.||
+silence|1|0|pause|Signe qui indique de ne pas jouer pendant une durée donnée.|Un ___ bien placé donne du relief.||
+allegro|1|0|rapide|Indication de mouvement vif et rapide.|Le premier mouvement est un ___ joyeux.||adagio
+adagio|2|0|lent|Indication de mouvement lent.|L'___ émeut toute la salle.||allegro
+contretemps|2|0|décalé|Note ou accent placé sur une partie faible du temps.|Ce ___ surprend l'oreille.||
+syncope|3|0|décalage|Note attaquée sur un temps faible et prolongée sur le temps fort.|La ___ donne au morceau son balancement.||
+crescendo|1|1|montée|Augmentation progressive de l'intensité sonore.|L'orchestre termine sur un ___.||decrescendo
+timbre|1|1|couleur|Couleur propre d'un son, qui distingue deux instruments.|On aime le ___ chaud du violoncelle.||
+pianissimo|2|1|très doux|Nuance très douce.|Le passage se joue ___.||fortissimo
+fortissimo|2|1|très fort|Nuance très forte.|Les cuivres entrent ___.||pianissimo
+legato|2|1|lié|Jeu où les notes sont liées sans interruption.|Jouez ce passage ___, sans détacher.||staccato
+staccato|2|1|détaché|Jeu où les notes sont détachées et brèves.|Des notes ___ font sautiller la mélodie.||legato
+vibrato|2|1|ondulation|Légère ondulation de la hauteur d'une note.|La chanteuse ajoute un ___ sur la note finale.||
+archet|1|2|baguette|Baguette tendue de crins pour frotter les cordes.|Le violoniste pose son ___ sur les cordes.||
+anche|2|2|lamelle|Lamelle qui vibre sous le souffle dans certains instruments à vent.|La clarinette a une ___ simple.||
+embouchure|2|2|bec|Partie d'un instrument à vent où l'on pose les lèvres.|Le trompettiste ajuste son ___.||
+timbales|2|2|tambours|Grands tambours accordables de l'orchestre.|Les ___ grondent à la fin du morceau.||
+clavecin|2|2|clavier|Instrument à clavier dont les cordes sont pincées.|Bach a beaucoup composé pour le ___.||
+basson|3|2|vent grave|Instrument à vent grave, à anche double.|Le ___ joue la ligne grave des bois.||
+gamme|1|3|suite|Suite de notes conjointes, montantes ou descendantes.|Il travaille sa ___ de do majeur.||
+accord|1|3|ensemble|Plusieurs notes jouées en même temps.|Un ___ de trois notes accompagne la mélodie.||
+portée|1|3|5 lignes|Ensemble de cinq lignes sur lesquelles on écrit les notes.|Les notes sont écrites sur la ___.||
+dièse|1|3|plus haut|Signe qui hausse une note d'un demi-ton.|Un ___ devant le fa le hausse d'un demi-ton.||bémol
+bémol|1|3|plus bas|Signe qui baisse une note d'un demi-ton.|Un ___ devant le si l'abaisse d'un demi-ton.||dièse
+refrain|1|3|reprise|Partie qui revient après chaque couplet.|Tout le monde reprend le ___ en chœur.||couplet
+canon|2|3|imitation|Morceau où les voix reprennent la même mélodie en décalé.|« Frère Jacques » se chante en ___.||
+fugue|3|3|composition|Composition où un thème est repris et imité par plusieurs voix.|Bach est le grand maître de la ___.||
+cadence|3|3|conclusion|Enchaînement d'accords qui conclut une phrase musicale.|Une ___ parfaite clôt le morceau.||
+`}
+];
+const THEMES = {};
+for(const t of THEMES_RAW){
+  const words = t.raw.trim().split("\n").filter(Boolean).map(line=>{
+    const [w,l,c,k,d,ex,s="",a=""] = line.split("|");
+    const list = x => x ? x.split(",").map(y=>y.trim()).filter(Boolean) : [];
+    return {w:w.trim(), l:+l, c:+c, k:k.trim(), d:d.trim(), ex:ex.trim(), s:list(s), a:list(a)};
+  });
+  THEMES[t.id] = {...t, words};
+}
+const THEME_LEVELS = {1:"Débutant",2:"Initié",3:"Confirmé"};
 
 const PROFILES = {
   junior:{label:"Junior",age:"8 à 12 ans",icon:"🦊",bank:"junior"},
@@ -508,7 +851,10 @@ const PROFILES = {
   serenite:{label:"Sérénité",age:"Grands caractères, rythme posé",icon:"🌿",bank:"adulte",big:true}
 };
 const LEVEL_NAMES = {1:"Courant",2:"Soutenu",3:"Rare"};
-const MODE_NAMES = {def:"Quel mot correspond ?",recall:"Retrouvez le mot",trou:"Phrase à trous",syn:"Synonyme",intrus:"L'intrus",anto:"Contraire"};
+const isTheme = () => !!(S.theme && THEMES[S.theme]);
+const theme = () => THEMES[S.theme];
+const lvName = () => isTheme() ? THEME_LEVELS : LEVEL_NAMES;
+const MODE_NAMES = {def:"Quel mot correspond ?",recall:"Retrouvez le mot",trou:"Phrase à trous",syn:"Synonyme",intrus:"L'intrus",anto:"Contraire",classer:"Classer"};
 const INTERVALS = [0,0,1,3,7,15]; // jours avant révision, par boîte 0→5
 const SESSION_LEN = 10;
 
@@ -520,15 +866,8 @@ function load(){
   return {profile:null, data:{}, streak:{last:null,count:0}};
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
-function settings(){ if(!S.settings) S.settings={theme:"auto",big:null,auto:false,vibe:true,goal:15}; return S.settings; }
-function applySettings(){
-  const st=settings();
-  if(st.theme==="auto") delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=st.theme;
-  const big = st.big===null ? !!(S.profile&&PROFILES[S.profile].big) : st.big;
-  document.body.classList.toggle("big",big);
-}
-function pdata(){ const p=S.profile; if(!S.data[p]) S.data[p]={words:{},xp:0,sessions:0}; return S.data[p]; }
-function bank(){ return BANK[PROFILES[S.profile].bank]; }
+function pdata(){ const p=isTheme()?S.profile+"|"+S.theme:S.profile; if(!S.data[p]) S.data[p]={words:{},xp:0,sessions:0}; return S.data[p]; }
+function bank(){ return isTheme() ? theme().words : BANK[PROFILES[S.profile].bank]; }
 function ws(w){ return pdata().words[w]; }
 
 /* ============ OUTILS ============ */
@@ -541,53 +880,12 @@ const norm = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""
 const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
 function today(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 function dayNum(str){ const [y,m,d]=str.split("-").map(Number); return Math.round(Date.UTC(y,m-1,d)/864e5); }
-const reduced = () => matchMedia("(prefers-reduced-motion:reduce)").matches;
-function buzz(p){ if(settings().vibe&&navigator.vibrate) try{ navigator.vibrate(p); }catch(e){} }
-
-/* ============ NAVIGATION ============ */
-// Le bouton « retour » du téléphone ramène à l'écran parent au lieu de fermer l'appli.
-// Principe : une entrée d'historique « piège » ; à chaque retour, on affiche le parent et on la remet.
-let ROUTE={name:"home",parent:null,guard:null};
-function at(name,parent,guard){ ROUTE={name,parent:parent||null,guard:guard||null}; if(parent) armTrap(); }
-function armTrap(){ try{ if(!history.state||!history.state.lmj) history.pushState({lmj:1},""); }catch(e){} }
-async function leave(target){
-  // target : fonction écran à afficher ; on demande confirmation si une partie est en cours
-  if(ROUTE.guard){ const msg=ROUTE.guard(); if(msg && !(await ask(msg,"Quitter","Continuer"))) return false; }
-  target(); return true;
-}
-window.addEventListener("popstate",async ()=>{
-  if(document.querySelector(".modal-bd")){ closeModal(false); history.pushState({lmj:1},""); return; }
-  const drawer=document.querySelector(".drawer.open"); if(drawer){ drawer.dispatchEvent(new CustomEvent("close")); history.pushState({lmj:1},""); return; }
-  if(!ROUTE.parent){ toast("Appuyez encore sur retour pour quitter.",null,null,2000); return; }   // accueil : le prochain retour ferme l'appli
-  history.pushState({lmj:1},"");
-  await leave(ROUTE.parent);
-});
-let modalResolve=null;
-function ask(msg,okLabel="OK",cancelLabel="Annuler"){
-  closeModal(false);
-  return new Promise(res=>{
-    modalResolve=res;
-    const bd=document.createElement("div"); bd.className="modal-bd";
-    bd.innerHTML=`<div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="mtxt"><p id="mtxt">${esc(msg)}</p><div class="row"><button class="btn ghost" data-r="0">${esc(cancelLabel)}</button><button class="btn" data-r="1">${esc(okLabel)}</button></div></div>`;
-    bd.addEventListener("click",ev=>{ if(ev.target===bd) closeModal(false); const b=ev.target.closest("[data-r]"); if(b) closeModal(b.dataset.r==="1"); });
-    bd.addEventListener("keydown",ev=>{ if(ev.key==="Escape"){ ev.stopPropagation(); closeModal(false);} });
-    document.body.appendChild(bd); bd.querySelector('[data-r="1"]').focus();
-  });
-}
-function closeModal(v){ const bd=document.querySelector(".modal-bd"); if(bd) bd.remove(); if(modalResolve){ const r=modalResolve; modalResolve=null; r(v); } }
-let toastTimer=null;
-function toast(msg,action,fn,ms=4000){
-  document.querySelector(".toast")?.remove(); clearTimeout(toastTimer);
-  const t=document.createElement("div"); t.className="toast"; t.setAttribute("role","status");
-  t.innerHTML=`<span>${esc(msg)}</span>${action?`<button>${esc(action)}</button>`:""}`;
-  if(action) t.querySelector("button").onclick=()=>{ t.remove(); fn(); };
-  document.body.appendChild(t); if(ms) toastTimer=setTimeout(()=>t.remove(),ms);
-}
 
 function unlockedLevel(){
   let L=1;
   for(const l of [1,2]){
     const words=bank().filter(e=>e.l===l);
+    if(!words.length){ L=l+1; continue; }
     const ok=words.filter(e=>(ws(e.w)?.box||0)>=2).length;
     if(ok/words.length>=0.6) L=l+1; else break;
   }
@@ -612,12 +910,6 @@ function touchStreak(){
   S.streak.count = (last && dayNum(t)-dayNum(last)===1) ? S.streak.count+1 : 1;
   S.streak.last=t;
 }
-function credit(n){
-  const t=today(); if(!S.daily||S.daily.date!==t) S.daily={date:t,n:0};
-  const before=S.daily.n; S.daily.n+=n; touchStreak(); save();
-  const g=settings().goal; if(before<g && S.daily.n>=g){ toast("🎯 Objectif du jour atteint ! Bravo."); buzz([30,60,30]); }
-}
-function dailyCount(){ return S.daily&&S.daily.date===today()?S.daily.n:0; }
 function streakShown(){
   const last=S.streak.last; if(!last) return 0;
   return dayNum(today())-dayNum(last)<=1 ? S.streak.count : 0;
@@ -626,194 +918,117 @@ function streakShown(){
 /* ============ EN-TÊTE ============ */
 function renderChips(){
   const c=$("#chips");
-  applySettings();
   if(!S.profile){ c.innerHTML=""; return; }
   const p=PROFILES[S.profile], st=streakShown();
-  c.innerHTML=`${st?`<span class="chip" title="Jours d'affilée">🔥 ${st} jour${st>1?"s":""}</span>`:""}<button class="chip" id="swProf" aria-label="Changer de profil (actuel : ${p.label})">${p.icon} ${p.label}</button><button class="chip" id="setBtn" aria-label="Réglages">⚙︎</button>`;
-  $("#swProf").onclick=()=>leave(profilePicker);
-  $("#setBtn").onclick=()=>leave(settingsScreen);
+  c.innerHTML=`<span class="chip" title="Jours d'affilée">🔥 ${st} jour${st>1?"s":""}</span><button class="chip" id="swProf">${p.icon} ${p.label}</button>`;
+  $("#swProf").onclick=()=>{ S.profile=null; save(); home(); };
+  document.body.classList.toggle("big",!!p.big);
 }
 
 /* ============ ACCUEIL ============ */
-function profilePicker(){
-  setKeys(null); at("profiles",S.profile?home:null);
-  const c=$("#chips"); c.innerHTML="";
-  const st=settings(); if(st.big===null) document.body.classList.remove("big");
-  app.innerHTML=`
-    <section class="hero">
-      <h1 class="word swipe">Le mot juste</h1>
-      <p>Des définitions, des phrases à compléter, des synonymes, des jeux de lettres et l'histoire des mots. Les mots que vous ratez reviennent plus souvent, ceux que vous maîtrisez s'espacent, et la difficulté monte avec vous.</p>
-    </section>
-    <h2 style="font-size:1.25rem">Qui joue ?</h2>
-    <div class="profiles">${Object.entries(PROFILES).map(([k,p])=>{ const d=S.data[k]; const n=d?Object.keys(d.words).length:0;
-      return `<button class="prof" data-p="${k}" ${k===S.profile?'aria-current="true" style="border-color:var(--ink)"':""}><span class="ic" aria-hidden="true">${p.icon}</span><strong>${p.label}</strong><span>${p.age}${n?` · ${n} mot${n>1?"s":""}`:""}</span></button>`;}).join("")}
-    </div>
-    ${S.profile?`<div class="actions"><button class="btn ghost" id="back">Annuler</button></div>`:""}`;
-  app.querySelectorAll(".prof").forEach(b=>b.onclick=()=>{ S.profile=b.dataset.p; save(); home(); });
-  if(S.profile) $("#back").onclick=home;
-  window.scrollTo({top:0});
-}
-function goalRing(n,g){
-  const r=24, C=2*Math.PI*r, f=Math.min(n/g,1);
-  return `<svg viewBox="0 0 56 56" aria-hidden="true"><circle class="bg" cx="28" cy="28" r="${r}"/><circle class="fg" cx="28" cy="28" r="${r}" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-f)).toFixed(1)}"/></svg>`;
-}
 function home(){
   setKeys(null);
-  if(!S.profile){ profilePicker(); return; }
-  at("home",null);
   renderChips();
+  if(!S.profile){
+    document.body.classList.remove("big");
+    app.innerHTML=`
+      <section class="hero">
+        <h1 class="word swipe">Le mot juste</h1>
+        <p>Des définitions, des phrases à compléter, des synonymes et des pièges. Les mots que vous ratez reviennent plus souvent, ceux que vous maîtrisez s'espacent, et la difficulté monte avec vous.</p>
+      </section>
+      <h2 style="font-size:1.25rem">Qui joue ?</h2>
+      <div class="profiles">${Object.entries(PROFILES).map(([k,p])=>`
+        <button class="prof" data-p="${k}"><span class="ic" aria-hidden="true">${p.icon}</span><strong>${p.label}</strong><span>${p.age}</span></button>`).join("")}
+      </div>`;
+    app.querySelectorAll(".prof").forEach(b=>b.onclick=()=>{ S.profile=b.dataset.p; save(); home(); });
+    return;
+  }
   const pd=pdata(), b=bank(), L=unlockedLevel();
   const seen=Object.keys(pd.words).length;
   const mastered=Object.values(pd.words).filter(x=>x.box>=4).length;
   const due=Object.values(pd.words).filter(x=>x.due<=dayNum(today())).length;
-  const t=today(); let h=0; for(const ch of t+S.profile) h=(h*31+ch.charCodeAt(0))>>>0;
+  const t=today(); let h=0; for(const ch of t+S.profile+(S.theme||"")) h=(h*31+ch.charCodeAt(0))>>>0;
   const wod=b[h%b.length];
-  const g=settings().goal, n=dailyCount();
+  const th=isTheme()?theme():null;
   app.innerHTML=`
+    <button class="themebar" id="themeBtn"><span class="ic" aria-hidden="true">${th?th.icon:"📚"}</span><span><small>Thème</small><strong>${th?esc(th.name):"Langage soutenu"}</strong></span><span class="chg">Changer</span></button>
+    ${th&&th.note?`<p class="note">${esc(th.note)}</p>`:""}
     <section class="daily" aria-label="Mot du jour">
       <h2>Le mot du jour</h2>
       <div class="word sm swipe">${esc(wod.w)}</div>
       <p class="def">${esc(wod.d)}</p>
       <p class="ex">${esc(wod.ex.replace("___",wod.w))}</p>
     </section>
-    <div class="goal" aria-label="Objectif du jour : ${Math.min(n,g)} sur ${g}">
-      ${goalRing(n,g)}
-      <div><b>${n>=g?"Objectif du jour atteint 🎯":`Objectif du jour : ${Math.min(n,g)} / ${g}`}</b>
-      <span>${n>=g?"Revenez demain pour prolonger votre série.":"Chaque bonne réponse et chaque jeu réussi comptent."}</span></div>
-    </div>
-    <div class="doors">
-      <button class="door main" id="play"><strong>${due>0?`Réviser · ${due} mot${due>1?"s":""} à revoir`:"S'entraîner"}</strong><span>${SESSION_LEN} questions variées${due>0?", vos révisions du jour en priorité":seen?", avec de nouveaux mots":" pour commencer en douceur"}.</span></button>
-      <button class="door" id="games"><strong>Jouer</strong><span>Pendu, mots croisés, mots fléchés, anagramme.</span></button>
-      <button class="door" id="learn"><strong>Comprendre</strong><span>Racines grecques et latines, origine des expressions.</span></button>
-    </div>
     <div class="stats">
       <div class="stat"><b>${seen}<span style="font-size:.5em"> / ${b.length}</span></b><span>mots rencontrés</span></div>
       <div class="stat"><b>${mastered}</b><span>mots maîtrisés</span></div>
-      <div class="stat"><b>${LEVEL_NAMES[L]}</b><span>niveau atteint</span></div>
+      <div class="stat"><b>${lvName()[L]}</b><span>niveau atteint</span></div>
       <div class="stat"><b>${pd.xp}</b><span>points</span></div>
     </div>
+    <div class="doors">
+      <button class="door main" id="play"><strong>S'entraîner</strong><span>${SESSION_LEN} questions variées, vos révisions du jour en priorité.</span></button>
+      <button class="door" id="games"><strong>Jouer</strong><span>Pendu, mots croisés, anagramme.</span></button>
+      <button class="door" id="learn"><strong>Comprendre</strong><span>Racines grecques et latines, origine des expressions.</span></button>
+    </div>
     <div class="actions"><button class="btn ghost" id="carnet">Ouvrir mon carnet de mots</button></div>
-    ${L<3?`<p class="muted" style="margin-top:1rem">Le niveau ${LEVEL_NAMES[L+1].toLowerCase()} se débloque quand 60 % des mots du niveau ${LEVEL_NAMES[L].toLowerCase()} ont été trouvés au moins deux fois.</p>`:""}`;
-  $("#play").onclick=()=>startSession();
+    <p class="muted" style="margin-top:1rem">${due>0?`${due} mot${due>1?"s":""} à réviser aujourd'hui, ils passeront en priorité.`:(seen?"Aucune révision en attente : de nouveaux mots vous attendent.":"Première partie : on commence par les mots les plus simples.")}</p>
+    ${L<3?`<p class="muted">Le niveau ${lvName()[L+1].toLowerCase()} se débloque quand 60 % des mots du niveau ${lvName()[L].toLowerCase()} ont été trouvés au moins une fois.</p>`:""}`;
+  $("#play").onclick=startSession;
+  $("#themeBtn").onclick=themePicker;
   $("#games").onclick=gamesHome;
   $("#learn").onclick=learnHome;
   $("#carnet").onclick=carnet;
-  window.scrollTo({top:0});
-}
-
-/* ============ RÉGLAGES ============ */
-function settingsScreen(){
-  setKeys(null); at("settings",home);
-  const st=settings(), bigNow=document.body.classList.contains("big");
-  const seg=(key,opts)=>`<div class="seg" role="group">${opts.map(([v,t])=>`<button data-set="${key}" data-v="${v}" aria-pressed="${String(st[key])===String(v)}">${t}</button>`).join("")}</div>`;
-  app.innerHTML=`
-    <h1 style="font-size:1.8rem">Réglages</h1>
-    <div class="set">
-      <h2>Affichage</h2>
-      <div class="setrow"><span>Thème</span>${seg("theme",[["auto","Auto"],["light","Clair"],["dark","Sombre"]])}</div>
-      <div class="setrow"><label for="sBig">Grands caractères</label><input type="checkbox" class="switch" id="sBig" ${bigNow?"checked":""}></div>
-      <h2>Partie</h2>
-      <div class="setrow"><label for="sAuto">Enchaîner après une bonne réponse<small>Passe seul à la question suivante.</small></label><input type="checkbox" class="switch" id="sAuto" ${st.auto?"checked":""}></div>
-      <div class="setrow"><label for="sVibe">Vibrations<small>Sur les téléphones compatibles.</small></label><input type="checkbox" class="switch" id="sVibe" ${st.vibe?"checked":""}></div>
-      <div class="setrow"><span>Objectif du jour<small>Bonnes réponses par jour.</small></span>${seg("goal",[[10,"10"],[15,"15"],[25,"25"],[40,"40"]])}</div>
-      <h2>Mes données</h2>
-      <p class="muted" style="margin:.2rem 0 .4rem">Les progrès restent sur cet appareil. Sauvegardez-les dans un fichier pour les transférer sur un autre téléphone ou les mettre à l'abri.</p>
-      <button class="btn ghost" id="exp">Sauvegarder mes progrès</button>
-      <button class="btn ghost" id="imp" style="margin-top:.5rem">Restaurer une sauvegarde</button>
-      <input type="file" id="impf" accept="application/json,.json" hidden>
-      <button class="btn ghost" id="reset" style="margin-top:.5rem;color:var(--ko)">Effacer les progrès du profil ${S.profile?esc(PROFILES[S.profile].label):""}</button>
-    </div>
-    <div class="actions"><button class="btn" id="back">Terminé</button></div>`;
-  app.querySelectorAll("[data-set]").forEach(b=>b.onclick=()=>{ const k=b.dataset.set; st[k]=k==="goal"?+b.dataset.v:b.dataset.v; save(); applySettings(); settingsScreen(); });
-  $("#sBig").onchange=e=>{ st.big=e.target.checked; save(); applySettings(); };
-  $("#sAuto").onchange=e=>{ st.auto=e.target.checked; save(); };
-  $("#sVibe").onchange=e=>{ st.vibe=e.target.checked; save(); if(st.vibe) buzz(20); };
-  $("#exp").onclick=()=>{
-    const blob=new Blob([JSON.stringify({app:"lemotjuste",v:1,date:new Date().toISOString(),state:S},null,1)],{type:"application/json"});
-    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`mot-juste-sauvegarde-${today()}.json`;
-    document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),2000);
-    toast("Sauvegarde téléchargée.");
-  };
-  $("#imp").onclick=()=>$("#impf").click();
-  $("#impf").onchange=async e=>{
-    const f=e.target.files[0]; if(!f) return;
-    try{
-      const j=JSON.parse(await f.text());
-      if(j.app!=="lemotjuste"||!j.state||typeof j.state.data!=="object") throw 0;
-      if(!(await ask("Remplacer les progrès de cet appareil par cette sauvegarde ?","Restaurer"))) return;
-      S=j.state; if(!S.streak) S.streak={last:null,count:0}; save(); toast("Progrès restaurés."); home();
-    }catch(err){ toast("Ce fichier n'est pas une sauvegarde du Mot Juste."); }
-  };
-  $("#reset").onclick=async ()=>{
-    if(!S.profile) return;
-    if(!(await ask(`Effacer tous les progrès du profil ${PROFILES[S.profile].label} ? Cette action est définitive.`,"Effacer"))) return;
-    delete S.data[S.profile]; save(); toast("Progrès effacés."); home();
-  };
-  $("#back").onclick=home;
-  window.scrollTo({top:0});
 }
 
 /* ============ CONSTRUCTION D'UNE PARTIE ============ */
-function buildSession(custom){
+function buildSession(){
   const pd=pdata(), L=unlockedLevel(), now=dayNum(today());
-  let list;
-  if(custom){ list=shuffle(custom).slice(0,SESSION_LEN); }
-  else {
-    let pool=bank().filter(e=>e.l<=L);
-    // Banque trop petite pour une partie complète : on emprunte au niveau suivant
-    if(pool.length<SESSION_LEN) pool=bank().filter(e=>e.l<=L+1);
-    const dueW=shuffle(pool.filter(e=>pd.words[e.w] && pd.words[e.w].due<=now)).sort((a,b)=>pd.words[a.w].box-pd.words[b.w].box).slice(0,6);
-    const fresh=shuffle(pool.filter(e=>!pd.words[e.w])).sort((a,b)=>a.l-b.l);
-    list=[...dueW, ...fresh.slice(0,SESSION_LEN-dueW.length)];
-    if(list.length<SESSION_LEN){
-      const rest=shuffle(pool.filter(e=>!list.includes(e))).sort((a,b)=>(pd.words[a.w]?.box||0)-(pd.words[b.w]?.box||0));
-      list=[...list,...rest.slice(0,SESSION_LEN-list.length)];
-    }
+  let pool=bank().filter(e=>e.l<=L);
+  for(let x=L+1; pool.length<SESSION_LEN+2 && x<=3; x++) pool=[...pool,...bank().filter(e=>e.l===x)];
+  const dueW=shuffle(pool.filter(e=>pd.words[e.w] && pd.words[e.w].due<=now)).sort((a,b)=>pd.words[a.w].box-pd.words[b.w].box).slice(0,6);
+  const fresh=shuffle(pool.filter(e=>!pd.words[e.w])).sort((a,b)=>a.l-b.l);
+  let list=[...dueW, ...fresh.slice(0,SESSION_LEN-dueW.length)];
+  if(list.length<SESSION_LEN){
+    const rest=shuffle(pool.filter(e=>!list.includes(e))).sort((a,b)=>(pd.words[a.w]?.box||0)-(pd.words[b.w]?.box||0));
+    list=[...list,...rest.slice(0,SESSION_LEN-list.length)];
   }
   let prev=null;
   return shuffle(list).map(e=>{
     const box=pd.words[e.w]?.box||0;
-    let modes = box<2 ? ["def","trou","syn"] : ["recall","recall","def","trou","syn","intrus","anto"];
-    modes=modes.filter(m=>(m!=="syn"||e.s.length) && (m!=="intrus"||e.s.length>=3) && (m!=="anto"||e.a.length));
+    let modes = box<2 ? ["def","trou","syn","classer"] : ["recall","recall","def","trou","syn","intrus","anto","classer"];
+    const canClass = isTheme() && e.c!==undefined && theme().cats.length>=3;
+    modes=modes.filter(m=>(m!=="syn"||e.s.length) && (m!=="intrus"||e.s.length>=3) && (m!=="anto"||e.a.length) && (m!=="classer"||canClass));
     const alt=modes.filter(m=>m!==prev); const m=pick(alt.length?alt:modes); prev=m;
     return {e,m};
   });
 }
 
 let G=null;
-function startSession(custom){
+function startSession(){
   setKeys(null);
-  G={qs:buildSession(custom),i:0,res:[],pts:0,startL:unlockedLevel(),answered:false,custom};
+  G={qs:buildSession(),i:0,res:[],pts:0,startL:unlockedLevel(),answered:false};
   question();
 }
-const sessionGuard=()=>G&&G.i<G.qs.length&&(G.i>0||G.answered)?"Quitter la partie en cours ? Les réponses déjà données sont enregistrées.":null;
 
 /* ============ QUESTIONS ============ */
 function progressBar(){
   return `<div class="progress" aria-label="Question ${G.i+1} sur ${G.qs.length}">${G.qs.map((_,k)=>`<i class="${k<G.i?(G.res[k]?"ok":"ko"):(k===G.i?"cur":"")}"></i>`).join("")}</div>`;
 }
-// Distance d'édition (fautes de frappe) : une lettre en trop, en moins, changée ou deux lettres inversées
-function editDist(a,b){
-  if(Math.abs(a.length-b.length)>2) return 9;
-  const d=[...Array(a.length+1)].map((_,i)=>[i,...Array(b.length).fill(0)]);
-  for(let j=1;j<=b.length;j++) d[0][j]=j;
-  for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++){
-    d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
-    if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1]) d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);
-  }
-  return d[a.length][b.length];
-}
 function question(){
-  G.answered=false; delete G.tries;
-  at("session",home,sessionGuard);
+  G.answered=false;
   const {e,m}=G.qs[G.i];
   let html=progressBar()+`<div class="mode"><span>${MODE_NAMES[m]}</span><span>${G.i+1} / ${G.qs.length}</span></div>`;
-  let opts=null;
+  let opts=null, correctIdx=null;
 
-  if(m==="def"){
+  if(m==="classer"){
+    const cats=theme().cats, others=shuffle(cats.filter((_,k)=>k!==e.c)).slice(0,3);
+    html+=`<div class="q"><div class="word">${esc(e.w)}</div><p class="prompt">Dans quelle famille range-t-on ce mot ?</p></div>`;
+    opts=shuffle([{t:cats[e.c],ok:true},...others.map(c=>({t:c,ok:false}))]);
+  } else if(m==="def"){
     const ds=distractors(e,3);
+    const all=shuffle([{t:e.d,ok:true},...ds.map(x=>({t:x.d,ok:false}))]);
     html+=`<div class="q"><div class="word">${esc(e.w)}</div><p class="prompt">Que signifie ce mot ?</p></div>`;
-    opts=shuffle([{t:e.d,ok:true},...ds.map(x=>({t:x.d,ok:false}))]);
+    opts=all;
   } else if(m==="trou"){
     const ds=distractors(e,3);
     const parts=e.ex.split("___");
@@ -822,7 +1037,7 @@ function question(){
   } else if(m==="syn"){
     const ds=distractors(e,3);
     html+=`<div class="q"><div class="word">${esc(e.w)}</div><p class="prompt">Lequel de ces mots en est un synonyme ?</p></div>`;
-    opts=shuffle([{t:pick(e.s),ok:true},...ds.map(x=>({t:pick([x.w,...x.s]),ok:false}))]);
+    opts=shuffle([{t:pick(e.s),ok:true},...ds.map(x=>({t:x.w,ok:false}))]);
   } else if(m==="anto"){
     const ds=distractors(e,2);
     html+=`<div class="q"><div class="word">${esc(e.w)}</div><p class="prompt">Lequel de ces mots veut dire le contraire ?</p></div>`;
@@ -835,44 +1050,31 @@ function question(){
     G.hints=0;
     html+=`<div class="q"><p class="prompt" style="margin-top:0">Quel mot correspond à cette définition ?</p><p class="defbox">${esc(e.d)}</p></div>
       <div class="pattern" id="pattern" aria-label="${e.w.length} lettres">${patternOf(e.w,0)}</div>
-      <form class="recall" id="rf" autocomplete="off"><input id="ri" aria-label="Votre réponse" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="Tapez le mot…"><button class="btn" type="submit">Valider</button></form>
+      <form class="recall" id="rf" autocomplete="off"><input id="ri" aria-label="Votre réponse" autocapitalize="off" spellcheck="false" placeholder="Tapez le mot…"><button class="btn" type="submit">Valider</button></form>
       <div class="hints"><button class="link" id="hint">Afficher un indice (−3 points)</button><button class="link" id="giveup">Je ne sais pas</button></div>`;
   }
 
   if(opts){
-    html+=`<div class="opts">${opts.map((o,k)=>`<button class="opt" data-k="${k}"><span class="k" aria-hidden="true">${k+1}</span>${esc(o.t)}</button>`).join("")}</div>
-      <p class="kbdhint">Astuce : touches 1 à ${opts.length} pour répondre, Entrée pour continuer.</p>`;
+    html+=`<div class="opts">${opts.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o.t)}</button>`).join("")}</div>`;
   }
-  html+=`<div id="fb"></div>
-    <div class="actions" style="margin-top:2rem"><button class="link" id="quitS">Quitter la partie</button></div>`;
+  html+=`<div id="fb"></div>`;
   app.innerHTML=html;
   window.scrollTo({top:0});
-  $("#quitS").onclick=()=>leave(home);
 
   if(opts){
-    const choose=k=>{
+    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
       if(G.answered) return;
-      const o=opts[k], btns=app.querySelectorAll(".opt");
-      btns.forEach((x,j)=>{ x.disabled=true; if(opts[j].ok) x.classList.add("ok"); });
-      if(!o.ok) btns[k].classList.add("ko");
+      const o=opts[+b.dataset.k];
+      app.querySelectorAll(".opt").forEach((x,k)=>{ x.disabled=true; if(opts[k].ok) x.classList.add("ok"); });
+      if(!o.ok) b.classList.add("ko");
       answer(o.ok, o.ok?5:0);
-    };
-    app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>choose(+b.dataset.k));
-    setKeys(ev=>{
-      if(ev.ctrlKey||ev.metaKey||ev.altKey||document.querySelector(".modal-bd")) return;
-      const n=parseInt(ev.key,10);
-      if(!G.answered && n>=1 && n<=opts.length){ ev.preventDefault(); choose(n-1); }
     });
   } else {
-    const inp=$("#ri"); inp.focus({preventScroll:true});
+    const inp=$("#ri"); inp.focus();
     $("#rf").onsubmit=ev=>{ ev.preventDefault(); if(G.answered||!inp.value.trim()) return;
-      const a=norm(inp.value), w=norm(e.w);
-      let ok=a===w, near=false;
-      if(!ok && w.length>=6 && editDist(a,w)===1){ ok=true; near=true; }
-      if(!ok && G.tries===undefined){ G.tries=1; inp.value=""; inp.placeholder="Pas tout à fait… encore un essai"; buzz(40);
-        inp.classList.remove("shake"); void inp.offsetWidth; inp.classList.add("shake"); inp.focus(); return; }
-      delete G.tries; inp.disabled=true;
-      answer(ok, ok?Math.max(10-3*G.hints-(near?2:0),2):0, true, near?inp.value.trim():null);
+      const flat=s=>norm(s).replace(/[\s'-]/g,""); const ok=flat(inp.value)===flat(e.w);
+      if(!ok && G.tries===undefined){ G.tries=1; inp.value=""; inp.placeholder="Pas tout à fait… encore un essai"; inp.focus(); return; }
+      delete G.tries; inp.disabled=true; answer(ok, ok?Math.max(10-3*G.hints,2):0, true);
     };
     $("#hint").onclick=()=>{ if(G.answered) return; G.hints=Math.min(G.hints+1,2); $("#pattern").innerHTML=patternOf(e.w,G.hints); if(G.hints>=2) $("#hint").disabled=true; inp.focus(); };
     $("#giveup").onclick=()=>{ if(G.answered) return; delete G.tries; inp.disabled=true; answer(false,0,true); };
@@ -889,96 +1091,66 @@ function patternOf(w,h){
 }
 
 /* ============ RÉPONSE & RÉPÉTITION ESPACÉE ============ */
-function answer(ok,pts,recall,typed){
+function answer(ok,pts,recall){
   G.answered=true;
   const {e}=G.qs[G.i], pd=pdata(), now=dayNum(today());
   const st=pd.words[e.w]||{box:0,ok:0,ko:0,due:now};
   if(ok){ st.box=Math.min(st.box+1,5); st.ok++; } else { st.box=1; st.ko++; }
   st.due=now+INTERVALS[st.box];
   pd.words[e.w]=st; pd.xp+=pts; G.pts+=pts; G.res[G.i]=ok;
-  save(); if(ok) credit(1);
-  buzz(ok?15:[40,40,40]);
+  save();
   const praise=["Exactement.","Bien vu.","Parfait.","C'est ça.","Très juste."];
-  const last=G.i+1>=G.qs.length;
   const fb=$("#fb");
   fb.innerHTML=`<div class="feedback ${ok?"good":"bad"}" role="status">
-    <div class="verdict">${ok?(typed?"Presque parfait !":pick(praise))+(pts?` +${pts} points`:""):"Ce n'était pas ça."}</div>
-    ${typed?`<p class="near">Vous avez écrit « ${esc(typed)} » : attention à l'orthographe.</p>`:""}
+    <div class="verdict">${ok?pick(praise)+(pts?` +${pts} points`:""):"Ce n'était pas ça."}</div>
     <div><strong style="font-family:Fraunces,Georgia,serif;font-size:1.3em">${esc(cap(e.w))}</strong> : ${esc(e.d)}</div>
     <p class="ex">${esc(e.ex.replace("___",e.w))}</p>
+    ${isTheme()&&e.c!==undefined?`<p class="syn">Famille : ${esc(theme().cats[e.c])}</p>`:""}
     ${e.s.length?`<p class="syn">Synonymes : ${e.s.map(esc).join(", ")}${e.a.length?`<br>Contraires : ${e.a.map(esc).join(", ")}`:""}</p>`:""}
-    <div class="stickynext"><button class="btn" id="next">${last?"Voir mon résultat":"Question suivante"}</button></div>
+    <button class="btn" id="next">${G.i+1<G.qs.length?"Question suivante":"Voir mon résultat"}</button>
   </div>`;
   if(recall) $("#pattern").textContent=e.w;
-  const nb=$("#next");
-  let timer=null;
-  const go=()=>{ clearTimeout(timer); if(!G||!G.answered) return; G.i++; G.i<G.qs.length?question():results(); };
-  nb.onclick=go;
-  nb.focus({preventScroll:true});
-  fb.scrollIntoView({behavior:reduced()?"auto":"smooth",block:"nearest"});
-  setKeys(ev=>{ if(document.querySelector(".modal-bd")) return; if(ev.key==="Enter"&&document.activeElement!==nb){ ev.preventDefault(); go(); } });
-  if(ok && settings().auto && !typed && !last){
-    nb.textContent="Question suivante…";
-    timer=setTimeout(go,1400);
-    // Toucher n'importe où annule l'enchaînement automatique pour laisser le temps de lire
-    const stop=ev=>{ if(ev.target===nb) return; clearTimeout(timer); nb.textContent="Question suivante"; };
-    fb.addEventListener("pointerdown",stop,{once:true});
-  }
+  const nb=$("#next"); nb.focus({preventScroll:true});
+  fb.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"nearest"});
+  nb.onclick=()=>{ G.i++; G.i<G.qs.length?question():results(); };
 }
 
 /* ============ RÉSULTATS ============ */
 function results(){
   const pd=pdata(); pd.sessions++; touchStreak(); save(); renderChips();
-  at("results",home);
-  setKeys(null);
-  const good=G.res.filter(Boolean).length, total=G.qs.length, L=unlockedLevel();
-  const ratio=good/total;
-  const msg = ratio>=.9?"Remarquable.":ratio>=.7?"Belle partie.":ratio>=.5?"Bon entraînement, les mots manqués reviendront bientôt.":"Les mots manqués vont revenir plus souvent : c'est comme ça qu'on les retient.";
-  const missed=G.qs.filter((q,k)=>!G.res[k]).map(q=>q.e);
+  const good=G.res.filter(Boolean).length, L=unlockedLevel();
+  const msg = good>=9?"Remarquable.":good>=7?"Belle partie.":good>=5?"Bon entraînement, les mots manqués reviendront bientôt.":"Les mots manqués vont revenir plus souvent : c'est comme ça qu'on les retient.";
   app.innerHTML=`
     <section class="hero">
-      <div class="result-score">${good}<span style="font-size:.4em;color:var(--ink-soft)"> / ${total}</span></div>
+      <div class="result-score">${good}<span style="font-size:.4em;color:var(--ink-soft)"> / ${G.qs.length}</span></div>
       <p style="font-size:1.15em;color:var(--ink)">${msg} Vous gagnez ${G.pts} points.</p>
-      ${L>G.startL?`<div class="levelup">🎉 Nouveau niveau débloqué : <strong>${LEVEL_NAMES[L]}</strong>. Des mots plus exigeants vont apparaître.</div>`:""}
+      ${L>G.startL?`<div class="levelup">🎉 Nouveau niveau débloqué : <strong>${lvName()[L]}</strong>. Des mots plus exigeants vont apparaître.</div>`:""}
     </section>
-    <div class="actions" style="margin-top:0">${missed.length?`<button class="btn" id="retry">Retravailler les ${missed.length} mot${missed.length>1?"s":""} manqué${missed.length>1?"s":""}</button>`:""}<button class="btn ${missed.length?"ghost":""}" id="again">Nouvelle partie</button><button class="btn ghost" id="back">Retour à l'accueil</button></div>
-    <h2 style="font-size:1.2rem;margin-top:1.8rem">Les mots de cette partie</h2>
-    <ul class="list">${G.qs.map((q,k)=>`<li><details><summary><strong>${esc(q.e.w)}</strong><span aria-label="${G.res[k]?"réussi":"manqué"}" style="color:var(--${G.res[k]?"ok":"ko"})">${G.res[k]?"✓":"✗"}</span></summary><p class="dd">${esc(q.e.d)}</p></details></li>`).join("")}</ul>`;
-  if(missed.length) $("#retry").onclick=()=>startSession(missed);
-  $("#again").onclick=()=>startSession(); $("#back").onclick=home;
+    <h2 style="font-size:1.2rem">Les mots de cette partie</h2>
+    <ul class="list">${G.qs.map((q,k)=>`<li><details><summary><strong>${esc(q.e.w)}</strong><span>${G.res[k]?"✓":"✗"}</span></summary><p class="dd">${esc(q.e.d)}</p></details></li>`).join("")}</ul>
+    <div class="actions"><button class="btn" id="again">Rejouer</button><button class="btn ghost" id="back">Retour à l'accueil</button></div>`;
+  $("#again").onclick=startSession; $("#back").onclick=home;
   window.scrollTo({top:0});
 }
 
 /* ============ CARNET ============ */
-let carnetFilter="all", carnetQ="";
+let carnetFilter="all";
 function carnet(){
-  setKeys(null); at("carnet",home);
+  setKeys(null);
   const pd=pdata();
   const seen=bank().filter(e=>pd.words[e.w]).sort((a,b)=>a.w.localeCompare(b.w,"fr"));
-  const weak=seen.filter(e=>pd.words[e.w].box<3);
+  const list=seen.filter(e=>carnetFilter==="all"||(carnetFilter==="weak"?pd.words[e.w].box<3:pd.words[e.w].box>=4));
   app.innerHTML=`
     <h1 style="font-size:1.8rem;margin-bottom:.4rem">Mon carnet</h1>
-    <p class="muted">${seen.length} mot${seen.length>1?"s":""} rencontré${seen.length>1?"s":""} sur ${bank().length}. Les points verts indiquent l'ancrage de chaque mot en mémoire.</p>
-    ${weak.length?`<div class="actions" style="margin-top:.6rem"><button class="btn" id="revise">Réviser les ${Math.min(weak.length,SESSION_LEN)} mots les plus fragiles</button></div>`:""}
-    ${seen.length?`<input class="search" id="q" type="search" placeholder="Chercher un mot ou une définition…" value="${esc(carnetQ)}" aria-label="Chercher dans le carnet">`:""}
+    <p class="muted">Les points verts indiquent l'ancrage de chaque mot en mémoire.</p>
     <div class="filters" role="group" aria-label="Filtrer">
       ${[["all","Tous"],["weak","À travailler"],["strong","Maîtrisés"]].map(([k,t])=>`<button data-f="${k}" aria-pressed="${carnetFilter===k}">${t}</button>`).join("")}
     </div>
-    <div id="clist"></div>
-    <div class="actions"><button class="btn ghost" id="back">Retour à l'accueil</button></div>`;
-  const draw=()=>{
-    const q=norm(carnetQ);
-    const list=seen.filter(e=>(carnetFilter==="all"||(carnetFilter==="weak"?pd.words[e.w].box<3:pd.words[e.w].box>=4)) && (!q||norm(e.w).includes(q)||norm(e.d).includes(q)));
-    $("#clist").innerHTML=list.length?`<ul class="list">${list.map(e=>{const b=pd.words[e.w].box;return `<li><details><summary><strong>${esc(e.w)}</strong><span class="dots" aria-label="Niveau ${b} sur 5">${[1,2,3,4,5].map(n=>`<i class="${n<=b?"on":""}"></i>`).join("")}</span></summary><p class="dd">${esc(e.d)}</p><p class="dd"><em>${esc(e.ex.replace("___",e.w))}</em></p>${e.s.length?`<p class="dd">Synonymes : ${e.s.map(esc).join(", ")}</p>`:""}</details></li>`}).join("")}</ul>`
-      :`<p style="margin:1.5rem 0">${seen.length?(q?"Aucun mot ne correspond à cette recherche.":"Aucun mot dans cette catégorie pour l'instant."):"Votre carnet se remplit au fil des parties. Lancez-en une pour y ajouter vos premiers mots."}</p>${seen.length?"":`<button class="btn" id="play">Lancer une partie</button>`}`;
-    const pl=$("#play"); if(pl) pl.onclick=()=>startSession();
-  };
-  app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{ carnetFilter=b.dataset.f; app.querySelectorAll("[data-f]").forEach(x=>x.setAttribute("aria-pressed",x===b)); draw(); });
-  const qi=$("#q"); if(qi) qi.oninput=()=>{ carnetQ=qi.value; draw(); };
-  if(weak.length) $("#revise").onclick=()=>startSession([...weak].sort((a,b)=>pd.words[a.w].box-pd.words[b.w].box).slice(0,SESSION_LEN));
-  $("#back").onclick=home;
-  draw();
-  window.scrollTo({top:0});
+    ${list.length?`<ul class="list">${list.map(e=>{const b=pd.words[e.w].box;return `<li><details><summary><strong>${esc(e.w)}</strong><span class="dots" aria-label="Niveau ${b} sur 5">${[1,2,3,4,5].map(n=>`<i class="${n<=b?"on":""}"></i>`).join("")}</span></summary><p class="dd">${esc(e.d)}</p><p class="dd"><em>${esc(e.ex.replace("___",e.w))}</em></p></details></li>`}).join("")}</ul>`
+      :`<p style="margin:1.5rem 0">${seen.length?"Aucun mot dans cette catégorie pour l'instant.":"Votre carnet se remplit au fil des parties. Lancez-en une pour y ajouter vos premiers mots."}</p>`}
+    <div class="actions"><button class="btn" id="play">Lancer une partie</button><button class="btn ghost" id="back">Retour à l'accueil</button></div>`;
+  app.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>{carnetFilter=b.dataset.f;carnet();});
+  $("#play").onclick=startSession; $("#back").onclick=home;
 }
 
 /* ============ OUTILS V2 ============ */
@@ -993,12 +1165,12 @@ function bump(e,ok,pts,soft){
   if(ok){ st.box=Math.min(st.box+1,5); st.ok++; } else { st.box=soft?Math.max(1,st.box-1):1; st.ko++; }
   st.due=now+INTERVALS[st.box];
   pd.words[e.w]=st; pd.xp+=pts; save();
-  if(ok) credit(1);
 }
 let lastBonus=null;
 function bonusWord(filter){
   const pd=pdata(), L=unlockedLevel();
-  const pool=bank().filter(e=>e.l<=L && filter(e) && e.w!==lastBonus);
+  let pool=bank().filter(e=>e.l<=L && filter(e) && e.w!==lastBonus);
+  if(pool.length<6) pool=bank().filter(e=>filter(e) && e.w!==lastBonus);
   const seen=pool.filter(e=>pd.words[e.w]);
   const e=pick(seen.length>=5 && Math.random()<0.75 ? seen : pool);
   lastBonus=e.w; return e;
@@ -1008,12 +1180,30 @@ function wordCard(e){
   return `<div><strong style="font-family:Fraunces,Georgia,serif;font-size:1.3em">${esc(cap(e.w))}</strong> : ${esc(e.d)}</div><p class="ex">${esc(e.ex.replace("___",e.w))}</p>`;
 }
 
+/* ============ CHOIX DU THÈME ============ */
+function themePicker(){
+  const card=(id,icon,name,n,sub)=>{
+    const key=id?S.profile+"|"+id:S.profile, seen=Object.keys((S.data[key]||{words:{}}).words).length;
+    const cur=(S.theme||null)===id;
+    return `<button class="tcard ${cur?"cur":""}" data-t="${id||""}"><span class="ic" aria-hidden="true">${icon}</span><strong>${esc(name)}</strong><span>${seen?`${seen} / ${n} mots vus`:`${n} mots`}${sub?" · "+sub:""}</span>${seen?`<i class="bar"><b style="width:${Math.round(seen/n*100)}%"></b></i>`:""}</button>`;
+  };
+  screen(`
+    <h1 style="font-size:2rem">Choisir un thème</h1>
+    <p class="muted">Chaque thème a sa propre progression. Le langage soutenu suit votre profil d'âge ; les autres thèmes vont de Débutant à Confirmé.</p>
+    <div class="tgrid">
+      ${card(null,"📚","Langage soutenu",BANK[PROFILES[S.profile].bank].length,"selon l'âge")}
+      ${THEMES_RAW.map(t=>card(t.id,t.icon,t.name,THEMES[t.id].words.length)).join("")}
+    </div>
+    <div class="actions"><button class="btn ghost" id="back">Retour à l'accueil</button></div>`);
+  document.querySelectorAll(".tcard").forEach(b=>b.onclick=()=>{ S.theme=b.dataset.t||null; save(); home(); });
+  $("#back").onclick=home;
+}
+
 /* ============ MENU JEUX ============ */
 function gamesHome(){
-  at("games",home);
   screen(`
     <h1 style="font-size:2rem">Jouer</h1>
-    <p class="muted">Des jeux plus détendus. Chaque mot trouvé compte quand même pour vos révisions.</p>
+    <p class="muted">Des jeux plus détendus, avec les mots du thème ${isTheme()?"« "+esc(theme().name)+" »":"« Langage soutenu »"}. Chaque mot trouvé compte pour vos révisions.</p>
     <div class="doors">
       <button class="door" id="g1"><strong>Le pendu</strong><span>Retrouvez le mot lettre par lettre, avec sa définition pour indice.</span></button>
       <button class="door" id="g2"><strong>Mots croisés</strong><span>Une nouvelle grille à chaque partie, construite avec vos mots.</span></button>
@@ -1021,10 +1211,10 @@ function gamesHome(){
       <button class="door" id="g3"><strong>L'anagramme</strong><span>Les lettres sont mélangées : remettez-les dans l'ordre.</span></button>
     </div>
     <div class="actions"><button class="btn ghost" id="back">Retour à l'accueil</button></div>`);
+  [["#g2",false],["#g4",true]].forEach(([id,fl])=>{ if(gridCount(fl)<8){ const b=$(id); b.disabled=true; b.querySelector("span").textContent="Pas assez de mots adaptés dans ce thème pour une grille."; } });
   $("#g1").onclick=hangman; $("#g2").onclick=crossword; $("#g3").onclick=anagram; $("#g4").onclick=arrowWords; $("#back").onclick=home;
 }
 function endBox(ok,e,title,again){
-  ROUTE.guard=null; buzz(ok?[20,50,20]:[40,40,40]);
   const fb=$("#fb");
   fb.innerHTML=`<div class="feedback ${ok?"good":"bad"}" role="status">
     <div class="verdict">${title}</div>${e?wordCard(e):""}
@@ -1032,7 +1222,7 @@ function endBox(ok,e,title,again){
     <button class="btn ghost" id="toGames" style="margin-top:.5rem">Autres jeux</button></div>`;
   $("#again").onclick=again; $("#toGames").onclick=gamesHome;
   $("#again").focus({preventScroll:true});
-  fb.scrollIntoView({behavior:reduced()?"auto":"smooth",block:"nearest"});
+  fb.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 
 /* ============ PENDU ============ */
@@ -1044,7 +1234,6 @@ const HANG_PARTS=[
 function hangman(){
   const e=bonusWord(x=>norm(x.w).length>=5);
   const H={e,t:UP(e.w),used:new Set(),miss:0,max:HANG_PARTS.length,done:false};
-  at("hangman",gamesHome,()=>H.used.size&&!H.done?"Abandonner ce pendu ?":null);
   screen(`
     <div class="mode"><span>Le pendu</span><span id="lives"></span></div>
     <div class="hang-top"><svg class="hang" viewBox="0 0 120 120" aria-hidden="true" id="gallows"></svg>
@@ -1065,7 +1254,7 @@ function hangman(){
     if(H.done||H.used.has(l)) return;
     H.used.add(l);
     const k=$(`.key[data-l="${l}"]`); k.disabled=true;
-    if(H.t.includes(l)) k.classList.add("ok"); else { k.classList.add("ko"); H.miss++; buzz(30); }
+    if(H.t.includes(l)) k.classList.add("ok"); else { k.classList.add("ko"); H.miss++; }
     const won=[...H.t].every(c=>!/[A-Z]/.test(c)||H.used.has(c));
     if(won||H.miss>=H.max){ H.done=true; setKeys(null); document.querySelectorAll(".key").forEach(b=>b.disabled=true);
       bump(e,won,won?6:0,true);
@@ -1084,7 +1273,6 @@ function anagram(){
   const t=UP(e.w);
   let letters; do{ letters=shuffle([...t]); }while(letters.join("")===t);
   const A={e,t,tiles:letters.map((l,i)=>({l,i,used:false})),ans:[],hints:0,done:false};
-  at("anagram",gamesHome);
   screen(`
     <div class="mode"><span>L'anagramme</span><span>${t.length} lettres</span></div>
     <p class="defbox" style="margin:0 0 1.2rem">${esc(e.d)}</p>
@@ -1127,16 +1315,19 @@ function anagram(){
 /* ============ GRILLES : MOTS CROISÉS & MOTS FLÉCHÉS ============ */
 // Indice court pour les mots fléchés : le synonyme le plus court, en un seul mot si possible
 function shortClue(e){
+  if(e.k) return e.k;
   const c=e.s.filter(s=>!s.includes(" ")&&s.length<=12&&!norm(e.w).startsWith(norm(s).slice(0,4)));
   if(!c.length) return null;
   return c.sort((a,b)=>a.length-b.length)[0];
 }
+function gridOk(fleche){ return e=>{const n=norm(e.w);return /^[a-z]+$/.test(n)&&n.length>=4&&n.length<=(fleche?8:11)&&(!fleche||shortClue(e));}; }
+function gridCount(fleche){ return bank().filter(gridOk(fleche)).length; }
 function genGrid(fleche){
   const L=unlockedLevel();
-  const ok=e=>{const n=norm(e.w);return /^[a-z]+$/.test(n)&&n.length>=4&&n.length<=(fleche?8:9)&&(!fleche||shortClue(e));};
+  const ok=gridOk(fleche);
   let pool=bank().filter(e=>e.l<=L&&ok(e));
   if(pool.length<16) pool=bank().filter(ok);
-  const MAXSPAN=fleche?9:10, TARGET=fleche?6:7; let best=null;
+  const MAXSPAN=fleche?9:11, TARGET=fleche?6:7; let best=null;
   for(let t=0;t<120;t++){
     const words=shuffle(pool); const grid=new Map(); const placed=[];
     const G=(r,c)=>grid.get(r+","+c);
@@ -1189,7 +1380,6 @@ const crossword=()=>gridGame(false);
 const arrowWords=()=>gridGame(true);
 function gridGame(fleche){
   const X=genGrid(fleche); X.dir=0; X.active=null; X.done=false; X.revealed=0; X.showDef=false;
-  at(fleche?"arrow":"crossword",gamesHome,()=>!X.done&&[...document.querySelectorAll(".cell input")].some(i=>i.value)?"Quitter cette grille ? Elle ne sera pas conservée.":null);
   const order=X.words.map((w,wi)=>wi).sort((a,b)=>X.words[a].d-X.words[b].d||X.words[a].n-X.words[b].n);
   let grid=`<div class="cw ${fleche?"fl":""}" style="--cols:${X.C}">`;
   for(let r=0;r<X.R;r++) for(let c=0;c<X.C;c++){ const k=r+","+c, cl=X.cells.get(k);
@@ -1256,7 +1446,6 @@ function gridGame(fleche){
   $("#prev").onclick=()=>nextWord(-1); $("#nextw").onclick=()=>nextWord(1);
   // Tiroir des définitions (mots croisés)
   const drawer=$("#drawer");
-  if(drawer) drawer.addEventListener("close",()=>setDrawer(false));
   const setDrawer=open=>{ if(!drawer) return; drawer.classList.toggle("open",open); drawer.setAttribute("aria-hidden",!open); $("#bd").hidden=!open; $("#dtab").setAttribute("aria-expanded",open); if(open) drawer.querySelector(".clue.on,.clue")?.focus({preventScroll:true}); };
   if(drawer){ $("#dtab").onclick=()=>setDrawer(true); $("#bd").onclick=()=>setDrawer(false); $("#dclose").onclick=()=>setDrawer(false);
     drawer.addEventListener("keydown",ev=>{ if(ev.key==="Escape") setDrawer(false); }); }
@@ -1273,15 +1462,14 @@ function gridGame(fleche){
   $("#sol").onclick=()=>{ if(X.done) return; for(const [k,cl] of X.cells) inp(k).value=cl.ch; finish(false); };
   const win=()=>{ const pts=Math.max(X.words.length*4-X.revealed,4);
     X.words.forEach(w=>bump(w.e,true,0,true)); pdata().xp+=pts; save(); finish(true,pts); };
-  const finish=(ok,pts)=>{ X.done=true; ROUTE.guard=null; document.activeElement?.blur(); buzz(ok?[20,50,20]:30);
+  const finish=(ok,pts)=>{ X.done=true; document.activeElement?.blur();
     document.querySelectorAll(".cell input").forEach(el=>el.readOnly=true);
     document.querySelectorAll(".cell").forEach(c=>c.classList.remove("hl","cur","bad"));
     $("#fb").innerHTML=`<div class="backdrop"></div><div class="sheet" role="dialog" aria-label="Résultat"><div class="feedback ${ok?"good":"bad"}" style="margin:0">
       <div class="verdict">${ok?`Grille complète ! +${pts} points`:"Voici la solution."}</div>
       <ul class="list" style="margin:.2rem 0 0">${X.words.map(w=>`<li><strong style="font-family:Fraunces,Georgia,serif">${esc(w.e.w)}</strong> : <span class="muted">${esc(w.e.d)}</span></li>`).join("")}</ul>
       <button class="btn" id="again">Nouvelle grille</button><button class="btn ghost" id="seeGrid" style="margin-top:.5rem">Revoir la grille</button><button class="btn ghost" id="toGames" style="margin-top:.5rem">Autres jeux</button></div></div>`;
-    $("#again").onclick=()=>gridGame(fleche); $("#toGames").onclick=gamesHome;
-    const sheet=$("#fb .sheet"); if(sheet) at(fleche?"arrow":"crossword",gamesHome); $("#seeGrid").onclick=()=>{ $("#fb").innerHTML=`<div class="actions"><button class="btn" id="again2">Nouvelle grille</button></div>`; $("#again2").onclick=()=>gridGame(fleche); };
+    $("#again").onclick=()=>gridGame(fleche); $("#toGames").onclick=gamesHome; $("#seeGrid").onclick=()=>{ $("#fb").innerHTML=`<div class="actions"><button class="btn" id="again2">Nouvelle grille</button></div>`; $("#again2").onclick=()=>gridGame(fleche); };
     $("#again").focus({preventScroll:true}); };
   $("#quit").onclick=gamesHome;
   goWord(order[0]);
@@ -1289,7 +1477,6 @@ function gridGame(fleche){
 
 /* ============ COMPRENDRE ============ */
 function learnHome(){
-  at("learn",home);
   const ls=learnState();
   const nr=Object.values(ls.roots).filter(v=>v>=2).length, ne=Object.values(ls.expr).filter(v=>v>=2).length;
   screen(`
@@ -1303,7 +1490,6 @@ function learnHome(){
   $("#l1").onclick=rootsCards; $("#l2").onclick=exprCards; $("#back").onclick=home;
 }
 function rootsCards(){
-  at("roots",learnHome);
   const ls=learnState();
   screen(`
     <h1 style="font-size:1.8rem">Les racines</h1>
@@ -1325,7 +1511,6 @@ function rootsQuiz(){
   });
 }
 function exprCards(){
-  at("expr",learnHome);
   const ls=learnState();
   screen(`
     <h1 style="font-size:1.8rem">Les expressions</h1>
@@ -1349,7 +1534,6 @@ function runQuiz(factory,back,title){
   const Q={qs:factory(),i:0,res:[]};
   const show=()=>{
     const q=Q.qs[Q.i];
-    at("quiz",back,()=>Q.i>0&&Q.i<Q.qs.length?"Quitter ce quiz ?":null);
     screen(`<div class="progress">${Q.qs.map((_,k)=>`<i class="${k<Q.i?(Q.res[k]?"ok":"ko"):(k===Q.i?"cur":"")}"></i>`).join("")}</div>
       <div class="mode"><span>${q.mode}</span><span>${Q.i+1} / ${Q.qs.length}</span></div>
       <div class="q">${q.big?`<div class="word ${q.small?"sm":""}">${esc(q.big)}</div>`:`<p class="defbox" style="margin:0">${esc(q.text)}</p>`}<p class="prompt">${esc(q.prompt)}</p></div>
@@ -1358,16 +1542,16 @@ function runQuiz(factory,back,title){
       const o=q.opts[+b.dataset.k];
       document.querySelectorAll(".opt").forEach((x,k)=>{ x.disabled=true; if(q.opts[k].ok) x.classList.add("ok"); });
       if(!o.ok) b.classList.add("ko");
-      Q.res[Q.i]=o.ok; q.mark(o.ok); if(o.ok){ pdata().xp+=3; save(); credit(1); } buzz(o.ok?15:[40,40,40]);
+      Q.res[Q.i]=o.ok; q.mark(o.ok); if(o.ok){ pdata().xp+=3; save(); }
       const fb=$("#fb");
       fb.innerHTML=`<div class="feedback ${o.ok?"good":"bad"}" role="status"><div class="verdict">${o.ok?"Exactement. +3 points":"Ce n'était pas ça."}</div>${q.explain}
-        <div class="stickynext"><button class="btn" id="next">${Q.i+1<Q.qs.length?"Question suivante":"Voir mon résultat"}</button></div></div>`;
-      $("#next").focus({preventScroll:true}); fb.scrollIntoView({behavior:reduced()?"auto":"smooth",block:"nearest"});
+        <button class="btn" id="next">${Q.i+1<Q.qs.length?"Question suivante":"Voir mon résultat"}</button></div>`;
+      $("#next").focus({preventScroll:true}); fb.scrollIntoView({behavior:"smooth",block:"nearest"});
       $("#next").onclick=()=>{ Q.i++; Q.i<Q.qs.length?show():end(); };
     });
   };
   const end=()=>{
-    const good=Q.res.filter(Boolean).length; touchStreak(); save(); renderChips(); at("quizEnd",back);
+    const good=Q.res.filter(Boolean).length; touchStreak(); save(); renderChips();
     screen(`<section class="hero"><div class="result-score">${good}<span style="font-size:.4em;color:var(--ink-soft)"> / ${Q.qs.length}</span></div>
       <p style="font-size:1.15em">${esc(title)} terminé.</p></section>
       <div class="actions"><button class="btn" id="again">Refaire un quiz</button><button class="btn ghost" id="back">Revoir les fiches</button></div>`);
@@ -1376,19 +1560,10 @@ function runQuiz(factory,back,title){
   show();
 }
 
-$("#homeBtn").onclick=()=>leave(home);
-$("#footSet").onclick=()=>leave(settingsScreen);
-applySettings();
+$("#homeBtn").onclick=home;
 home();
 
-// Hors ligne + mises à jour : quand une nouvelle version est installée, on propose de recharger
-if("serviceWorker" in navigator && location.protocol!=="file:"){
-  const hadController=!!navigator.serviceWorker.controller;
-  let reloading=false;
-  navigator.serviceWorker.addEventListener("controllerchange",()=>{
-    if(!hadController||reloading) return;
-    toast("Une nouvelle version du jeu est prête.","Recharger",()=>{ reloading=true; location.reload(); },0);
-  });
+if("serviceWorker" in navigator){
   window.addEventListener("load",()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); });
 }
 </script>
